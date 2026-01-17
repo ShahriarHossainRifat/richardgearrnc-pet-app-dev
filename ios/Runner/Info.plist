@@ -47,7 +47,6 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-
 		<!-- Deep Links: Custom URL Scheme -->
 		<!-- Example: myapp://home, myapp://product/123 -->
 		<!-- TODO: Replace 'myapp' with your app's custom scheme -->
@@ -64,7 +63,6 @@
 				</array>
 			</dict>
 		</array>
-
 		<!-- Biometric Authentication (Face ID) -->
 		<key>NSFaceIDUsageDescription</key>
 		<string>Use Face ID to securely authenticate and access the app.</string>

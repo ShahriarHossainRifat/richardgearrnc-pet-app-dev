@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/session/session_service.dart';
 
 /// BuildContext extension methods for common operations.
 extension BuildContextExtensions on BuildContext {
@@ -81,6 +84,62 @@ extension BuildContextExtensions on BuildContext {
   bool get canPop => Navigator.of(this).canPop();
 
   // ─────────────────────────────────────────────────────────────────────────────
+  // NAVIGATION (with Authentication Check)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Navigate to a route based on authentication status.
+  ///
+  /// If the user is authenticated, navigates to [authenticatedRoute].
+  /// Otherwise, navigates to [unauthenticatedRoute] (typically login).
+  ///
+  /// Example:
+  /// ```dart
+  /// context.pushRouteIfAuthenticatedElse(
+  ///   authenticatedRoute: AppRoute.settings,
+  ///   unauthenticatedRoute: AppRoute.login,
+  /// );
+  /// ```
+  void pushRouteIfAuthenticatedElse({
+    required final AppRoute authenticatedRoute,
+    required final AppRoute unauthenticatedRoute,
+  }) {
+    final container = ProviderContainer();
+    final isAuthenticated = container.read(isAuthenticatedProvider);
+
+    if (isAuthenticated) {
+      pushRoute(authenticatedRoute);
+    } else {
+      goRoute(unauthenticatedRoute);
+    }
+  }
+
+  /// Execute an action only if the user is authenticated.
+  ///
+  /// If authenticated, executes [action]. Otherwise, navigates to login.
+  /// Useful for protecting actions that require authentication.
+  ///
+  /// Example:
+  /// ```dart
+  /// context.executeIfAuthenticatedElse(
+  ///   action: () => sendNotification(),
+  ///   unauthenticatedRoute: AppRoute.login,
+  /// );
+  /// ```
+  void executeIfAuthenticatedElse({
+    required final VoidCallback action,
+    required final AppRoute unauthenticatedRoute,
+  }) {
+    final container = ProviderContainer();
+    final isAuthenticated = container.read(isAuthenticatedProvider);
+
+    if (isAuthenticated) {
+      action();
+    } else {
+      goRoute(unauthenticatedRoute);
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
   // FOCUS
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -88,8 +147,7 @@ extension BuildContextExtensions on BuildContext {
   void unfocus() => FocusScope.of(this).unfocus();
 
   /// Request focus on a specific node
-  void requestFocus(final FocusNode node) =>
-      FocusScope.of(this).requestFocus(node);
+  void requestFocus(final FocusNode node) => FocusScope.of(this).requestFocus(node);
 
   // ─────────────────────────────────────────────────────────────────────────────
   // SNACKBAR

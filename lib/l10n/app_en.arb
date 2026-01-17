@@ -652,5 +652,10 @@
   "notificationsDisabled": "Notifications disabled",
   "@notificationsDisabled": {
     "description": "Feedback message when notifications are disabled"
+  },
+
+  "signInToUnlock": "Sign in to unlock exclusive features",
+  "@signInToUnlock": {
+    "description": "Sign-in prompt message on home screen for unauthenticated users"
   }
 }

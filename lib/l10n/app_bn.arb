@@ -122,5 +122,6 @@
   "onboardingNext": "পরবর্তী",
   "onboardingGetStarted": "শুরু করুন",
   "notificationsEnabled": "নোটিফিকেশন সক্রিয় করা হয়েছে",
-  "notificationsDisabled": "নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে"
+  "notificationsDisabled": "নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে",
+  "signInToUnlock": "এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন"
 }

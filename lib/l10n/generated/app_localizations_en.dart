@@ -430,4 +430,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsDisabled => 'Notifications disabled';
+
+  @override
+  String get signInToUnlock => 'Sign in to unlock exclusive features';
 }

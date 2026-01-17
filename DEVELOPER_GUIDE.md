@@ -771,7 +771,45 @@ context.unfocus()       // Dismiss keyboard
 context.showSnackBar('Message')
 context.showErrorSnackBar('Error!')
 context.showSuccessSnackBar('Success!')
+
+// Authentication-aware navigation
+context.pushRouteIfAuthenticatedElse(
+  authenticatedRoute: AppRoute.settings,
+  unauthenticatedRoute: AppRoute.login,
+)
+
+// Authentication-aware action execution
+context.executeIfAuthenticatedElse(
+  action: () => sendNotification(),
+  unauthenticatedRoute: AppRoute.login,
+)
 ```
+
+#### Authentication-Aware Methods
+
+Two extension methods protect navigation and actions based on authentication status:
+
+**`pushRouteIfAuthenticatedElse()`** - Navigate conditionally based on auth status:
+
+```dart
+// Navigate to settings if authenticated, otherwise to login
+context.pushRouteIfAuthenticatedElse(
+  authenticatedRoute: AppRoute.settings,
+  unauthenticatedRoute: AppRoute.login,
+);
+```
+
+**`executeIfAuthenticatedElse()`** - Execute an action or redirect if not authenticated:
+
+```dart
+// Send notification only if authenticated, otherwise redirect to login
+context.executeIfAuthenticatedElse(
+  action: () => _sendNotification(),
+  unauthenticatedRoute: AppRoute.login,
+);
+```
+
+Both methods read `isAuthenticatedProvider` to check the current session state. Use these for any feature that requires authentication.
 
 ### String Extensions
 

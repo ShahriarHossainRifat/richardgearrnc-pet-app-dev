@@ -367,6 +367,17 @@ context.showSnackBar(msg)   // show snackbar
 context.showErrorSnackBar() // error snackbar
 'hello'.capitalized         // string utilities
 DateTime.now().timeAgo      // date formatting
+
+// Authentication-aware navigation
+context.pushRouteIfAuthenticatedElse(
+  authenticatedRoute: AppRoute.settings,
+  unauthenticatedRoute: AppRoute.login,
+)
+
+context.executeIfAuthenticatedElse(
+  action: () => sendNotification(),
+  unauthenticatedRoute: AppRoute.login,
+)
 ```
 
 ### Hooks (`lib/core/hooks/`)

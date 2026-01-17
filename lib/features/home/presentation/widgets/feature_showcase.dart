@@ -95,7 +95,12 @@ class FeatureShowcase extends ConsumerWidget {
                       variant: .secondary,
                       size: .medium,
                       isExpanded: true,
-                      onPressed: () => _sendBasicNotification(ref, l10n),
+                      onPressed: () {
+                        context.executeIfAuthenticatedElse(
+                          action: () => _sendBasicNotification(ref, l10n),
+                          unauthenticatedRoute: AppRoute.login,
+                        );
+                      },
                       icon: Icons.notifications_outlined,
                       label: l10n.basicNotification,
                     ),
@@ -108,7 +113,12 @@ class FeatureShowcase extends ConsumerWidget {
                     child: AppButton(
                       variant: .primary,
                       size: .medium,
-                      onPressed: () => context.pushRoute(AppRoute.settings),
+                      onPressed: () {
+                        context.pushRouteIfAuthenticatedElse(
+                          authenticatedRoute: AppRoute.settings,
+                          unauthenticatedRoute: AppRoute.login,
+                        );
+                      },
                       icon: Icons.settings_outlined,
                       label: l10n.goToSettings,
                     ),

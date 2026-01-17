@@ -18,13 +18,13 @@ class AppConfig {
   ///
   /// When `false`, the app operates in "public mode" without login.
   /// When `true`, users must authenticate to access protected routes.
-  static const bool authEnabled = true;
+  static const bool authEnabled = false;
 
   /// Whether onboarding flow is enabled.
   ///
   /// When `true`, new users see onboarding before main app content.
   /// When `false`, users go directly to login or home.
-  static const bool onboardingEnabled = true;
+  static const bool onboardingEnabled = false;
 
   /// Minimum password length for validation.
   ///

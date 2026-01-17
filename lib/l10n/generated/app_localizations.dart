@@ -817,6 +817,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications disabled'**
   String get notificationsDisabled;
+
+  /// Sign-in prompt message on home screen for unauthenticated users
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to unlock exclusive features'**
+  String get signInToUnlock;
 }
 
 class _AppLocalizationsDelegate

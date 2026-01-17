@@ -431,4 +431,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get notificationsDisabled => 'নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে';
+
+  @override
+  String get signInToUnlock => 'এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন';
 }
