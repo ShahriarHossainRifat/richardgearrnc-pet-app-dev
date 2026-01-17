@@ -1,8 +1,8 @@
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/config/env_config.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/config/env_config.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'performance_service.g.dart';
 

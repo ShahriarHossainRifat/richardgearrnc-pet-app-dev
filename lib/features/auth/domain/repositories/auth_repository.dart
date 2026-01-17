@@ -1,5 +1,5 @@
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/core/result/result.dart';
+import 'package:petzy_app/features/auth/domain/entities/user.dart';
 
 /// Contract for authentication operations.
 /// Implemented by [AuthRepositoryImpl] in the data layer.

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/app/app_config.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/auth_routes.dart';
-import 'package:riverpod_go_router_boilerplate/app/presentation/pages/error_page.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/protected_routes.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/splash_route.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/app_lifecycle_notifier.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/app_lifecycle_state.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
+import 'package:petzy_app/app/app_config.dart';
+import 'package:petzy_app/app/router/auth_routes.dart';
+import 'package:petzy_app/app/presentation/pages/error_page.dart';
+import 'package:petzy_app/app/router/protected_routes.dart';
+import 'package:petzy_app/app/router/splash_route.dart';
+import 'package:petzy_app/app/startup/app_lifecycle_notifier.dart';
+import 'package:petzy_app/app/startup/app_lifecycle_state.dart';
+import 'package:petzy_app/core/core.dart';
 
 part 'app_router.g.dart';
 

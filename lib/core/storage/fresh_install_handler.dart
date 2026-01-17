@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/storage_keys.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/core/constants/storage_keys.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Handles fresh install detection and secure storage cleanup.

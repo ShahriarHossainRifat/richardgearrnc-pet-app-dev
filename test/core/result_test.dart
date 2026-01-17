@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
+import 'package:petzy_app/core/result/result.dart';
 
 void main() {
   group('Result', () {

@@ -1,4 +1,4 @@
-name: riverpod_go_router_boilerplate
+name: petzy_app
 description: "Opinionated production-ready Flutter boilerplate using Riverpod and GoRouter."
 publish_to: "none"
 version: 1.1.0+1

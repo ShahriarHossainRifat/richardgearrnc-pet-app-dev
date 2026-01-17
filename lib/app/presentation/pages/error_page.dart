@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/extensions/context_extensions.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/buttons.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/spacing.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/extensions/context_extensions.dart';
+import 'package:petzy_app/core/widgets/buttons.dart';
+import 'package:petzy_app/core/widgets/spacing.dart';
 
 /// Error page shown when a route is not found (404).
 ///

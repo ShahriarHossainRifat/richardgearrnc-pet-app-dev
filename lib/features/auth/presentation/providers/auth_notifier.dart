@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/data/repositories/auth_repository_provider.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/domain/entities/user.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/auth/data/repositories/auth_repository_provider.dart';
+import 'package:petzy_app/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
 part 'auth_notifier.g.dart';
 

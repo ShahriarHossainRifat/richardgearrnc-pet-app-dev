@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod_go_router_boilerplate/core/session/session_state.dart';
+import 'package:petzy_app/core/session/session_state.dart';
 
 void main() {
   group('SessionState', () {

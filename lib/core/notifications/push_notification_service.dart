@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'push_notification_service.g.dart';
 

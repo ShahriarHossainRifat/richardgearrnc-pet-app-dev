@@ -1,9 +1,9 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/config/env_config.dart';
-import 'package:riverpod_go_router_boilerplate/core/remote_config/remote_config_keys.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/config/env_config.dart';
+import 'package:petzy_app/core/remote_config/remote_config_keys.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'firebase_remote_config_service.g.dart';
 

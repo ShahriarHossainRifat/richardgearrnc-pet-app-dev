@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:riverpod_go_router_boilerplate/core/hooks/basic_hooks.dart';
+import 'package:petzy_app/core/hooks/basic_hooks.dart';
 
 /// State for pagination with infinite scroll.
 class InfiniteScrollState<T> {

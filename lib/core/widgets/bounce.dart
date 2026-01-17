@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
 
 /// A widget that performs a bounce animation to draw attention.
 ///

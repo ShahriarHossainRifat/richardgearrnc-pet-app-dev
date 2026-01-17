@@ -1,4 +1,4 @@
-package com.example.riverpod_go_router_boilerplate
+package com.petzy.petzy_app
 
 import io.flutter.embedding.android.FlutterActivity
 

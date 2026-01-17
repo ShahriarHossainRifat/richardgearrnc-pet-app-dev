@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/biometric/biometric_result.dart';
-import 'package:riverpod_go_router_boilerplate/core/storage/secure_storage.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/core/biometric/biometric_result.dart';
+import 'package:petzy_app/core/storage/secure_storage.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'biometric_service.g.dart';
 

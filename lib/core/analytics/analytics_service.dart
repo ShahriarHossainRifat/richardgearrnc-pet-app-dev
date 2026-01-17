@@ -1,9 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/config/env_config.dart';
-import 'package:riverpod_go_router_boilerplate/core/analytics/analytics_events.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/config/env_config.dart';
+import 'package:petzy_app/core/analytics/analytics_events.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'analytics_service.g.dart';
 

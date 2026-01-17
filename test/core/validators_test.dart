@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/validators.dart';
+import 'package:petzy_app/core/utils/validators.dart';
 
 void main() {
   group('Validators', () {

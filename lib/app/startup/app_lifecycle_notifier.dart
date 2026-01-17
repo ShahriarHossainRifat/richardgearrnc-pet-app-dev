@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/app/app_config.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/app_lifecycle_state.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_events.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_signals.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_state_machine.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_state_resolver.dart';
-import 'package:riverpod_go_router_boilerplate/core/config/remote_config_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/notifications/badge_counter.dart';
-import 'package:riverpod_go_router_boilerplate/core/notifications/local_notification_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/session/session.dart';
-import 'package:riverpod_go_router_boilerplate/features/onboarding/data/onboarding_service.dart';
+import 'package:petzy_app/app/app_config.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/app/startup/app_lifecycle_state.dart';
+import 'package:petzy_app/app/startup/startup_events.dart';
+import 'package:petzy_app/app/startup/startup_signals.dart';
+import 'package:petzy_app/app/startup/startup_state_machine.dart';
+import 'package:petzy_app/app/startup/startup_state_resolver.dart';
+import 'package:petzy_app/core/config/remote_config_service.dart';
+import 'package:petzy_app/core/notifications/badge_counter.dart';
+import 'package:petzy_app/core/notifications/local_notification_service.dart';
+import 'package:petzy_app/core/session/session.dart';
+import 'package:petzy_app/features/onboarding/data/onboarding_service.dart';
 
 /// Notifier that manages the app lifecycle and state transitions.
 class AppLifecycleNotifier extends Notifier<AppLifecycleState>

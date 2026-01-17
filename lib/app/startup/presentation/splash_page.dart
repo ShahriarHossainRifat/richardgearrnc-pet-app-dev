@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/app_lifecycle_notifier.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_route_mapper.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/extensions/context_extensions.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/spacing.dart';
+import 'package:petzy_app/app/startup/app_lifecycle_notifier.dart';
+import 'package:petzy_app/app/startup/startup_route_mapper.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/extensions/context_extensions.dart';
+import 'package:petzy_app/core/widgets/spacing.dart';
 
 /// Splash page shown during app initialization.
 ///

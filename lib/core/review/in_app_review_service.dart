@@ -1,7 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/storage/secure_storage.dart';
+import 'package:petzy_app/core/storage/secure_storage.dart';
 
 part 'in_app_review_service.g.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/l10n/generated/app_localizations.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Shows a dialog for selecting the app theme.
 void showThemeSelectionDialog(

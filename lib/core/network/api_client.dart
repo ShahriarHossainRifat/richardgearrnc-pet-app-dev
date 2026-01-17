@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/network/dio_provider.dart';
-import 'package:riverpod_go_router_boilerplate/core/network/error_converter.dart';
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
+import 'package:petzy_app/core/network/dio_provider.dart';
+import 'package:petzy_app/core/network/error_converter.dart';
+import 'package:petzy_app/core/result/result.dart';
 
 part 'api_client.g.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/localization/locale_notifier.dart';
+import 'package:petzy_app/core/localization/locale_notifier.dart';
 
 /// Theme mode notifier for managing app theme
 class ThemeNotifier extends Notifier<ThemeMode> {

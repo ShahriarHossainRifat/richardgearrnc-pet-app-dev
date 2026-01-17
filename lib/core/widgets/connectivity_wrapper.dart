@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
+import 'package:petzy_app/core/core.dart';
 
 /// A wrapper widget that shows a "No Internet" banner when connectivity is lost.
 ///

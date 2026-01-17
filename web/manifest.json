@@ -1,6 +1,6 @@
 {
-    "name": "riverpod_go_router_boilerplate",
-    "short_name": "riverpod_go_router_boilerplate",
+    "name": "petzy_app",
+    "short_name": "petzy_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/extensions/context_extensions.dart';
-import 'package:riverpod_go_router_boilerplate/core/review/in_app_review_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/version/app_version_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/buttons.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/spacing.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/extensions/context_extensions.dart';
+import 'package:petzy_app/core/review/in_app_review_service.dart';
+import 'package:petzy_app/core/version/app_version_service.dart';
+import 'package:petzy_app/core/widgets/buttons.dart';
+import 'package:petzy_app/core/widgets/spacing.dart';
 
 /// Force update page shown when app version is below minimum required.
 ///

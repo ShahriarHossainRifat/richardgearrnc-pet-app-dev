@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
-import 'package:riverpod_go_router_boilerplate/core/notifications/notification_channels.dart';
-import 'package:riverpod_go_router_boilerplate/core/notifications/notification_config.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/utils/logger.dart';
+import 'package:petzy_app/core/notifications/notification_channels.dart';
+import 'package:petzy_app/core/notifications/notification_config.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 

@@ -5,7 +5,7 @@
 /// ## Quick Start
 ///
 /// ```dart
-/// import 'package:riverpod_go_router_boilerplate/core/forms/forms.dart';
+/// import 'package:petzy_app/core/forms/forms.dart';
 ///
 /// final form = loginForm();
 ///

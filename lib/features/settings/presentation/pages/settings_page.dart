@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/features/settings/presentation/widgets/language_selection_dialog.dart';
-import 'package:riverpod_go_router_boilerplate/features/settings/presentation/widgets/theme_selection_dialog.dart';
-import 'package:riverpod_go_router_boilerplate/features/settings/presentation/providers/package_info_provider.dart';
-import 'package:riverpod_go_router_boilerplate/features/settings/presentation/widgets/notification_badge_settings.dart';
-import 'package:riverpod_go_router_boilerplate/features/settings/presentation/widgets/settings_section_header.dart';
-import 'package:riverpod_go_router_boilerplate/l10n/generated/app_localizations.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/settings/presentation/widgets/language_selection_dialog.dart';
+import 'package:petzy_app/features/settings/presentation/widgets/theme_selection_dialog.dart';
+import 'package:petzy_app/features/settings/presentation/providers/package_info_provider.dart';
+import 'package:petzy_app/features/settings/presentation/widgets/notification_badge_settings.dart';
+import 'package:petzy_app/features/settings/presentation/widgets/settings_section_header.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Settings page demonstrating theme switching and app info.
 ///

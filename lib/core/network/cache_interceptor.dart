@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:riverpod_go_router_boilerplate/core/cache/cache_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/connectivity.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/core/cache/cache_service.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/utils/connectivity.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 /// Interceptor for offline-first caching of API responses.
 ///

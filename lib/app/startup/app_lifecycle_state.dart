@@ -1,5 +1,5 @@
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_events.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_state_machine.dart';
+import 'package:petzy_app/app/startup/startup_events.dart';
+import 'package:petzy_app/app/startup/startup_state_machine.dart';
 
 /// Represents the lifecycle state of the application during startup.
 ///

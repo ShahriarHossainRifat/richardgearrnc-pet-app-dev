@@ -7,9 +7,9 @@
 /// - [isAuthenticatedProvider] - Simple auth check
 library;
 
-import 'package:riverpod_go_router_boilerplate/core/core.dart'
+import 'package:petzy_app/core/core.dart'
     show SessionService, SessionState;
-import 'package:riverpod_go_router_boilerplate/core/session/session.dart'
+import 'package:petzy_app/core/session/session.dart'
     show SessionService, SessionState;
 
 export 'session_service.dart';

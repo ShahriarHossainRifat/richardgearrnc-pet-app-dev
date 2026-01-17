@@ -1,11 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:riverpod_go_router_boilerplate/core/network/api_client.dart';
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/data/repositories/auth_repository_mock.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/data/repositories/auth_repository_remote.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/core/network/api_client.dart';
+import 'package:petzy_app/core/result/result.dart';
+import 'package:petzy_app/features/auth/data/repositories/auth_repository_mock.dart';
+import 'package:petzy_app/features/auth/data/repositories/auth_repository_remote.dart';
+import 'package:petzy_app/features/auth/domain/entities/user.dart';
 
 // Mocks
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}

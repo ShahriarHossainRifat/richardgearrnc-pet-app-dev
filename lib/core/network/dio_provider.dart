@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/config/env_config.dart';
-import 'package:riverpod_go_router_boilerplate/core/cache/cache_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/network/cache_interceptor.dart';
-import 'package:riverpod_go_router_boilerplate/core/network/interceptors.dart';
-import 'package:riverpod_go_router_boilerplate/core/performance/performance_http_interceptor.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/connectivity.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/config/env_config.dart';
+import 'package:petzy_app/core/cache/cache_service.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/network/cache_interceptor.dart';
+import 'package:petzy_app/core/network/interceptors.dart';
+import 'package:petzy_app/core/performance/performance_http_interceptor.dart';
+import 'package:petzy_app/core/utils/connectivity.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'dio_provider.g.dart';
 

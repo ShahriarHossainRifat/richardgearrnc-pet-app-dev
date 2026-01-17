@@ -1,7 +1,7 @@
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/config/remote_config_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
+import 'package:petzy_app/core/config/remote_config_service.dart';
+import 'package:petzy_app/core/result/result.dart';
 
 part 'app_version_service.g.dart';
 

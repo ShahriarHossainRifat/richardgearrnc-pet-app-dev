@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/core/feedback/feedback_config.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/spacing.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/feedback/feedback_config.dart';
+import 'package:petzy_app/core/widgets/spacing.dart';
 
 /// Service for showing dialogs and snackbars without BuildContext.
 ///

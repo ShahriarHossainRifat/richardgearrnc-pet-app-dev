@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
+import 'package:petzy_app/core/result/result.dart';
 
 /// Interface for converting API errors to app exceptions.
 ///

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/entry_animations.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/widgets/entry_animations.dart';
 
 /// A widget that animates a list of items with staggered timing.
 class StaggeredList extends StatelessWidget {

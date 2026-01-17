@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/cache/cache_database.dart';
-import 'package:riverpod_go_router_boilerplate/core/cache/cache_entry.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/core/cache/cache_database.dart';
+import 'package:petzy_app/core/cache/cache_entry.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 export 'cache_entry.dart';
 export 'cache_extensions.dart';

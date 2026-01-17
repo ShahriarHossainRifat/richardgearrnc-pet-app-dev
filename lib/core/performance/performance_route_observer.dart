@@ -1,7 +1,7 @@
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/performance/performance_service.dart';
+import 'package:petzy_app/core/performance/performance_service.dart';
 
 /// Route observer that tracks screen rendering performance.
 ///

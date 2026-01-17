@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/theme/app_colors.dart';
-import 'package:riverpod_go_router_boilerplate/core/theme/app_typography.dart';
+import 'package:petzy_app/core/theme/app_colors.dart';
+import 'package:petzy_app/core/theme/app_typography.dart';
 
 /// App theme configuration.
 ///

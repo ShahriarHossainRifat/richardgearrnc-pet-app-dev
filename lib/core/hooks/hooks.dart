@@ -10,7 +10,7 @@
 /// ## Usage
 ///
 /// ```dart
-/// import 'package:riverpod_go_router_boilerplate/core/hooks/hooks.dart';
+/// import 'package:petzy_app/core/hooks/hooks.dart';
 ///
 /// class MyPage extends HookWidget {
 ///   @override

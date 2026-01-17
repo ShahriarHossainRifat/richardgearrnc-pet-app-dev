@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/storage_keys.dart';
-import 'package:riverpod_go_router_boilerplate/core/storage/secure_storage.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/auth.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/constants/storage_keys.dart';
+import 'package:petzy_app/core/storage/secure_storage.dart';
+import 'package:petzy_app/core/utils/logger.dart';
+import 'package:petzy_app/features/auth/auth.dart';
 
 /// Callback type for token refresh logic.
 /// Returns true if refresh was successful, false otherwise.

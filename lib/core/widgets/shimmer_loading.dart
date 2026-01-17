@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
+import 'package:petzy_app/core/core.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// A shimmer loading wrapper for arbitrary content.

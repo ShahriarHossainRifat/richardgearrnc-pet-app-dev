@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/app/app.dart';
-import 'package:riverpod_go_router_boilerplate/config/env_config.dart';
-import 'package:riverpod_go_router_boilerplate/core/storage/fresh_install_handler.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/connectivity.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/app/app.dart';
+import 'package:petzy_app/config/env_config.dart';
+import 'package:petzy_app/core/storage/fresh_install_handler.dart';
+import 'package:petzy_app/core/utils/connectivity.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Bootstrap the application.

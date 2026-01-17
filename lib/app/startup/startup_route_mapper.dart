@@ -1,5 +1,5 @@
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_state_machine.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/app/startup/startup_state_machine.dart';
 
 /// Maps startup states to their corresponding routes.
 class StartupRouteMapper {

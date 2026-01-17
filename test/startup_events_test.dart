@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_events.dart';
+import 'package:petzy_app/app/startup/startup_events.dart';
 
 void main() {
   group('StartupEvent', () {

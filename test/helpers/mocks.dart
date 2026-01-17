@@ -1,9 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:riverpod_go_router_boilerplate/core/cache/cache_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/network/api_client.dart';
-import 'package:riverpod_go_router_boilerplate/core/notifications/local_notification_service.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:petzy_app/core/cache/cache_service.dart';
+import 'package:petzy_app/core/network/api_client.dart';
+import 'package:petzy_app/core/notifications/local_notification_service.dart';
+import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STORAGE MOCKS

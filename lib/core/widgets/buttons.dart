@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/extensions/context_extensions.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/spacing.dart';
+import 'package:petzy_app/core/extensions/context_extensions.dart';
+import 'package:petzy_app/core/widgets/spacing.dart';
 
 /// A configurable button with consistent app styling.
 class AppButton extends StatelessWidget {

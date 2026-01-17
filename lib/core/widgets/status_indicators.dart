@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/extensions/context_extensions.dart';
+import 'package:petzy_app/core/extensions/context_extensions.dart';
 
 /// A status indicator dot.
 class StatusDot extends StatelessWidget {

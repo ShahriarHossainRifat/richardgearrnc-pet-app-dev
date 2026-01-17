@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
+import 'package:petzy_app/core/core.dart';
 
 /// A widget that renders loading, error, or data states
 /// for a Riverpod [AsyncValue].

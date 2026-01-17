@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/async_value_widget.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/buttons.dart';
-import 'package:riverpod_go_router_boilerplate/core/widgets/spacing.dart';
+import 'package:petzy_app/core/widgets/async_value_widget.dart';
+import 'package:petzy_app/core/widgets/buttons.dart';
+import 'package:petzy_app/core/widgets/spacing.dart';
 
 void main() {
   group('AsyncValueWidget', () {

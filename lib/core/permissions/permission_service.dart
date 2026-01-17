@@ -1,7 +1,7 @@
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/core/feedback/feedback_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/permissions/permission_config.dart';
+import 'package:petzy_app/core/feedback/feedback_service.dart';
+import 'package:petzy_app/core/permissions/permission_config.dart';
 
 part 'permission_service.g.dart';
 

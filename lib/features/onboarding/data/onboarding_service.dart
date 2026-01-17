@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/localization/locale_notifier.dart';
+import 'package:petzy_app/core/localization/locale_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service for managing onboarding state.

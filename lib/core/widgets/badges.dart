@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/extensions/context_extensions.dart';
+import 'package:petzy_app/core/extensions/context_extensions.dart';
 
 /// A badge widget for displaying counts or status.
 class AppBadge extends StatelessWidget {

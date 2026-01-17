@@ -1,5 +1,5 @@
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:riverpod_go_router_boilerplate/core/forms/custom_validators.dart';
+import 'package:petzy_app/core/forms/custom_validators.dart';
 
 /// Login form with email and password fields.
 ///

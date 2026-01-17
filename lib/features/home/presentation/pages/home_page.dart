@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/domain/entities/user.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:riverpod_go_router_boilerplate/features/home/presentation/widgets/feature_showcase.dart';
-import 'package:riverpod_go_router_boilerplate/features/home/presentation/widgets/welcome_card.dart';
-import 'package:riverpod_go_router_boilerplate/l10n/generated/app_localizations.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:petzy_app/features/home/presentation/widgets/feature_showcase.dart';
+import 'package:petzy_app/features/home/presentation/widgets/welcome_card.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Home page shown after successful authentication.
 class HomePage extends HookConsumerWidget {

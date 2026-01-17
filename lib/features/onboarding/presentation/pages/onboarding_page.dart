@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/app_lifecycle_notifier.dart';
-import 'package:riverpod_go_router_boilerplate/app/startup/startup_route_mapper.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/features/onboarding/data/onboarding_service.dart';
-import 'package:riverpod_go_router_boilerplate/features/onboarding/presentation/widgets/onboarding_page_content.dart';
-import 'package:riverpod_go_router_boilerplate/features/onboarding/presentation/widgets/page_indicator.dart';
-import 'package:riverpod_go_router_boilerplate/l10n/generated/app_localizations.dart';
+import 'package:petzy_app/app/startup/app_lifecycle_notifier.dart';
+import 'package:petzy_app/app/startup/startup_route_mapper.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/onboarding/data/onboarding_service.dart';
+import 'package:petzy_app/features/onboarding/presentation/widgets/onboarding_page_content.dart';
+import 'package:petzy_app/features/onboarding/presentation/widgets/page_indicator.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Onboarding pages - customize these for your app
 List<OnboardingPageData> _buildPages(final AppLocalizations l10n) => [

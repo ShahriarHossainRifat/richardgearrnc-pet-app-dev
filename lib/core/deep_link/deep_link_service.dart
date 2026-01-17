@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/core/utils/logger.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 
 part 'deep_link_service.g.dart';
 

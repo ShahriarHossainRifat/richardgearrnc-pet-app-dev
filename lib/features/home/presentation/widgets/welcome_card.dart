@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/l10n/generated/app_localizations.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Welcome card displayed on the home page.
 ///

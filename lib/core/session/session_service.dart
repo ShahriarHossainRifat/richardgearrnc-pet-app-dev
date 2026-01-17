@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/core/result/result.dart';
-import 'package:riverpod_go_router_boilerplate/core/session/session_state.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/auth.dart';
+import 'package:petzy_app/core/result/result.dart';
+import 'package:petzy_app/core/session/session_state.dart';
+import 'package:petzy_app/features/auth/auth.dart';
 
 /// Provider that exposes the current session state reactively.
 ///

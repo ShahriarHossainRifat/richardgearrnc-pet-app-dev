@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_go_router_boilerplate/app/router/app_router.dart';
-import 'package:riverpod_go_router_boilerplate/core/core.dart';
-import 'package:riverpod_go_router_boilerplate/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:riverpod_go_router_boilerplate/l10n/generated/app_localizations.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Login page for user authentication.
 class LoginPage extends ConsumerStatefulWidget {

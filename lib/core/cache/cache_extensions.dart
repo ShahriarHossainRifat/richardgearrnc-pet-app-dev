@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:riverpod_go_router_boilerplate/core/cache/cache_service.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
+import 'package:petzy_app/core/cache/cache_service.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
 
 /// Extension for convenient caching of typed objects.
 extension CacheServiceExtensions on CacheService {

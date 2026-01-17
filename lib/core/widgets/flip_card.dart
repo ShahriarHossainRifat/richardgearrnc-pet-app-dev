@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:riverpod_go_router_boilerplate/core/constants/app_constants.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
 
 /// A widget that flips between front and back faces with a 3D animation.
 ///
