@@ -97,6 +97,7 @@ class FeatureShowcase extends ConsumerWidget {
                       isExpanded: true,
                       onPressed: () {
                         context.executeIfAuthenticatedElse(
+                          widgetRef: ref,
                           action: () => _sendBasicNotification(ref, l10n),
                           unauthenticatedRoute: AppRoute.login,
                         );
@@ -115,6 +116,7 @@ class FeatureShowcase extends ConsumerWidget {
                       size: .medium,
                       onPressed: () {
                         context.pushRouteIfAuthenticatedElse(
+                          widgetRef: ref,
                           authenticatedRoute: AppRoute.settings,
                           unauthenticatedRoute: AppRoute.login,
                         );

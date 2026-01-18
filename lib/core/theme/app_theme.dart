@@ -5,7 +5,8 @@ import 'package:petzy_app/core/theme/app_typography.dart';
 /// App theme configuration.
 ///
 /// Provides light and dark themes with shared component styles.
-/// Uses Material 3 design system with customizable color schemes.
+/// Uses Material 3 design system with a custom color scheme
+/// tailored for the Petzy brand.
 ///
 /// Usage:
 /// ```dart
@@ -33,10 +34,10 @@ abstract class AppTheme {
   static const double _snackBarRadius = 8;
 
   /// Minimum button size (width x height).
-  static const Size _buttonMinSize = Size(.infinity, 48);
+  static const Size _buttonMinSize = Size(double.infinity, 48);
 
   /// Standard input padding.
-  static const EdgeInsets _inputPadding = .symmetric(
+  static const EdgeInsets _inputPadding = EdgeInsets.symmetric(
     horizontal: 16,
     vertical: 16,
   );
@@ -57,55 +58,53 @@ abstract class AppTheme {
     style: FilledButton.styleFrom(
       minimumSize: _buttonMinSize,
       shape: RoundedRectangleBorder(
-        borderRadius: .circular(_buttonRadius),
+        borderRadius: BorderRadius.circular(_buttonRadius),
       ),
     ),
   );
 
   /// Common outlined button style.
-  static final OutlinedButtonThemeData _outlinedButtonTheme =
-      OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          minimumSize: _buttonMinSize,
-          shape: RoundedRectangleBorder(
-            borderRadius: .circular(_buttonRadius),
-          ),
-        ),
-      );
+  static final OutlinedButtonThemeData _outlinedButtonTheme = OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      minimumSize: _buttonMinSize,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(_buttonRadius),
+      ),
+    ),
+  );
 
   /// Common text button style.
   static final TextButtonThemeData _textButtonTheme = TextButtonThemeData(
     style: TextButton.styleFrom(
       minimumSize: _buttonMinSize,
       shape: RoundedRectangleBorder(
-        borderRadius: .circular(_buttonRadius),
+        borderRadius: BorderRadius.circular(_buttonRadius),
       ),
     ),
   );
 
   /// Common input decoration theme.
-  static final InputDecorationTheme _inputDecorationTheme =
-      InputDecorationTheme(
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: .circular(_inputRadius),
-        ),
-        contentPadding: _inputPadding,
-      );
+  static final InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
+    filled: true,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(_inputRadius),
+    ),
+    contentPadding: _inputPadding,
+  );
 
   /// Common card theme.
   static final CardThemeData _cardTheme = CardThemeData(
     elevation: 0,
     shape: RoundedRectangleBorder(
-      borderRadius: .circular(_cardRadius),
+      borderRadius: BorderRadius.circular(_cardRadius),
     ),
   );
 
   /// Common snackbar theme.
   static final SnackBarThemeData _snackBarTheme = SnackBarThemeData(
-    behavior: .floating,
+    behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
-      borderRadius: .circular(_snackBarRadius),
+      borderRadius: BorderRadius.circular(_snackBarRadius),
     ),
   );
 
@@ -117,8 +116,9 @@ abstract class AppTheme {
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
-      brightness: .light,
+      brightness: Brightness.light,
       colorScheme: _lightColorScheme,
+      scaffoldBackgroundColor: AppColors.background,
       textTheme: AppTypography.textTheme,
       appBarTheme: _appBarTheme,
       filledButtonTheme: _filledButtonTheme,
@@ -134,8 +134,9 @@ abstract class AppTheme {
   static ThemeData get dark {
     return ThemeData(
       useMaterial3: true,
-      brightness: .dark,
+      brightness: Brightness.dark,
       colorScheme: _darkColorScheme,
+      scaffoldBackgroundColor: _darkColorScheme.surface,
       textTheme: AppTypography.textTheme,
       appBarTheme: _appBarTheme,
       filledButtonTheme: _filledButtonTheme,
@@ -152,62 +153,71 @@ abstract class AppTheme {
   // ─────────────────────────────────────────────────────────────────────────────
 
   /// Light mode color scheme.
-  static const ColorScheme _lightColorScheme = ColorScheme.light(
+  static const ColorScheme _lightColorScheme = ColorScheme(
+    brightness: Brightness.light,
+
     primary: AppColors.primary,
+    onPrimary: AppColors.onPrimary,
     primaryContainer: AppColors.primaryContainer,
     onPrimaryContainer: AppColors.onPrimaryContainer,
+
     secondary: AppColors.secondary,
     onSecondary: AppColors.onSecondary,
     secondaryContainer: AppColors.secondaryContainer,
     onSecondaryContainer: AppColors.onSecondaryContainer,
-    tertiary: AppColors.tertiary,
-    onTertiary: AppColors.onTertiary,
-    tertiaryContainer: AppColors.tertiaryContainer,
-    onTertiaryContainer: AppColors.onTertiaryContainer,
+
     error: AppColors.error,
-    errorContainer: AppColors.errorContainer,
-    onErrorContainer: AppColors.onErrorContainer,
+    onError: AppColors.onError,
+
     surface: AppColors.surface,
     onSurface: AppColors.onSurface,
     surfaceContainerHighest: AppColors.surfaceVariant,
     onSurfaceVariant: AppColors.onSurfaceVariant,
+
     outline: AppColors.outline,
     outlineVariant: AppColors.outlineVariant,
+
     shadow: AppColors.shadow,
-    scrim: AppColors.scrim,
-    inverseSurface: AppColors.inverseSurface,
-    onInverseSurface: AppColors.onInverseSurface,
-    inversePrimary: AppColors.inversePrimary,
+    scrim: Colors.black54,
+
+    inverseSurface: AppColors.onSurface,
+    onInverseSurface: AppColors.surface,
+    inversePrimary: AppColors.primaryStrong,
   );
 
   /// Dark mode color scheme.
-  static const ColorScheme _darkColorScheme = ColorScheme.dark(
-    primary: AppColors.inversePrimary,
-    onPrimary: AppColors.onPrimaryContainer,
-    primaryContainer: AppColors.primary,
-    onPrimaryContainer: AppColors.primaryContainer,
-    secondary: AppColors.secondaryContainer,
-    onSecondary: AppColors.onSecondaryContainer,
+  ///
+  /// Designed manually to preserve brand warmth
+  /// while ensuring proper contrast and readability.
+  static const ColorScheme _darkColorScheme = ColorScheme(
+    brightness: Brightness.dark,
+
+    primary: AppColors.primary,
+    onPrimary: AppColors.onPrimary,
+    primaryContainer: AppColors.primaryStrong,
+    onPrimaryContainer: AppColors.onPrimary,
+
+    secondary: AppColors.secondary,
+    onSecondary: AppColors.onSecondary,
     secondaryContainer: AppColors.secondary,
     onSecondaryContainer: AppColors.onSecondary,
-    tertiary: AppColors.tertiaryContainer,
-    onTertiary: AppColors.onTertiaryContainer,
-    tertiaryContainer: AppColors.tertiary,
-    onTertiaryContainer: AppColors.onTertiary,
-    error: AppColors.errorContainer,
-    onError: AppColors.onErrorContainer,
-    errorContainer: AppColors.error,
-    onErrorContainer: AppColors.onError,
-    surface: AppColors.surfaceDark,
-    onSurface: AppColors.onSurfaceDark,
-    surfaceContainerHighest: AppColors.onSurfaceVariant,
-    onSurfaceVariant: AppColors.surfaceVariant,
-    outline: AppColors.outlineVariant,
-    outlineVariant: AppColors.outline,
-    shadow: AppColors.shadow,
-    scrim: AppColors.scrim,
-    inverseSurface: AppColors.surface,
-    onInverseSurface: AppColors.onSurface,
+
+    error: AppColors.error,
+    onError: AppColors.onError,
+
+    surface: Color(0xFF1A1A1A),
+    onSurface: Colors.white,
+    surfaceContainerHighest: Color(0xFF262626),
+    onSurfaceVariant: Color(0xFFBDBDBD),
+
+    outline: Color(0xFF3A3A3A),
+    outlineVariant: Color(0xFF2A2A2A),
+
+    shadow: Colors.black,
+    scrim: Colors.black54,
+
+    inverseSurface: Colors.white,
+    onInverseSurface: Color(0xFF121212),
     inversePrimary: AppColors.primary,
   );
 }

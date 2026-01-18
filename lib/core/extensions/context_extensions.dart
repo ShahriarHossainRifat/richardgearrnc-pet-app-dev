@@ -92,19 +92,22 @@ extension BuildContextExtensions on BuildContext {
   /// If the user is authenticated, navigates to [authenticatedRoute].
   /// Otherwise, navigates to [unauthenticatedRoute] (typically login).
   ///
+  /// **Requires [widgetRef]** - Pass the WidgetRef from your ConsumerWidget/HookConsumerWidget
+  ///
   /// Example:
   /// ```dart
   /// context.pushRouteIfAuthenticatedElse(
+  ///   widgetRef: ref,
   ///   authenticatedRoute: AppRoute.settings,
   ///   unauthenticatedRoute: AppRoute.login,
   /// );
   /// ```
   void pushRouteIfAuthenticatedElse({
+    required final WidgetRef widgetRef,
     required final AppRoute authenticatedRoute,
     required final AppRoute unauthenticatedRoute,
   }) {
-    final container = ProviderContainer();
-    final isAuthenticated = container.read(isAuthenticatedProvider);
+    final isAuthenticated = widgetRef.read(isAuthenticatedProvider);
 
     if (isAuthenticated) {
       pushRoute(authenticatedRoute);
@@ -118,19 +121,22 @@ extension BuildContextExtensions on BuildContext {
   /// If authenticated, executes [action]. Otherwise, navigates to login.
   /// Useful for protecting actions that require authentication.
   ///
+  /// **Requires [widgetRef]** - Pass the WidgetRef from your ConsumerWidget/HookConsumerWidget
+  ///
   /// Example:
   /// ```dart
   /// context.executeIfAuthenticatedElse(
+  ///   widgetRef: ref,
   ///   action: () => sendNotification(),
   ///   unauthenticatedRoute: AppRoute.login,
   /// );
   /// ```
   void executeIfAuthenticatedElse({
+    required final WidgetRef widgetRef,
     required final VoidCallback action,
     required final AppRoute unauthenticatedRoute,
   }) {
-    final container = ProviderContainer();
-    final isAuthenticated = container.read(isAuthenticatedProvider);
+    final isAuthenticated = widgetRef.read(isAuthenticatedProvider);
 
     if (isAuthenticated) {
       action();
