@@ -56,6 +56,23 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  /// Attempt to login with phone number.
+  Future<void> loginWithPhone(final String phoneNumber) async {
+    state = const AsyncLoading();
+
+    final result = await _repo.loginWithPhone(phoneNumber);
+
+    state = result.fold(
+      onSuccess: AsyncData.new,
+      onFailure: (final error) => AsyncError(error, StackTrace.current),
+    );
+
+    // Track login event (success or failure)
+    if (state.value != null) {
+      ref.read(analyticsServiceProvider).logEvent(AnalyticsEvents.login);
+    }
+  }
+
   /// Logout the current user.
   Future<void> logout() async {
     final result = await _repo.logout();

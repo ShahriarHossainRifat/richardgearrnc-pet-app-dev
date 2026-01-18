@@ -46,7 +46,7 @@
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIStatusBarHidden</key>
-		<false/>
+		<true/>
 		<!-- Deep Links: Custom URL Scheme -->
 		<!-- Example: myapp://home, myapp://product/123 -->
 		<!-- TODO: Replace 'myapp' with your app's custom scheme -->
@@ -66,5 +66,7 @@
 		<!-- Biometric Authentication (Face ID) -->
 		<key>NSFaceIDUsageDescription</key>
 		<string>Use Face ID to securely authenticate and access the app.</string>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
+		<false/>
 	</dict>
 </plist>

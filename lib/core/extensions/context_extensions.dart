@@ -188,4 +188,13 @@ extension BuildContextExtensions on BuildContext {
       SnackBar(content: Text(message), backgroundColor: Colors.green),
     );
   }
+
+  /// Show an info snackbar
+  void showInfoSnackBar(final String message) {
+    ScaffoldMessenger.of(
+      this,
+    ).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: colorScheme.primary),
+    );
+  }
 }

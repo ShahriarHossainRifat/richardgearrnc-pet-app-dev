@@ -433,4 +433,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signInToUnlock => 'Sign in to unlock exclusive features';
+
+  @override
+  String get loginToExplore => 'Login To Explore';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get phoneNumberRequired => 'Phone number is required';
+
+  @override
+  String get phoneNumberInvalid => 'Please enter a valid phone number';
+
+  @override
+  String get or => 'Or';
+
+  @override
+  String get google => 'Google';
 }

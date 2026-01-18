@@ -1,8 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:petzy_app/core/analytics/analytics_service.dart';
 import 'package:petzy_app/core/cache/cache_service.dart';
+import 'package:petzy_app/core/crashlytics/crashlytics_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/notifications/local_notification_service.dart';
+import 'package:petzy_app/core/performance/performance_service.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -29,6 +32,15 @@ class MockLocalNotificationService extends Mock
 
 /// Mock for [CacheService].
 class MockCacheService extends Mock implements CacheService {}
+
+/// Mock for [AnalyticsService].
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+/// Mock for [CrashlyticsService].
+class MockCrashlyticsService extends Mock implements CrashlyticsService {}
+
+/// Mock for [PerformanceService].
+class MockPerformanceService extends Mock implements PerformanceService {}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REPOSITORY MOCKS

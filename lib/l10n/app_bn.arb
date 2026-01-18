@@ -123,5 +123,11 @@
   "onboardingGetStarted": "শুরু করুন",
   "notificationsEnabled": "নোটিফিকেশন সক্রিয় করা হয়েছে",
   "notificationsDisabled": "নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে",
-  "signInToUnlock": "এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন"
+  "signInToUnlock": "এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন",
+  "loginToExplore": "এক্সপ্লোর করতে লগইন করুন",
+  "phoneNumber": "ফোন নম্বর",
+  "phoneNumberRequired": "ফোন নম্বর প্রয়োজন",
+  "phoneNumberInvalid": "অনুগ্রহ করে একটি বৈধ ফোন নম্বর প্রবেশ করুন",
+  "or": "অথবা",
+  "google": "গুগল"
 }

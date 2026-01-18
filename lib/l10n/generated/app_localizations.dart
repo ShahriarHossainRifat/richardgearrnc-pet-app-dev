@@ -823,6 +823,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign in to unlock exclusive features'**
   String get signInToUnlock;
+
+  /// Login page hero title
+  ///
+  /// In en, this message translates to:
+  /// **'Login To Explore'**
+  String get loginToExplore;
+
+  /// Phone number input label
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// Validation error when phone number is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get phoneNumberRequired;
+
+  /// Validation error when phone number is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get phoneNumberInvalid;
+
+  /// Separator text between login options
+  ///
+  /// In en, this message translates to:
+  /// **'Or'**
+  String get or;
+
+  /// Google sign-in button text
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get google;
 }
 
 class _AppLocalizationsDelegate

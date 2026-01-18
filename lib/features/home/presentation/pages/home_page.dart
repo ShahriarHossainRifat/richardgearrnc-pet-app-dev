@@ -31,10 +31,7 @@ class HomePage extends HookConsumerWidget {
           const ConnectivityIndicator(),
           AppIconButton(
             icon: Icons.settings_outlined,
-            onPressed: () => context.pushRouteIfAuthenticatedElse(
-              widgetRef: ref,
-              authenticatedRoute: AppRoute.settings,
-            ),
+            onPressed: () => context.pushRoute(AppRoute.settings),
           ),
         ],
       ),

@@ -657,5 +657,35 @@
   "signInToUnlock": "Sign in to unlock exclusive features",
   "@signInToUnlock": {
     "description": "Sign-in prompt message on home screen for unauthenticated users"
+  },
+
+  "loginToExplore": "Login To Explore",
+  "@loginToExplore": {
+    "description": "Login page hero title"
+  },
+
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number input label"
+  },
+
+  "phoneNumberRequired": "Phone number is required",
+  "@phoneNumberRequired": {
+    "description": "Validation error when phone number is empty"
+  },
+
+  "phoneNumberInvalid": "Please enter a valid phone number",
+  "@phoneNumberInvalid": {
+    "description": "Validation error when phone number is invalid"
+  },
+
+  "or": "Or",
+  "@or": {
+    "description": "Separator text between login options"
+  },
+
+  "google": "Google",
+  "@google": {
+    "description": "Google sign-in button text"
   }
 }

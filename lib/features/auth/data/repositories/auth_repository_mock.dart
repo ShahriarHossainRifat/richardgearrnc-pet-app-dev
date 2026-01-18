@@ -62,6 +62,31 @@ class AuthRepositoryMock implements AuthRepository {
   }
 
   @override
+  Future<Result<User>> loginWithPhone(final String phoneNumber) async {
+    await Future<void>.delayed(AppConstants.mockNetworkDelay);
+
+    // Simulate error for testing
+    if (phoneNumber.contains('000')) {
+      return const Failure(AuthException(message: 'Invalid phone number'));
+    }
+
+    // Generate mock token
+    final token = 'mock_token_${DateTime.now().millisecondsSinceEpoch}';
+    await secureStorage.write(key: StorageKeys.accessToken, value: token);
+
+    // Return mock user
+    final user = User(
+      id: 'mock_user_${phoneNumber.hashCode}',
+      email: '$phoneNumber@phone.local',
+      name: 'Phone User',
+    );
+
+    await secureStorage.write(key: StorageKeys.userId, value: user.id);
+
+    return Success(user);
+  }
+
+  @override
   Future<Result<User>> restoreSession() async {
     await Future<void>.delayed(AppConstants.mockNetworkDelay);
 

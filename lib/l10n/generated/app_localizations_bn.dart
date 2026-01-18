@@ -434,4 +434,22 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get signInToUnlock => 'এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন';
+
+  @override
+  String get loginToExplore => 'এক্সপ্লোর করতে লগইন করুন';
+
+  @override
+  String get phoneNumber => 'ফোন নম্বর';
+
+  @override
+  String get phoneNumberRequired => 'ফোন নম্বর প্রয়োজন';
+
+  @override
+  String get phoneNumberInvalid => 'অনুগ্রহ করে একটি বৈধ ফোন নম্বর প্রবেশ করুন';
+
+  @override
+  String get or => 'অথবা';
+
+  @override
+  String get google => 'গুগল';
 }

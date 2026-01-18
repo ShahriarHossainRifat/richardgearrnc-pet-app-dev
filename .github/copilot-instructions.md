@@ -677,12 +677,206 @@ make prepare   # Full setup (clean + l10n + gen)
 
 ### Testing Guidelines
 
-- **Unit Tests**: For Logic/Repositories
-- **Widget Tests**: For UI Components
-- **Pattern**: Arrange-Act-Assert
+#### Test Organization
+
+- **Unit Tests**: For business logic, repositories, and services (no UI)
+- **Widget Tests**: For UI components and pages (uses `testWidgets()`)
+- **Pattern**: Arrange-Act-Assert (AAA) for all tests
 - **Shared Mocks**: Place in `test/helpers/mocks.dart`
-- **Library**: Use `mocktail` for all mocking
-- **Result<void>**: Return `const Success(null)` when mocking
+- **Mocking Library**: Use `mocktail` for all mocking
+- **Test Structure**: 1 test file per domain/service, feature pages get their own test file
+
+#### Unit Tests (Repositories & Services)
+
+```dart
+void main() {
+  group('AuthRepository', () {
+    late MockApiClient mockApiClient;
+    late AuthRepositoryRemote repository;
+
+    setUp(() {
+      mockApiClient = MockApiClient();
+      repository = AuthRepositoryRemote(apiClient: mockApiClient);
+    });
+
+    test('loginWithPhone returns Success with user data', () async {
+      // Arrange
+      const phoneNumber = '+821234567890';
+      final mockResponse = {'id': '1', 'name': 'John'};
+      when(() => mockApiClient.post<Map>('/login', data: any(named: 'data')))
+          .thenAnswer((_) async => mockResponse);
+
+      // Act
+      final result = await repository.loginWithPhone(phoneNumber);
+
+      // Assert
+      expect(result, isA<Success>());
+      expect(result.fold(onSuccess: (data) => data.id, onFailure: (_) => ''), '1');
+      verify(() => mockApiClient.post<Map>('/login', data: any(named: 'data')))
+          .called(1);
+    });
+
+    test('loginWithPhone returns Failure on network error', () async {
+      // Arrange
+      const phoneNumber = '+821234567890';
+      when(() => mockApiClient.post<Map>('/login', data: any(named: 'data')))
+          .thenThrow(Exception('Network error'));
+
+      // Act
+      final result = await repository.loginWithPhone(phoneNumber);
+
+      // Assert
+      expect(result, isA<Failure>());
+      expect(result.fold(onSuccess: (_) => false, onFailure: (e) => true), true);
+    });
+  });
+}
+```
+
+#### Widget/Page Tests (UI Components)
+
+```dart
+void main() {
+  group('LoginPage', () {
+    late ProviderContainer providerContainer;
+
+    setUp(() {
+      // Create a test provider container with overrides
+      providerContainer = ProviderContainer(
+        overrides: [
+          analyticsServiceProvider.overrideWithValue(MockAnalyticsService()),
+          authProvider.overrideWithValue(MockAuthNotifier()),
+        ],
+      );
+    });
+
+    testWidgets('displays phone input and login button', (WidgetTester tester) async {
+      // Arrange & Act
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: providerContainer,
+          child: const MaterialApp(home: LoginPage()),
+        ),
+      );
+
+      // Assert
+      expect(find.byType(InternationalPhoneNumberInput), findsOneWidget);
+      expect(find.byType(AppButton), findsOneWidget);
+      expect(find.text('Login'), findsOneWidget);
+    });
+
+    testWidgets('shows error snackbar on invalid phone number', (WidgetTester tester) async {
+      // Arrange
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: providerContainer,
+          child: const MaterialApp(home: LoginPage()),
+        ),
+      );
+
+      // Act - Try to login without entering phone number
+      await tester.tap(find.byType(AppButton));
+      await tester.pumpAndSettle();
+
+      // Assert
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
+
+    testWidgets('calls login when button pressed with valid phone', (WidgetTester tester) async {
+      // Arrange
+      final mockAuthNotifier = MockAuthNotifier();
+      providerContainer = ProviderContainer(
+        overrides: [
+          authProvider.overrideWithValue(mockAuthNotifier),
+        ],
+      );
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: providerContainer,
+          child: const MaterialApp(home: LoginPage()),
+        ),
+      );
+
+      // Act - Enter phone number
+      await tester.enterText(find.byType(TextField), '+821234567890');
+      await tester.tap(find.byType(AppButton));
+      await tester.pumpAndSettle();
+
+      // Assert
+      verify(() => mockAuthNotifier.loginWithPhone('+821234567890')).called(1);
+    });
+  });
+}
+```
+
+#### Riverpod Provider Tests
+
+```dart
+void main() {
+  group('AuthNotifier', () {
+    late ProviderContainer container;
+
+    setUp(() {
+      container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(MockAuthRepository()),
+        ],
+      );
+    });
+
+    test('loginWithPhone updates state correctly', () async {
+      // Arrange
+      final mockRepo = MockAuthRepository();
+      when(() => mockRepo.loginWithPhone(any()))
+          .thenAnswer((_) async => Success(testUser));
+
+      container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(mockRepo),
+        ],
+      );
+
+      // Act
+      await container.read(authProvider.notifier).loginWithPhone('+821234567890');
+
+      // Assert
+      final state = container.read(authProvider);
+      expect(state.maybeWhen(
+        data: (user) => user?.id == testUser.id,
+        orElse: () => false,
+      ), true);
+    });
+  });
+}
+```
+
+#### Mocking Results
+
+```dart
+// ✅ Correct - mock Result success
+when(() => repo.getData())
+    .thenAnswer((_) async => Success(testData));
+
+// ✅ Correct - mock Result failure
+when(() => repo.getData())
+    .thenAnswer((_) async => Failure(NetworkException()));
+
+// ✅ Correct - mock void success
+when(() => repo.logout())
+    .thenAnswer((_) async => const Success(null));
+```
+
+#### Best Practices
+
+- **Always use setUp()**: Initialize mocks and providers before each test
+- **Test one thing per test**: Each test should verify one behavior
+- **Use descriptive names**: Test names should describe what they test
+- **Mock external dependencies**: Never make real network/storage calls in tests
+- **Use `pumpAndSettle()`**: After tapping buttons to wait for animations
+- **Test error cases**: Not just happy paths
+- **Clean up resources**: Dispose controllers and providers in tearDown()
+- **Test analytics tracking**: Verify `logScreenView` and events are called
 
 ---
 
@@ -700,6 +894,195 @@ make prepare   # Full setup (clean + l10n + gen)
 - **Spacing**: Use `VerticalSpace` / `HorizontalSpace` widgets.
 - **Lists**: Use `ListView.builder` for performance.
 - **Safe Areas**: Respect `SafeArea`.
+
+---
+
+## 📱 Responsive Layout Guidelines
+
+### Critical Rules for Overflow Prevention
+
+**NEVER allow layout overflow errors.** These indicate a broken UI that won't work on all devices.
+
+#### Row Widgets - ALWAYS Use Flexible/Expanded
+
+```dart
+// ❌ WRONG - Will overflow on small screens
+Row(
+  children: [
+    Text('Very long text that might overflow'),
+    Icon(Icons.check),
+  ],
+)
+
+// ✅ CORRECT - Text will truncate gracefully
+Row(
+  children: [
+    Flexible(
+      child: Text(
+        'Very long text that might overflow',
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+    Icon(Icons.check),
+  ],
+)
+
+// ✅ CORRECT - Text will wrap or scale
+Row(
+  children: [
+    Expanded(
+      child: Text(
+        'Very long text',
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
+      ),
+    ),
+    const HorizontalSpace.sm(),
+    Icon(Icons.check),
+  ],
+)
+```
+
+#### When to Use Flexible vs Expanded
+
+| Widget      | Use When                                         |
+| :---------- | :----------------------------------------------- |
+| `Flexible`  | Child can be smaller than available space        |
+| `Expanded`  | Child should fill all remaining space            |
+| `FittedBox` | Scale down content to fit (icons, images)        |
+| `Wrap`      | Items should wrap to next line when space is low |
+
+#### Button Content - Always Constrain Text
+
+```dart
+// ❌ WRONG - Button text can overflow
+OutlinedButton(
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(Icons.google),
+      SizedBox(width: 8),
+      Text('Sign in with Google'), // Can overflow!
+    ],
+  ),
+)
+
+// ✅ CORRECT - Text is constrained
+OutlinedButton(
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.google),
+      const HorizontalSpace.sm(),
+      Flexible(
+        child: Text(
+          'Sign in with Google',
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ],
+  ),
+)
+```
+
+#### Headers with Icons - Space Between Pattern
+
+```dart
+// ❌ WRONG - No flex handling
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text('Phone Number'),
+    Row(children: [Icon(Icons.pets), Icon(Icons.pets)]),
+  ],
+)
+
+// ✅ CORRECT - Text can shrink, icons stay fixed
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Flexible(
+      child: Text(
+        'Phone Number',
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+    Row(
+      mainAxisSize: MainAxisSize.min, // Don't expand!
+      children: [Icon(Icons.pets), Icon(Icons.pets)],
+    ),
+  ],
+)
+```
+
+### Screen Size Breakpoints
+
+Use these breakpoints for responsive design:
+
+| Breakpoint | Width     | Device Type      |
+| :--------- | :-------- | :--------------- |
+| Mobile     | < 600dp   | Phones           |
+| Tablet     | 600-900dp | Small tablets    |
+| Desktop    | > 900dp   | Large tablets/PC |
+
+```dart
+// Check screen size
+if (context.screenWidth < 600) {
+  // Mobile layout
+} else if (context.screenWidth < 900) {
+  // Tablet layout
+} else {
+  // Desktop layout
+}
+
+// Or use ResponsiveBuilder
+ResponsiveBuilder(
+  mobile: (context) => MobileLayout(),
+  tablet: (context) => TabletLayout(),
+  desktop: (context) => DesktopLayout(),
+)
+```
+
+### Third-Party Widget Constraints
+
+Some third-party widgets (like `InternationalPhoneNumberInput`) have internal `Row` widgets that can overflow. When using them:
+
+1. **Wrap in ConstrainedBox** if needed
+2. **Test on small screens** (320dp width minimum)
+3. **Consider alternatives** if not responsive
+
+### Testing Responsive Layouts
+
+Always test layouts at multiple sizes:
+
+```dart
+testWidgets('layout works on small screens', (tester) async {
+  // Set small screen size (320dp is minimum supported)
+  tester.view.physicalSize = const Size(320, 568);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+  });
+
+  await tester.pumpWidget(MyWidget());
+  await tester.pumpAndSettle();
+
+  // Should not throw overflow errors
+  expect(tester.takeException(), isNull);
+});
+```
+
+### Anti-Patterns for Layouts
+
+1. **🔴 Don't** use `Row` without `Flexible`/`Expanded` for text content
+2. **🔴 Don't** assume fixed widths for text (fonts can vary)
+3. **🔴 Don't** ignore overflow errors in tests - they're real bugs
+4. **🔴 Don't** use `mainAxisSize: MainAxisSize.max` for nested Rows
+5. **✅ Do** always add `overflow: TextOverflow.ellipsis` to constrained text
+6. **✅ Do** test on 320dp width minimum
+7. **✅ Do** use `mainAxisSize: MainAxisSize.min` for icon rows
 
 ### Accessibility
 

@@ -81,6 +81,47 @@ class AuthRepositoryRemote implements AuthRepository {
   }
 
   @override
+  Future<Result<User>> loginWithPhone(final String phoneNumber) async {
+    final result = await _apiClient.post<Map<String, dynamic>>(
+      '/auth/login/phone',
+      data: {'phone_number': phoneNumber},
+      fromJson: (final json) => json as Map<String, dynamic>,
+    );
+
+    return result.fold(
+      onSuccess: (final data) async {
+        // Store tokens
+        final token = data['token'] as String?;
+        final refreshToken = data['refresh_token'] as String?;
+
+        if (token != null) {
+          await secureStorage.write(key: StorageKeys.accessToken, value: token);
+        }
+        if (refreshToken != null) {
+          await secureStorage.write(
+            key: StorageKeys.refreshToken,
+            value: refreshToken,
+          );
+        }
+
+        // Parse user
+        final userData = data['user'] as Map<String, dynamic>?;
+        if (userData == null) {
+          return const Failure(
+            AuthException(message: 'Invalid response: missing user data'),
+          );
+        }
+
+        final user = User.fromJson(userData);
+        await secureStorage.write(key: StorageKeys.userId, value: user.id);
+
+        return Success(user);
+      },
+      onFailure: Failure.new,
+    );
+  }
+
+  @override
   Future<Result<User>> restoreSession() async {
     final token = await secureStorage.read(key: StorageKeys.accessToken);
 
