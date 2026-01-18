@@ -181,6 +181,8 @@ fi
 # Update Android manifests
 replace_in_files "AndroidManifest.xml" "$OLD_ANDROID_PACKAGE" "$NEW_ANDROID_PACKAGE"
 replace_in_files "AndroidManifest.xml" "android:label=\"$OLD_DISPLAY_NAME\"" "android:label=\"$NEW_DISPLAY_NAME\""
+# Also handle case where label is just the old package name (fallback)
+replace_in_files "AndroidManifest.xml" "android:label=\"$OLD_PACKAGE_NAME\"" "android:label=\"$NEW_DISPLAY_NAME\""
 
 # =============================================================================
 # Step 4: Update iOS configuration
