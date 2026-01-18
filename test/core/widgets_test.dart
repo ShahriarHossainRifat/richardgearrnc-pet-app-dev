@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lottie/lottie.dart';
 import 'package:petzy_app/core/widgets/async_value_widget.dart';
 import 'package:petzy_app/core/widgets/buttons.dart';
 import 'package:petzy_app/core/widgets/spacing.dart';
@@ -19,7 +20,8 @@ void main() {
         ),
       );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(LoadingWidget), findsOneWidget);
+      expect(find.byType(Lottie), findsWidgets);
     });
 
     testWidgets('shows data when loaded', (final tester) async {
@@ -77,7 +79,7 @@ void main() {
         const MaterialApp(home: Scaffold(body: LoadingWidget())),
       );
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(Lottie), findsOneWidget);
     });
 
     testWidgets('shows message when provided', (final tester) async {
@@ -98,7 +100,7 @@ void main() {
       final sizedBox = tester.widget<SizedBox>(
         find
             .ancestor(
-              of: find.byType(CircularProgressIndicator),
+              of: find.byType(Lottie),
               matching: find.byType(SizedBox),
             )
             .first,

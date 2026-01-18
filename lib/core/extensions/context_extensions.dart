@@ -90,7 +90,7 @@ extension BuildContextExtensions on BuildContext {
   /// Navigate to a route based on authentication status.
   ///
   /// If the user is authenticated, navigates to [authenticatedRoute].
-  /// Otherwise, navigates to [unauthenticatedRoute] (typically login).
+  /// If not authenticated, always navigates to login.
   ///
   /// **Requires [widgetRef]** - Pass the WidgetRef from your ConsumerWidget/HookConsumerWidget
   ///
@@ -99,20 +99,18 @@ extension BuildContextExtensions on BuildContext {
   /// context.pushRouteIfAuthenticatedElse(
   ///   widgetRef: ref,
   ///   authenticatedRoute: AppRoute.settings,
-  ///   unauthenticatedRoute: AppRoute.login,
   /// );
   /// ```
   void pushRouteIfAuthenticatedElse({
     required final WidgetRef widgetRef,
     required final AppRoute authenticatedRoute,
-    required final AppRoute unauthenticatedRoute,
   }) {
     final isAuthenticated = widgetRef.read(isAuthenticatedProvider);
 
     if (isAuthenticated) {
       pushRoute(authenticatedRoute);
     } else {
-      goRoute(unauthenticatedRoute);
+      goRoute(AppRoute.login);
     }
   }
 
@@ -128,20 +126,18 @@ extension BuildContextExtensions on BuildContext {
   /// context.executeIfAuthenticatedElse(
   ///   widgetRef: ref,
   ///   action: () => sendNotification(),
-  ///   unauthenticatedRoute: AppRoute.login,
   /// );
   /// ```
   void executeIfAuthenticatedElse({
     required final WidgetRef widgetRef,
     required final VoidCallback action,
-    required final AppRoute unauthenticatedRoute,
   }) {
     final isAuthenticated = widgetRef.read(isAuthenticatedProvider);
 
     if (isAuthenticated) {
       action();
     } else {
-      goRoute(unauthenticatedRoute);
+      goRoute(AppRoute.login);
     }
   }
 

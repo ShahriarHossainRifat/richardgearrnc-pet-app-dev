@@ -99,7 +99,6 @@ class FeatureShowcase extends ConsumerWidget {
                         context.executeIfAuthenticatedElse(
                           widgetRef: ref,
                           action: () => _sendBasicNotification(ref, l10n),
-                          unauthenticatedRoute: AppRoute.login,
                         );
                       },
                       icon: Icons.notifications_outlined,
@@ -118,7 +117,6 @@ class FeatureShowcase extends ConsumerWidget {
                         context.pushRouteIfAuthenticatedElse(
                           widgetRef: ref,
                           authenticatedRoute: AppRoute.settings,
-                          unauthenticatedRoute: AppRoute.login,
                         );
                       },
                       icon: Icons.settings_outlined,
