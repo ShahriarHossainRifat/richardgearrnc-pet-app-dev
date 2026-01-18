@@ -44,6 +44,9 @@ abstract class Assets {
   /// Splash screen image.
   static const String splash = '$imagesPath/splash_image.png';
 
+  /// Login screen image.
+  static const String loginImage = '$imagesPath/login_image.png';
+
   // ─────────────────────────────────────────────────────────────────────────────
   // PLACEHOLDERS
   // ─────────────────────────────────────────────────────────────────────────────
