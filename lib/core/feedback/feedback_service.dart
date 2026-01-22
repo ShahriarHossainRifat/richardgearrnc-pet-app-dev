@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/feedback/feedback_config.dart';
 import 'package:petzy_app/core/widgets/spacing.dart';
 
@@ -54,7 +55,7 @@ class FeedbackService {
       SnackbarConfig(
         message: message,
         type: SnackbarType.success,
-        duration: duration ?? const Duration(seconds: 3),
+        duration: duration ?? AppConstants.snackbarDefaultDuration,
       ),
     );
   }
@@ -65,7 +66,7 @@ class FeedbackService {
       SnackbarConfig(
         message: message,
         type: SnackbarType.error,
-        duration: const Duration(seconds: 4),
+        duration: AppConstants.snackbarErrorDuration,
         action: onRetry,
         actionLabel: onRetry != null ? 'Retry' : null,
       ),

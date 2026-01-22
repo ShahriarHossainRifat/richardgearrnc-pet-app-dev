@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
 
 /// Types of snackbar messages.
 enum SnackbarType {
@@ -21,7 +22,7 @@ class SnackbarConfig {
   const SnackbarConfig({
     required this.message,
     this.type = SnackbarType.info,
-    this.duration = const Duration(seconds: 3),
+    this.duration = AppConstants.snackbarDefaultDuration,
     this.action,
     this.actionLabel,
     this.dismissible = true,

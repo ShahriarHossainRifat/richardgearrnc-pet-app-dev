@@ -66,6 +66,22 @@ abstract class AppConstants {
   /// Send timeout for HTTP requests.
   static const Duration sendTimeout = Duration(seconds: 30);
 
+  /// Session restoration timeout for profile validation (8 seconds).
+  static const Duration sessionRestoreTimeout = Duration(seconds: 8);
+
+  /// Session restoration timeout in notifier for overall operation (10 seconds).
+  static const Duration sessionRestoreNotifierTimeout = Duration(seconds: 10);
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // FEEDBACK & UI TIMEOUTS
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Default snackbar display duration (3 seconds).
+  static const Duration snackbarDefaultDuration = Duration(seconds: 3);
+
+  /// Error snackbar display duration (4 seconds).
+  static const Duration snackbarErrorDuration = Duration(seconds: 4);
+
   /// Maximum number of retry attempts for failed requests.
   static const int maxRetryAttempts = 3;
 

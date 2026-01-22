@@ -1,32 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:petzy_app/core/constants/api_endpoints.dart';
+import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
-/// Remote implementation of [AuthRepository].
+/// Remote implementation of [AuthRepository] for actual API calls.
 ///
-/// This implementation makes actual API calls to your backend.
-/// Use this in production environments.
-///
-/// Expects the following API endpoints:
-/// - POST /auth/login - Login with email/password
-/// - GET /auth/me - Get current user profile
-/// - POST /auth/logout - Invalidate session (optional)
-///
-/// Expected response format for login:
+/// Expected response for login endpoints:
 /// ```json
-/// {
-///   "token": "jwt_token_here",
-///   "refresh_token": "refresh_token_here", // optional
-///   "user": {
-///     "id": "user_id",
-///     "email": "user@example.com",
-///     "name": "User Name"
-///   }
-/// }
+/// {"token": "jwt", "refresh_token": "refresh", "user": {...}}
 /// ```
 class AuthRepositoryRemote implements AuthRepository {
   /// Creates a [AuthRepositoryRemote] instance.
@@ -118,28 +105,28 @@ class AuthRepositoryRemote implements AuthRepository {
             ApiEndpoints.currentUserProfile,
             fromJson: (final json) => json as Map<String, dynamic>,
           )
-          .timeout(
-            const Duration(seconds: 8),
-            onTimeout: () => Failure(
-              NetworkException(message: 'Session validation timed out'),
-            ),
-          );
+          .timeout(AppConstants.sessionRestoreTimeout);
 
       return result.fold(
         onSuccess: (final data) {
           final userData = data['user'] as Map<String, dynamic>? ?? data;
           return Success(User.fromJson(userData));
         },
-        onFailure: (final error) async {
-          // Token is invalid, clear stored tokens
+        onFailure: (final error) {
+          // Clear tokens on 401 (fire-and-forget) to avoid fold type issues
           if (error is NetworkException && error.statusCode == 401) {
-            await _clearTokens();
+            _clearTokens(); // Not awaited to prevent fold type signature issues
           }
           return Failure(error);
         },
       );
+    } on TimeoutException catch (_) {
+      // Session validation timed out - treat as invalid session
+      return Failure(
+        NetworkException(message: 'Session validation timed out'),
+      );
     } catch (e) {
-      // Network error or timeout
+      // Network error or other exception
       return Failure(
         NetworkException(message: 'Failed to restore session: $e'),
       );
@@ -164,10 +151,8 @@ class AuthRepositoryRemote implements AuthRepository {
     return token != null;
   }
 
-  /// Handles successful authentication response by storing tokens and user data.
-  ///
-  /// Extracts tokens and user information from API response and stores them
-  /// in secure storage. This logic is shared between login and OTP verification.
+  /// Handles successful auth responses by storing tokens and user data.
+  /// Shared by [login] and [verifyOtp].
   Future<Result<User>> _handleAuthResponse(
     final Map<String, dynamic> data,
   ) async {
@@ -208,18 +193,18 @@ class AuthRepositoryRemote implements AuthRepository {
     }
   }
 
+  /// Clears all stored authentication tokens and user data asynchronously.
   Future<Result<void>> _clearTokens() async {
     try {
-      await secureStorage.delete(key: StorageKeys.accessToken);
-      await secureStorage.delete(key: StorageKeys.refreshToken);
-      await secureStorage.delete(key: StorageKeys.userId);
+      await Future.wait([
+        secureStorage.delete(key: StorageKeys.accessToken),
+        secureStorage.delete(key: StorageKeys.refreshToken),
+        secureStorage.delete(key: StorageKeys.userId),
+      ]);
       return const Success(null);
     } catch (e, stackTrace) {
       return Failure(
-        CacheException(
-          message: 'Failed to clear session',
-          stackTrace: stackTrace,
-        ),
+        CacheException(message: 'Clear session failed', stackTrace: stackTrace),
       );
     }
   }

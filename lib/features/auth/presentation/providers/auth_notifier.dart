@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:petzy_app/core/core.dart';
@@ -36,13 +38,19 @@ class AuthNotifier extends _$AuthNotifier {
     _repo = ref.watch(authRepositoryProvider);
 
     try {
+      // Use timeout at the Future level, not at the Result level
       final result = await _repo.restoreSession().timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => Failure(
-          AuthException(message: 'Session restoration timed out'),
-        ),
+        AppConstants.sessionRestoreNotifierTimeout,
       );
       return result.dataOrNull;
+    } on TimeoutException catch (error, stackTrace) {
+      // Handle timeout gracefully - treat as not authenticated
+      AppLogger.instance.e(
+        'Session restoration timed out',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return null;
     } catch (error, stackTrace) {
       // If session restoration throws, log it and treat as not authenticated
       AppLogger.instance.e(
