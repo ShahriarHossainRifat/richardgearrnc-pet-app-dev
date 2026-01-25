@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/data/repositories/auth_repository_mock.dart';
@@ -11,6 +12,8 @@ import 'package:petzy_app/features/auth/domain/entities/user.dart';
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
 class MockApiClient extends Mock implements ApiClient {}
+
+class MockGoogleSignInService extends Mock implements GoogleSignInService {}
 
 void main() {
   group('AuthRepositoryMock', () {
@@ -233,6 +236,47 @@ void main() {
         expect(result, false);
       });
     });
+
+    group('loginWithGoogle', () {
+      late MockGoogleSignInService mockGoogleSignIn;
+
+      setUp(() {
+        mockGoogleSignIn = MockGoogleSignInService();
+      });
+
+      test('returns Success with mock user', () async {
+        // Act
+        final result = await repository.loginWithGoogle(
+          googleSignInService: mockGoogleSignIn,
+        );
+
+        // Assert
+        expect(result.isSuccess, true);
+        expect(result.dataOrNull, isA<User>());
+        expect(result.dataOrNull?.email, 'google.user@example.com');
+      });
+
+      test('stores access token on successful login', () async {
+        // Act
+        await repository.loginWithGoogle(
+          googleSignInService: mockGoogleSignIn,
+        );
+
+        // Assert
+        verify(
+          () => mockStorage.write(
+            key: 'access_token',
+            value: any(named: 'value'),
+            iOptions: any(named: 'iOptions'),
+            aOptions: any(named: 'aOptions'),
+            lOptions: any(named: 'lOptions'),
+            webOptions: any(named: 'webOptions'),
+            mOptions: any(named: 'mOptions'),
+            wOptions: any(named: 'wOptions'),
+          ),
+        ).called(1);
+      });
+    });
   });
 
   group('AuthRepositoryRemote', () {
@@ -413,6 +457,122 @@ void main() {
             wOptions: any(named: 'wOptions'),
           ),
         ).called(1);
+      });
+    });
+
+    group('loginWithGoogle', () {
+      late MockGoogleSignInService mockGoogleSignIn;
+
+      setUp(() {
+        mockGoogleSignIn = MockGoogleSignInService();
+      });
+
+      test('returns Success when Google Sign-In succeeds', () async {
+        // Arrange
+        when(
+          () => mockGoogleSignIn.signIn(),
+        ).thenAnswer((_) async => 'firebase_id_token_123');
+
+        when(
+          () => mockApiClient.post<Map<String, dynamic>>(
+            '/auth/login/google',
+            data: any(named: 'data'),
+            queryParameters: any(named: 'queryParameters'),
+            fromJson: any(named: 'fromJson'),
+          ),
+        ).thenAnswer(
+          (_) async => const Success({
+            'user': {
+              'id': 'google_user_123',
+              'email': 'google@example.com',
+              'name': 'Google User',
+            },
+            'token': 'google_token_abc',
+            'refresh_token': 'google_refresh_xyz',
+          }),
+        );
+
+        // Act
+        final result = await repository.loginWithGoogle(
+          googleSignInService: mockGoogleSignIn,
+        );
+
+        // Assert
+        expect(result.isSuccess, true);
+        expect(result.dataOrNull?.email, 'google@example.com');
+        verify(() => mockGoogleSignIn.signIn()).called(1);
+      });
+
+      test(
+        'returns Failure with GoogleAuthException when user cancels',
+        () async {
+          // Arrange
+          when(() => mockGoogleSignIn.signIn()).thenThrow(
+            const GoogleSignInException.cancelled(),
+          );
+
+          // Act
+          final result = await repository.loginWithGoogle(
+            googleSignInService: mockGoogleSignIn,
+          );
+
+          // Assert
+          expect(result.isFailure, true);
+          final error = result.errorOrNull;
+          expect(error, isA<AuthException>());
+          if (error is AuthException) {
+            expect(error.isGoogleSignInCancelled, true);
+          }
+        },
+      );
+
+      test(
+        'returns Failure when Google Sign-In throws unrelated error',
+        () async {
+          // Arrange
+          when(
+            () => mockGoogleSignIn.signIn(),
+          ).thenThrow(Exception('Google service unavailable'));
+
+          // Act
+          final result = await repository.loginWithGoogle(
+            googleSignInService: mockGoogleSignIn,
+          );
+
+          // Assert
+          expect(result.isFailure, true);
+          expect(
+            result.errorOrNull?.message,
+            contains('Google sign-in failed'),
+          );
+        },
+      );
+
+      test('returns Failure when backend rejects token', () async {
+        // Arrange
+        when(
+          () => mockGoogleSignIn.signIn(),
+        ).thenAnswer((_) async => 'firebase_id_token_123');
+
+        when(
+          () => mockApiClient.post<Map<String, dynamic>>(
+            '/auth/login/google',
+            data: any(named: 'data'),
+            queryParameters: any(named: 'queryParameters'),
+            fromJson: any(named: 'fromJson'),
+          ),
+        ).thenAnswer(
+          (_) async => Failure(AuthException(message: 'Invalid token')),
+        );
+
+        // Act
+        final result = await repository.loginWithGoogle(
+          googleSignInService: mockGoogleSignIn,
+        );
+
+        // Assert
+        expect(result.isFailure, true);
+        expect(result.errorOrNull?.message, 'Invalid token');
       });
     });
   });

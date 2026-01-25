@@ -370,7 +370,7 @@ class _PhoneInput extends StatelessWidget {
   }
 }
 
-/// Google sign-in button.
+/// Google sign-in button with error handling and loading state.
 class _GoogleSignInButton extends ConsumerWidget {
   const _GoogleSignInButton({required this.isLoading});
 
@@ -381,7 +381,7 @@ class _GoogleSignInButton extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     return OutlinedButton(
-      onPressed: isLoading ? null : () => _handleGoogleSignIn(context),
+      onPressed: isLoading ? null : () => _handleGoogleSignIn(context, ref),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size.fromHeight(AppConstants.buttonHeight),
         shape: RoundedRectangleBorder(
@@ -413,9 +413,39 @@ class _GoogleSignInButton extends ConsumerWidget {
     );
   }
 
-  void _handleGoogleSignIn(final BuildContext context) {
-    // TODO: Implement Google Sign-In
+  /// Handle Google Sign-In flow.
+  ///
+  /// Responsibilities:
+  /// - Trigger login via notifier
+  /// - Navigate on success
+  /// - Show error UI on real failures (not cancellations)
+  ///
+  /// Note: Cancellations (user tapping "Cancel" in Google UI) do NOT
+  /// trigger error snackbars. Only real auth failures show errors.
+  Future<void> _handleGoogleSignIn(
+    final BuildContext context,
+    final WidgetRef ref,
+  ) async {
     final l10n = AppLocalizations.of(context);
-    context.showInfoSnackBar(l10n.googleSignInComingSoon);
+
+    await ref.read(authProvider.notifier).loginWithGoogle();
+
+    if (!context.mounted) return;
+
+    final authState = ref.read(authProvider);
+
+    authState.whenOrNull(
+      data: (final user) {
+        // Successful authentication
+        if (user != null) {
+          context.goRoute(AppRoute.home);
+        }
+        // If user is null, Google sign-in was cancelled - no error shown
+      },
+      error: (final error, _) {
+        // Show error only for real failures (network, backend, etc.)
+        context.showErrorSnackBar(l10n.googleSignInFailed);
+      },
+    );
   }
 }

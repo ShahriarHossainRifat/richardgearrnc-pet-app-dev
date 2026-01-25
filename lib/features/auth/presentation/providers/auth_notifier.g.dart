@@ -93,7 +93,7 @@ final class AuthNotifierProvider
   AuthNotifier create() => AuthNotifier();
 }
 
-String _$authNotifierHash() => r'44d4365bcddb90c4078a64f21800420b4790d0a0';
+String _$authNotifierHash() => r'8117fcdadf8e4591b766c86e9b181637e716ce2d';
 
 /// Manages authentication state.
 ///

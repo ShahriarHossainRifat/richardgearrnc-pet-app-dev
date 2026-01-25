@@ -58,13 +58,15 @@ dependencies:
   local_auth: ^3.0.0
 
   # ─────────────────────────────────────────────────────────────────────────────
-  # FIREBASE SUITE (Crashlytics, Analytics, Performance, Remote Config)
+  # FIREBASE SUITE (Crashlytics, Analytics, Performance, Remote Config, Auth)
   # ─────────────────────────────────────────────────────────────────────────────
   firebase_core: ^4.3.0
   firebase_crashlytics: ^5.0.6
   firebase_analytics: ^12.1.0
   firebase_performance: ^0.11.1
   firebase_remote_config: ^6.1.3
+  firebase_auth: ^6.1.4
+  google_sign_in: ^7.2.0
 
   # ─────────────────────────────────────────────────────────────────────────────
   # DEEP LINKING

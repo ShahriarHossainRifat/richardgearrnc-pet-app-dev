@@ -132,6 +132,7 @@
   "google": "গুগল",
   "phoneInputHint": "(०००) ०००-०००००",
   "googleSignInComingSoon": "গুগল সাইন-ইন শীঘ্রই আসছে",
+  "googleSignInFailed": "গুগল সাইন-ইন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
   "enterVerificationCode": "যাচাইকরণ কোড প্রবেশ করুন",
   "enterCodeSentToPhoneNumber": "আপনার ফোন নম্বরে পাঠানো কোড প্রবেশ করুন",
   "verifyCode": "কোড যাচাই করুন",

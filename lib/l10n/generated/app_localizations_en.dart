@@ -459,6 +459,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get googleSignInComingSoon => 'Google Sign-In coming soon';
 
   @override
+  String get googleSignInFailed => 'Google Sign-In failed. Please try again.';
+
+  @override
   String get enterVerificationCode => 'Enter verification code';
 
   @override

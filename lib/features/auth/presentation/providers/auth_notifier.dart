@@ -115,6 +115,45 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  /// Attempt to login with Google using Firebase Auth.
+  ///
+  /// Flow:
+  /// 1. Get Google Sign-In service from Riverpod
+  /// 2. Pass service to repository (dependency injection)
+  /// 3. Repository triggers Google auth and exchanges token with backend
+  /// 4. User + tokens stored on success
+  ///
+  /// Cancellation is handled gracefully and does NOT emit AsyncError.
+  /// Instead, returns AsyncData(null) to indicate user cancelled.
+  Future<void> loginWithGoogle() async {
+    state = const AsyncLoading();
+
+    // Inject Google Sign-In service from Riverpod
+    final googleSignInService = ref.read(googleSignInServiceProvider);
+
+    final result = await _repo.loginWithGoogle(
+      googleSignInService: googleSignInService,
+    );
+
+    // Handle result with single fold
+    state = result.fold(
+      onSuccess: (final user) {
+        // Track successful login
+        ref.read(analyticsServiceProvider).logEvent(AnalyticsEvents.login);
+        // State is AsyncData(user)
+        return AsyncData<User?>(user);
+      },
+      onFailure: (final error) {
+        // Handle Google sign-in cancellation gracefully (not an error)
+        if (error is AuthException && error.isGoogleSignInCancelled) {
+          return AsyncData<User?>(null);
+        }
+        // Real errors emit as AsyncError
+        return AsyncError<User?>(error, StackTrace.current);
+      },
+    );
+  }
+
   /// Resend OTP code to the provided phone number.
   Future<void> resendOtp(final String phoneNumber) async {
     final result = await _repo.resendOtp(phoneNumber);

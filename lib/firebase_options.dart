@@ -64,6 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '389948242204',
     projectId: 'richard-petzy',
     storageBucket: 'richard-petzy.firebasestorage.app',
+    androidClientId:
+        '389948242204-ebmocf0qpsf73pl54ncohnqnge6vbupt.apps.googleusercontent.com',
+    iosClientId:
+        '389948242204-nk6421icrug37432r6pur1mtog6ffeod.apps.googleusercontent.com',
     iosBundleId: 'com.example.riverpodGoRouterBoilerplate',
   );
 
@@ -73,6 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '389948242204',
     projectId: 'richard-petzy',
     storageBucket: 'richard-petzy.firebasestorage.app',
+    androidClientId:
+        '389948242204-ebmocf0qpsf73pl54ncohnqnge6vbupt.apps.googleusercontent.com',
+    iosClientId:
+        '389948242204-nk6421icrug37432r6pur1mtog6ffeod.apps.googleusercontent.com',
     iosBundleId: 'com.example.riverpodGoRouterBoilerplate',
   );
 

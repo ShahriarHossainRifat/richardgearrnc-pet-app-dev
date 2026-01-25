@@ -262,6 +262,20 @@ final class AuthException extends AppException {
   /// No active session
   factory AuthException.noSession() =>
       const AuthException(message: 'No active session', code: 'NO_SESSION');
+
+  /// Google sign-in with optional cancellation flag.
+  ///
+  /// Set [isCancelled] to true when user dismissed Google Sign-In UI.
+  factory AuthException.googleAuth({
+    required final String message,
+    final bool isCancelled = false,
+  }) => AuthException(
+    message: message,
+    code: isCancelled ? 'GOOGLE_SIGN_IN_CANCELLED' : 'GOOGLE_SIGN_IN_FAILED',
+  );
+
+  /// Check if this is a Google sign-in cancellation.
+  bool get isGoogleSignInCancelled => code == 'GOOGLE_SIGN_IN_CANCELLED';
 }
 
 /// Validation-related exceptions.

@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
 import 'package:petzy_app/core/constants/app_constants.dart';
+import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
@@ -115,6 +116,28 @@ class AuthRepositoryMock implements AuthRepository {
     // In a real app, this would trigger an OTP to be sent
     // For mock, we just return success after a delay
     return const Success(null);
+  }
+
+  @override
+  Future<Result<User>> loginWithGoogle({
+    required final GoogleSignInService googleSignInService,
+  }) async {
+    await Future<void>.delayed(AppConstants.mockNetworkDelay);
+
+    // Generate mock token
+    final token = 'mock_token_${DateTime.now().millisecondsSinceEpoch}';
+    await secureStorage.write(key: StorageKeys.accessToken, value: token);
+
+    // Return mock user
+    final user = User(
+      id: 'mock_google_user_${DateTime.now().millisecondsSinceEpoch}',
+      email: 'google.user@example.com',
+      name: 'Google User',
+    );
+
+    await secureStorage.write(key: StorageKeys.userId, value: user.id);
+
+    return Success(user);
   }
 
   @override

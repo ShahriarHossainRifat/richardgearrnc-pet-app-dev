@@ -872,6 +872,12 @@ abstract class AppLocalizations {
   /// **'Google Sign-In coming soon'**
   String get googleSignInComingSoon;
 
+  /// Error message when Google Sign-In fails
+  ///
+  /// In en, this message translates to:
+  /// **'Google Sign-In failed. Please try again.'**
+  String get googleSignInFailed;
+
   /// OTP page title
   ///
   /// In en, this message translates to:

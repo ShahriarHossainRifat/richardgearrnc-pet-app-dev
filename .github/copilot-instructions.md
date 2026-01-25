@@ -560,6 +560,77 @@ Duration(seconds: AppConstants.otpResendTimeoutSeconds),
 
 ## 📝 Coding Standards & Style
 
+### Code Review Baseline Checklist
+
+**BEFORE submitting any code for review, verify ALL of the following:**
+
+#### Testing Requirements (MANDATORY)
+
+- ✅ **Unit tests created** for all business logic (repositories, services, notifiers)
+  - Use mocktail for mocking external dependencies
+  - Follow Arrange-Act-Assert (AAA) pattern
+  - Test both success and failure paths
+- ✅ **Provider tests created** for Riverpod notifiers
+  - Override dependencies in ProviderContainer
+  - Mock analytics, network, and external services
+  - Test state changes and side effects
+- ✅ **Widget tests created** for critical UI components
+  - Use `testWidgets()` for Flutter widget testing
+  - Test user interactions and state rendering
+  - Override providers with mock implementations
+- ✅ **All tests pass locally**
+  - Run: `flutter test` or `make test`
+  - Zero failing tests before submission
+  - All mocks properly configured and returning correct types
+
+- ✅ **Test methods return correct types**
+  - Mock methods returning `Future<void>` must use `.thenAnswer((_) async {})`
+  - Mock methods returning values must use `.thenReturn()` or `.thenAnswer()`
+  - Use `registerFallbackValue()` for complex types in mocktail matchers
+
+#### Code Quality Requirements
+
+- ✅ **No magic numbers** - All numeric values use constants from `AppConstants`, `AppSpacing`, etc.
+- ✅ **No hardcoded strings** - All user-facing text uses localization (l10n)
+- ✅ **No hardcoded API paths** - Use `ApiEndpoints` constants
+- ✅ **Proper dependency injection** - Services injected via Riverpod, never instantiated directly
+- ✅ **Exception handling correct** - Use `Result<T>` monad pattern, use fold for error handling
+- ✅ **Code compiles** - Run `flutter pub get` and verify no compilation errors
+- ✅ **Code is formatted** - Run `make format` to apply formatting and fixes
+- ✅ **No linting violations** - Run `make lint` and fix all issues
+
+#### Testing Examples
+
+**Example: Repository Test with Mocks**
+
+```dart
+test('login stores tokens on success', () async {
+  const testUser = User(id: '123', email: 'test@example.com', name: 'Test');
+  when(() => mockApiClient.post<Map>(ApiEndpoints.login, data: any(named: 'data')))
+      .thenAnswer((_) async => {'tokens': {'access': 'abc123'}, 'user': {...}});
+
+  final result = await repository.login('test@example.com', 'password');
+
+  expect(result, isA<Success>());
+  verify(() => mockSecureStorage.write(key: StorageKeys.accessToken, value: any())).called(1);
+});
+```
+
+**Example: Notifier Test with Overrides**
+
+```dart
+test('loginWithGoogle distinguishes cancellation from errors', () async {
+  when(() => mockRepository.loginWithGoogle(googleSignInService: any(named: 'googleSignInService')))
+      .thenAnswer((_) async => Failure(AuthException.googleAuth(message: 'User cancelled', isCancelled: true)));
+
+  await container.read(authProvider.notifier).loginWithGoogle();
+
+  final state = container.read(authProvider);
+  expect(state.value, isNull); // Cancellation is AsyncData(null), not error
+  expect(state, isA<AsyncData>());
+});
+```
+
 ### Hard Constraints
 
 - **No Magic Numbers**: CRITICAL - Every numeric value must use a pre-defined constant (see detailed rules below)

@@ -48,6 +48,9 @@ abstract class ApiEndpoints {
   /// Resend verification email endpoint.
   static const String resendVerification = '/auth/resend-verification';
 
+  /// Login with Google endpoint (Firebase ID token).
+  static const String loginGoogle = '/auth/login/google';
+
   // ─────────────────────────────────────────────────────────────────────────────
   // USER
   // ─────────────────────────────────────────────────────────────────────────────

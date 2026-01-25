@@ -23,6 +23,9 @@ export 'performance/performance.dart';
 export 'remote_config/remote_config.dart';
 // Deep Linking
 export 'deep_link/deep_link.dart';
+// Google Sign-In (Firebase)
+export 'google_signin/google_signin_provider.dart';
+export 'google_signin/google_signin_service.dart';
 // Extensions
 export 'extensions/extensions.dart';
 // Feedback (Dialogs, Snackbars)

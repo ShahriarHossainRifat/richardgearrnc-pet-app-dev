@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:petzy_app/core/constants/api_endpoints.dart';
 import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
+import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
@@ -57,6 +58,43 @@ class AuthRepositoryRemote implements AuthRepository {
       },
       onFailure: Failure.new,
     );
+  }
+
+  @override
+  Future<Result<User>> loginWithGoogle({
+    required final GoogleSignInService googleSignInService,
+  }) async {
+    // 1. Authenticate with Google and get Firebase ID token
+    try {
+      final firebaseIdToken = await googleSignInService.signIn();
+
+      // 2. Exchange Firebase ID token for app auth token
+      final result = await _apiClient.post<Map<String, dynamic>>(
+        ApiEndpoints.loginGoogle,
+        data: {'id_token': firebaseIdToken},
+        fromJson: (final json) => json as Map<String, dynamic>,
+      );
+
+      return result.fold(
+        onSuccess: _handleAuthResponse,
+        onFailure: Failure.new,
+      );
+    } on GoogleSignInException catch (e) {
+      // Preserve cancellation flag in exception code
+      return Failure(
+        AuthException.googleAuth(
+          message: e.message,
+          isCancelled: e.isCancelled,
+        ),
+      );
+    } catch (e, stackTrace) {
+      return Failure(
+        AuthException(
+          message: 'Google sign-in failed: $e',
+          stackTrace: stackTrace,
+        ),
+      );
+    }
   }
 
   @override

@@ -460,6 +460,10 @@ class AppLocalizationsBn extends AppLocalizations {
   String get googleSignInComingSoon => 'গুগল সাইন-ইন শীঘ্রই আসছে';
 
   @override
+  String get googleSignInFailed =>
+      'গুগল সাইন-ইন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
+
+  @override
   String get enterVerificationCode => 'যাচাইকরণ কোড প্রবেশ করুন';
 
   @override

@@ -1,3 +1,4 @@
+import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 
@@ -21,6 +22,14 @@ abstract interface class AuthRepository {
 
   /// Resend OTP code to the provided phone number.
   Future<Result<void>> resendOtp(final String phoneNumber);
+
+  /// Attempt to login with Google using Firebase Auth.
+  ///
+  /// Requires [GoogleSignInService] for dependency injection.
+  /// This service handles the Firebase auth flow.
+  Future<Result<User>> loginWithGoogle({
+    required final GoogleSignInService googleSignInService,
+  });
 
   /// Restore session from stored credentials.
   Future<Result<User>> restoreSession();

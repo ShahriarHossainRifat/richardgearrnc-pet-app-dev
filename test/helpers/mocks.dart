@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:petzy_app/core/analytics/analytics_service.dart';
 import 'package:petzy_app/core/cache/cache_service.dart';
 import 'package:petzy_app/core/crashlytics/crashlytics_service.dart';
+import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/notifications/local_notification_service.dart';
 import 'package:petzy_app/core/performance/performance_service.dart';
@@ -21,6 +22,9 @@ class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
 /// Mock for [ApiClient].
 class MockApiClient extends Mock implements ApiClient {}
+
+/// Mock for [GoogleSignInService].
+class MockGoogleSignInService extends Mock implements GoogleSignInService {}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SERVICE MOCKS
