@@ -2,6 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
 import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/google_signin/google_signin_service.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
@@ -27,6 +28,9 @@ class AuthRepositoryMock implements AuthRepository {
 
   /// Secure storage for storing mock tokens.
   final FlutterSecureStorage secureStorage;
+
+  /// Stores the phone number for mock OTP verification.
+  String? _pendingPhoneNumber;
 
   @override
   Future<Result<User>> login(final String email, final String password) async {
@@ -63,13 +67,19 @@ class AuthRepositoryMock implements AuthRepository {
   }
 
   @override
-  Future<Result<void>> loginWithPhone(final String phoneNumber) async {
+  Future<Result<void>> loginWithPhone({
+    required final PhoneAuthService phoneAuthService,
+    required final String phoneNumber,
+  }) async {
     await Future<void>.delayed(AppConstants.mockNetworkDelay);
 
     // Simulate error for testing
     if (phoneNumber.contains('000')) {
       return const Failure(AuthException(message: 'Invalid phone number'));
     }
+
+    // Store phone number for mock OTP verification
+    _pendingPhoneNumber = phoneNumber;
 
     // OTP sent successfully - do NOT store any tokens or user data
     // User will be authenticated only after OTP verification with verifyOtp()
@@ -77,14 +87,14 @@ class AuthRepositoryMock implements AuthRepository {
   }
 
   @override
-  Future<Result<User>> verifyOtp(
-    final String phoneNumber,
-    final String code,
-  ) async {
+  Future<Result<User>> verifyOtp({
+    required final PhoneAuthService phoneAuthService,
+    required final String smsCode,
+  }) async {
     await Future<void>.delayed(AppConstants.mockNetworkDelay);
 
     // Simulate error for testing
-    if (code == '000000') {
+    if (smsCode == '000000') {
       return const Failure(AuthException(message: 'Invalid OTP code'));
     }
 
@@ -92,7 +102,8 @@ class AuthRepositoryMock implements AuthRepository {
     final token = 'mock_token_${DateTime.now().millisecondsSinceEpoch}';
     await secureStorage.write(key: StorageKeys.accessToken, value: token);
 
-    // Return mock user
+    // Return mock user using stored phone number
+    final phoneNumber = _pendingPhoneNumber ?? '+1234567890';
     final user = User(
       id: 'mock_user_${phoneNumber.hashCode}',
       email: '$phoneNumber@phone.local',
@@ -100,18 +111,25 @@ class AuthRepositoryMock implements AuthRepository {
     );
 
     await secureStorage.write(key: StorageKeys.userId, value: user.id);
+    _pendingPhoneNumber = null;
 
     return Success(user);
   }
 
   @override
-  Future<Result<void>> resendOtp(final String phoneNumber) async {
+  Future<Result<void>> resendOtp({
+    required final PhoneAuthService phoneAuthService,
+    required final String phoneNumber,
+  }) async {
     await Future<void>.delayed(AppConstants.mockNetworkDelay);
 
     // Simulate error for testing
     if (phoneNumber.contains('000')) {
       return const Failure(AuthException(message: 'Invalid phone number'));
     }
+
+    // Store phone number for mock OTP verification
+    _pendingPhoneNumber = phoneNumber;
 
     // In a real app, this would trigger an OTP to be sent
     // For mock, we just return success after a delay
@@ -166,6 +184,7 @@ class AuthRepositoryMock implements AuthRepository {
       await secureStorage.delete(key: StorageKeys.accessToken);
       await secureStorage.delete(key: StorageKeys.refreshToken);
       await secureStorage.delete(key: StorageKeys.userId);
+      _pendingPhoneNumber = null;
       return const Success(null);
     } catch (e, stackTrace) {
       return Failure(

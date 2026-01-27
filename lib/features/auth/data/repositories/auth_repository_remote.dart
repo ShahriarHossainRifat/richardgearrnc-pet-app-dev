@@ -6,6 +6,7 @@ import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
 import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
@@ -43,21 +44,32 @@ class AuthRepositoryRemote implements AuthRepository {
   }
 
   @override
-  Future<Result<void>> loginWithPhone(final String phoneNumber) async {
-    final result = await _apiClient.post<Map<String, dynamic>>(
-      ApiEndpoints.loginPhone,
-      data: {'phone_number': phoneNumber},
-      fromJson: (final json) => json as Map<String, dynamic>,
-    );
+  Future<Result<void>> loginWithPhone({
+    required final PhoneAuthService phoneAuthService,
+    required final String phoneNumber,
+  }) async {
+    try {
+      // Use Firebase Phone Auth to send OTP
+      await phoneAuthService.verifyPhoneNumber(phoneNumber);
 
-    return result.fold(
-      onSuccess: (_) {
-        // OTP sent successfully - do NOT store any tokens or user data
-        // User will be authenticated only after OTP verification with verifyOtp()
-        return const Success(null);
-      },
-      onFailure: Failure.new,
-    );
+      // OTP sent successfully - do NOT store any tokens or user data
+      // User will be authenticated only after OTP verification with verifyOtp()
+      return const Success(null);
+    } on PhoneAuthException catch (e) {
+      return Failure(
+        AuthException(
+          message: e.message,
+          code: e.code,
+        ),
+      );
+    } catch (e, stackTrace) {
+      return Failure(
+        AuthException(
+          message: 'Phone verification failed: $e',
+          stackTrace: stackTrace,
+        ),
+      );
+    }
   }
 
   @override
@@ -98,34 +110,65 @@ class AuthRepositoryRemote implements AuthRepository {
   }
 
   @override
-  Future<Result<User>> verifyOtp(
-    final String phoneNumber,
-    final String code,
-  ) async {
-    final result = await _apiClient.post<Map<String, dynamic>>(
-      ApiEndpoints.verifyOtp,
-      data: {'phone_number': phoneNumber, 'code': code},
-      fromJson: (final json) => json as Map<String, dynamic>,
-    );
+  Future<Result<User>> verifyOtp({
+    required final PhoneAuthService phoneAuthService,
+    required final String smsCode,
+  }) async {
+    try {
+      // 1. Verify OTP with Firebase and get ID token
+      final firebaseIdToken = await phoneAuthService.verifyOtpCode(smsCode);
 
-    return result.fold(
-      onSuccess: _handleAuthResponse,
-      onFailure: Failure.new,
-    );
+      // 2. Exchange Firebase ID token for app auth token (same as Google flow)
+      final result = await _apiClient.post<Map<String, dynamic>>(
+        ApiEndpoints.loginPhoneFirebase,
+        data: {'id_token': firebaseIdToken},
+        fromJson: (final json) => json as Map<String, dynamic>,
+      );
+
+      return result.fold(
+        onSuccess: _handleAuthResponse,
+        onFailure: Failure.new,
+      );
+    } on PhoneAuthException catch (e) {
+      return Failure(
+        AuthException(
+          message: e.message,
+          code: e.code,
+        ),
+      );
+    } catch (e, stackTrace) {
+      return Failure(
+        AuthException(
+          message: 'OTP verification failed: $e',
+          stackTrace: stackTrace,
+        ),
+      );
+    }
   }
 
   @override
-  Future<Result<void>> resendOtp(final String phoneNumber) async {
-    final result = await _apiClient.post<Map<String, dynamic>>(
-      ApiEndpoints.resendOtp,
-      data: {'phone_number': phoneNumber},
-      fromJson: (final json) => json as Map<String, dynamic>,
-    );
-
-    return result.fold(
-      onSuccess: (_) => const Success(null),
-      onFailure: Failure.new,
-    );
+  Future<Result<void>> resendOtp({
+    required final PhoneAuthService phoneAuthService,
+    required final String phoneNumber,
+  }) async {
+    try {
+      await phoneAuthService.resendOtp(phoneNumber);
+      return const Success(null);
+    } on PhoneAuthException catch (e) {
+      return Failure(
+        AuthException(
+          message: e.message,
+          code: e.code,
+        ),
+      );
+    } catch (e, stackTrace) {
+      return Failure(
+        AuthException(
+          message: 'Failed to resend OTP: $e',
+          stackTrace: stackTrace,
+        ),
+      );
+    }
   }
 
   @override

@@ -7,6 +7,7 @@ import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/notifications/local_notification_service.dart';
 import 'package:petzy_app/core/performance/performance_service.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -25,6 +26,9 @@ class MockApiClient extends Mock implements ApiClient {}
 
 /// Mock for [GoogleSignInService].
 class MockGoogleSignInService extends Mock implements GoogleSignInService {}
+
+/// Mock for [PhoneAuthService].
+class MockPhoneAuthService extends Mock implements PhoneAuthService {}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SERVICE MOCKS

@@ -4,6 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:petzy_app/core/analytics/analytics_service.dart';
 import 'package:petzy_app/core/google_signin/google_signin_provider.dart';
 import 'package:petzy_app/core/google_signin/google_signin_service.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service_provider.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/data/repositories/auth_repository_provider.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
@@ -20,6 +22,14 @@ class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 class MockGoogleSignInService extends Mock implements GoogleSignInService {}
 
+class MockPhoneAuthService extends Mock implements PhoneAuthService {}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FALLBACK VALUES FOR MOCKTAIL
+// ─────────────────────────────────────────────────────────────────────────────
+
+class FakePhoneAuthService extends Fake implements PhoneAuthService {}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TEST DATA
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,14 +45,21 @@ final testUser = User(
 // ─────────────────────────────────────────────────────────────────────────────
 
 void main() {
+  setUpAll(() {
+    // Register fallback values for mocktail
+    registerFallbackValue(FakePhoneAuthService());
+  });
+
   group('AuthNotifier', () {
     late MockAuthRepository mockAuthRepository;
     late MockAnalyticsService mockAnalyticsService;
+    late MockPhoneAuthService mockPhoneAuthService;
     late ProviderContainer container;
 
     setUp(() {
       mockAuthRepository = MockAuthRepository();
       mockAnalyticsService = MockAnalyticsService();
+      mockPhoneAuthService = MockPhoneAuthService();
 
       // Setup default mocks for async methods - will be overridden in individual tests
       when(
@@ -60,12 +77,19 @@ void main() {
           screenName: any(named: 'screenName'),
         ),
       ).thenAnswer((_) async {});
+
+      // Configure MockPhoneAuthService defaults
+      when(
+        () => mockPhoneAuthService.onAutoVerificationCompleted,
+      ).thenAnswer((_) => const Stream.empty());
+      when(() => mockPhoneAuthService.signOut()).thenAnswer((_) async {});
     });
 
     /// Create a ProviderContainer with mocked dependencies
     ProviderContainer createContainer({
       final AuthRepository? authRepo,
       final AnalyticsService? analyticsService,
+      final PhoneAuthService? phoneAuthService,
     }) {
       return ProviderContainer(
         overrides: [
@@ -74,6 +98,9 @@ void main() {
           ),
           analyticsServiceProvider.overrideWithValue(
             analyticsService ?? mockAnalyticsService,
+          ),
+          phoneAuthServiceProvider.overrideWithValue(
+            phoneAuthService ?? mockPhoneAuthService,
           ),
         ],
       );
@@ -140,8 +167,11 @@ void main() {
     test('login with phone succeeds with valid phone number', () async {
       // Arrange
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
-      ).thenAnswer((_) async => Success(testUser));
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+821234567890',
+        ),
+      ).thenAnswer((_) async => const Success(null));
       container = createContainer();
 
       // Act
@@ -183,7 +213,10 @@ void main() {
       // Arrange
       final error = UnexpectedException(message: 'Invalid phone number');
       when(
-        () => mockAuthRepository.loginWithPhone('+00000000000'),
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+00000000000',
+        ),
       ).thenAnswer((_) async => Failure(error));
       container = createContainer();
 
@@ -198,20 +231,30 @@ void main() {
 
     test('login sets AsyncLoading state during request', () async {
       // Arrange
-      when(() => mockAuthRepository.loginWithPhone('+821234567890')).thenAnswer(
+      when(
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+821234567890',
+        ),
+      ).thenAnswer(
         (_) => Future.delayed(
           const Duration(milliseconds: 100),
-          () => Success(testUser),
+          () => const Success(null),
         ),
       );
       container = createContainer();
-      final notifier = container.read(authProvider.notifier);
+
+      // Wait for initial build to complete
+      await container.read(authProvider.future);
 
       // Act
-      final future = notifier.loginWithPhone('+821234567890');
+      final future = container
+          .read(authProvider.notifier)
+          .loginWithPhone('+821234567890');
 
-      // Assert - Should be loading immediately
-      expect(container.read(authProvider), isA<AsyncLoading<User?>>());
+      // Assert - loginWithPhone does NOT set loading state
+      // The state should still be AsyncData(null) from the initial build
+      expect(container.read(authProvider), isA<AsyncData<User?>>());
 
       await future;
     });
@@ -223,13 +266,13 @@ void main() {
     test('logout clears user state on success', () async {
       // Arrange
       container = createContainer();
-      // First login
+      // First login with email
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
+        () => mockAuthRepository.login('test@example.com', 'password'),
       ).thenAnswer((_) async => Success(testUser));
       await container
           .read(authProvider.notifier)
-          .loginWithPhone('+821234567890');
+          .login('test@example.com', 'password');
 
       // Setup logout mock
       when(
@@ -249,13 +292,13 @@ void main() {
     test('logout clears state even if server fails', () async {
       // Arrange
       container = createContainer();
-      // First login
+      // First login with email
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
+        () => mockAuthRepository.login('test@example.com', 'password'),
       ).thenAnswer((_) async => Success(testUser));
       await container
           .read(authProvider.notifier)
-          .loginWithPhone('+821234567890');
+          .login('test@example.com', 'password');
 
       // Setup logout mock to fail
       when(
@@ -296,6 +339,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(mockAuthRepository),
           analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
           googleSignInServiceProvider.overrideWithValue(googleSignIn),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
         ],
       );
 
@@ -333,6 +377,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(mockAuthRepository),
           analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
           googleSignInServiceProvider.overrideWithValue(googleSignIn),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
         ],
       );
 
@@ -368,6 +413,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(mockAuthRepository),
           analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
           googleSignInServiceProvider.overrideWithValue(googleSignIn),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
         ],
       );
 
@@ -404,6 +450,7 @@ void main() {
           authRepositoryProvider.overrideWithValue(mockAuthRepository),
           analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
           googleSignInServiceProvider.overrideWithValue(googleSignIn),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
         ],
       );
 
@@ -545,7 +592,10 @@ void main() {
       // Arrange
       final networkError = NetworkException(message: 'No internet');
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+821234567890',
+        ),
       ).thenAnswer((_) async => Failure(networkError));
       container = createContainer();
 

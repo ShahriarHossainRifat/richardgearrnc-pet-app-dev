@@ -26,6 +26,9 @@ export 'deep_link/deep_link.dart';
 // Google Sign-In (Firebase)
 export 'google_signin/google_signin_provider.dart';
 export 'google_signin/google_signin_service.dart';
+// Phone Auth (Firebase)
+export 'phone_auth/phone_auth_service.dart';
+export 'phone_auth/phone_auth_service_provider.dart';
 // Extensions
 export 'extensions/extensions.dart';
 // Feedback (Dialogs, Snackbars)

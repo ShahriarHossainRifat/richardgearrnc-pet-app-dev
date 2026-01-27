@@ -51,6 +51,10 @@ abstract class ApiEndpoints {
   /// Login with Google endpoint (Firebase ID token).
   static const String loginGoogle = '/auth/login/google';
 
+  /// Login with Firebase phone auth (ID token exchange).
+  /// Used after Firebase Phone Auth verification to create app session.
+  static const String loginPhoneFirebase = '/auth/login/phone-firebase';
+
   // ─────────────────────────────────────────────────────────────────────────────
   // USER
   // ─────────────────────────────────────────────────────────────────────────────

@@ -32,10 +32,17 @@ part 'auth_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class AuthNotifier extends _$AuthNotifier {
   late final AuthRepository _repo;
+  StreamSubscription<dynamic>? _autoVerificationSub;
 
   @override
   Future<User?> build() async {
     _repo = ref.watch(authRepositoryProvider);
+
+    // Listen for auto-verification events (Android SMS retriever)
+    _setupAutoVerificationListener();
+
+    // Ensure cleanup when provider is disposed
+    ref.onDispose(_cleanup);
 
     try {
       // Use timeout at the Future level, not at the Result level
@@ -62,6 +69,48 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  void _setupAutoVerificationListener() {
+    final phoneAuthService = ref.read(phoneAuthServiceProvider);
+    _autoVerificationSub = phoneAuthService.onAutoVerificationCompleted.listen(
+      (final userCredential) async {
+        AppLogger.instance.i('Auto-verification completed, authenticating...');
+        // When auto-verified, get the ID token and complete auth
+        // The userCredential is a firebase_auth.UserCredential, but we access it
+        // through dynamic to avoid importing firebase_auth in this file
+        final firebaseUser = userCredential.user;
+        if (firebaseUser != null) {
+          try {
+            final idToken = await firebaseUser.getIdToken();
+            if (idToken != null) {
+              // The auto-verification flow needs to exchange token with backend
+              // For now, just mark the verification as complete
+              // The OTP page will handle the backend exchange
+              AppLogger.instance.i('Auto-verification ID token obtained');
+            }
+          } catch (e, stack) {
+            AppLogger.instance.e(
+              'Failed to get ID token after auto-verification',
+              error: e,
+              stackTrace: stack,
+            );
+          }
+        }
+      },
+      onError: (final Object error, final StackTrace stackTrace) {
+        AppLogger.instance.e(
+          'Auto-verification stream error',
+          error: error,
+          stackTrace: stackTrace,
+        );
+      },
+    );
+  }
+
+  void _cleanup() {
+    _autoVerificationSub?.cancel();
+    _autoVerificationSub = null;
+  }
+
   /// Attempt to login with credentials.
   Future<void> login(final String email, final String password) async {
     state = const AsyncLoading();
@@ -69,7 +118,7 @@ class AuthNotifier extends _$AuthNotifier {
     final result = await _repo.login(email, password);
 
     state = result.fold(
-      onSuccess: AsyncData.new,
+      onSuccess: (final user) => AsyncData<User?>(user),
       onFailure: (final error) => AsyncError(error, StackTrace.current),
     );
 
@@ -79,10 +128,19 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Attempt to login with phone number.
-  /// This sends an OTP to the phone number.
+  /// Attempt to login with phone number using Firebase Phone Auth.
+  /// This sends an OTP to the phone number via Firebase.
+  ///
+  /// Unlike the old API-based flow, this uses Firebase's verifyPhoneNumber
+  /// which handles SMS sending and auto-retrieval on Android.
   Future<void> loginWithPhone(final String phoneNumber) async {
-    final result = await _repo.loginWithPhone(phoneNumber);
+    // Inject PhoneAuthService from Riverpod
+    final phoneAuthService = ref.read(phoneAuthServiceProvider);
+
+    final result = await _repo.loginWithPhone(
+      phoneAuthService: phoneAuthService,
+      phoneNumber: phoneNumber,
+    );
 
     result.fold(
       onSuccess: (_) {
@@ -96,16 +154,22 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   /// Verify OTP code for phone number authentication.
-  Future<void> verifyOtp(
-    final String phoneNumber,
-    final String code,
-  ) async {
+  ///
+  /// Uses Firebase Phone Auth to verify the SMS code, then exchanges
+  /// the Firebase ID token with the backend for app authentication.
+  Future<void> verifyOtp(final String smsCode) async {
     state = const AsyncLoading();
 
-    final result = await _repo.verifyOtp(phoneNumber, code);
+    // Inject PhoneAuthService from Riverpod
+    final phoneAuthService = ref.read(phoneAuthServiceProvider);
+
+    final result = await _repo.verifyOtp(
+      phoneAuthService: phoneAuthService,
+      smsCode: smsCode,
+    );
 
     state = result.fold(
-      onSuccess: AsyncData.new,
+      onSuccess: (final user) => AsyncData<User?>(user),
       onFailure: (final error) => AsyncError(error, StackTrace.current),
     );
 
@@ -156,7 +220,13 @@ class AuthNotifier extends _$AuthNotifier {
 
   /// Resend OTP code to the provided phone number.
   Future<void> resendOtp(final String phoneNumber) async {
-    final result = await _repo.resendOtp(phoneNumber);
+    // Inject PhoneAuthService from Riverpod
+    final phoneAuthService = ref.read(phoneAuthServiceProvider);
+
+    final result = await _repo.resendOtp(
+      phoneAuthService: phoneAuthService,
+      phoneNumber: phoneNumber,
+    );
 
     result.fold(
       onSuccess: (_) {
@@ -172,6 +242,10 @@ class AuthNotifier extends _$AuthNotifier {
 
   /// Logout the current user.
   Future<void> logout() async {
+    // Also sign out from Firebase Phone Auth
+    final phoneAuthService = ref.read(phoneAuthServiceProvider);
+    await phoneAuthService.signOut();
+
     final result = await _repo.logout();
 
     result.fold(

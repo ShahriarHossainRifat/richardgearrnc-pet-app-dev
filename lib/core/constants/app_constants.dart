@@ -72,6 +72,10 @@ abstract class AppConstants {
   /// Session restoration timeout in notifier for overall operation (10 seconds).
   static const Duration sessionRestoreNotifierTimeout = Duration(seconds: 10);
 
+  /// Phone authentication OTP timeout (60 seconds).
+  /// After this timeout, the auto-retrieval on Android will stop trying.
+  static const Duration phoneAuthTimeout = Duration(seconds: 60);
+
   // ─────────────────────────────────────────────────────────────────────────────
   // FEEDBACK & UI TIMEOUTS
   // ─────────────────────────────────────────────────────────────────────────────

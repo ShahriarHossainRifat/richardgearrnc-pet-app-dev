@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:petzy_app/core/analytics/analytics_service.dart';
 import 'package:petzy_app/core/google_signin/google_signin_provider.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service_provider.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/data/repositories/auth_repository_provider.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
@@ -19,16 +20,18 @@ void main() {
     late ProviderContainer container;
     late MockAuthRepository mockRepository;
     late MockGoogleSignInService mockGoogleSignInService;
+    late MockPhoneAuthService mockPhoneAuthService;
     late MockAnalyticsService mockAnalyticsService;
 
     setUp(() {
       mockRepository = MockAuthRepository();
       mockGoogleSignInService = MockGoogleSignInService();
+      mockPhoneAuthService = MockPhoneAuthService();
       mockAnalyticsService = MockAnalyticsService();
 
       // Register fallback values for mocktail
       registerFallbackValue(mockGoogleSignInService);
-      registerFallbackValue('');
+      registerFallbackValue(mockPhoneAuthService);
       registerFallbackValue('');
 
       // Setup analytics mock to return futures for all methods
@@ -45,12 +48,19 @@ void main() {
         ),
       ).thenAnswer((_) async {});
 
+      // Setup PhoneAuthService mock defaults
+      when(
+        () => mockPhoneAuthService.onAutoVerificationCompleted,
+      ).thenAnswer((_) => const Stream.empty());
+      when(() => mockPhoneAuthService.signOut()).thenAnswer((_) async {});
+
       container = ProviderContainer(
         overrides: [
           authRepositoryProvider.overrideWithValue(mockRepository),
           googleSignInServiceProvider.overrideWithValue(
             mockGoogleSignInService,
           ),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
           analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
         ],
       );
@@ -60,6 +70,20 @@ void main() {
         () => mockRepository.restoreSession(),
       ).thenAnswer((_) async => Failure(AuthException.noSession()));
     });
+
+    /// Helper to create a fresh container with current mocks
+    ProviderContainer createContainer() {
+      return ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(mockRepository),
+          googleSignInServiceProvider.overrideWithValue(
+            mockGoogleSignInService,
+          ),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
+          analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
+        ],
+      );
+    }
 
     group('build', () {
       test('returns null when session restoration fails', () async {
@@ -82,15 +106,7 @@ void main() {
         ).thenAnswer((_) async => const Success(testUser));
 
         // Need to create new container with updated override
-        container = ProviderContainer(
-          overrides: [
-            authRepositoryProvider.overrideWithValue(mockRepository),
-            googleSignInServiceProvider.overrideWithValue(
-              mockGoogleSignInService,
-            ),
-            analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
-          ],
-        );
+        container = createContainer();
 
         // Act
         final state = await container.read(authProvider.future);

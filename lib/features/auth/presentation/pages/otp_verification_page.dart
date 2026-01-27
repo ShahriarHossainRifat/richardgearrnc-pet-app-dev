@@ -191,9 +191,7 @@ class _OTPCard extends HookConsumerWidget {
         return;
       }
 
-      await ref
-          .read(authProvider.notifier)
-          .verifyOtp(phoneNumber, otpCode.value);
+      await ref.read(authProvider.notifier).verifyOtp(otpCode.value);
     }
 
     return Container(

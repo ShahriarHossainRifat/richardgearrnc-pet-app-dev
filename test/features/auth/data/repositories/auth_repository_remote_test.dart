@@ -5,6 +5,7 @@ import 'package:petzy_app/core/constants/api_endpoints.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
 import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/data/repositories/auth_repository_remote.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
@@ -16,10 +17,13 @@ class MockSecureStorage extends Mock implements FlutterSecureStorage {}
 
 class MockGoogleSignInService extends Mock implements GoogleSignInService {}
 
+class MockPhoneAuthService extends Mock implements PhoneAuthService {}
+
 void main() {
   group('AuthRepositoryRemote', () {
     late MockApiClient mockApiClient;
     late MockSecureStorage mockSecureStorage;
+    late MockPhoneAuthService mockPhoneAuthService;
     late AuthRepositoryRemote repository;
 
     // Test data
@@ -40,6 +44,7 @@ void main() {
     setUp(() {
       mockApiClient = MockApiClient();
       mockSecureStorage = MockSecureStorage();
+      mockPhoneAuthService = MockPhoneAuthService();
       repository = AuthRepositoryRemote(
         apiClient: mockApiClient,
         secureStorage: mockSecureStorage,
@@ -159,71 +164,73 @@ void main() {
       });
     });
 
-    group('loginWithPhone', () {
-      test('returns Success on OTP request', () async {
+    group('loginWithPhone (Firebase)', () {
+      test(
+        'returns Success when PhoneAuthService verifies successfully',
+        () async {
+          // Arrange
+          when(
+            () => mockPhoneAuthService.verifyPhoneNumber('+1234567890'),
+          ).thenAnswer((_) async => Future.value());
+
+          // Act
+          final result = await repository.loginWithPhone(
+            phoneAuthService: mockPhoneAuthService,
+            phoneNumber: '+1234567890',
+          );
+
+          // Assert
+          expect(result, isA<Success<void>>());
+          verify(
+            () => mockPhoneAuthService.verifyPhoneNumber('+1234567890'),
+          ).called(1);
+        },
+      );
+
+      test(
+        'does not store tokens on OTP request (pending verification)',
+        () async {
+          // Arrange
+          when(
+            () => mockPhoneAuthService.verifyPhoneNumber('+1234567890'),
+          ).thenAnswer((_) async => Future.value());
+
+          // Act
+          await repository.loginWithPhone(
+            phoneAuthService: mockPhoneAuthService,
+            phoneNumber: '+1234567890',
+          );
+
+          // Assert - verify no storage calls
+          verifyNever(
+            () => mockSecureStorage.write(
+              key: any(named: 'key'),
+              value: any(named: 'value'),
+            ),
+          );
+        },
+      );
+
+      test('returns Failure when PhoneAuthService throws exception', () async {
         // Arrange
         when(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            ApiEndpoints.loginPhone,
-            data: any(named: 'data'),
-            fromJson: any(named: 'fromJson'),
-          ),
-        ).thenAnswer((_) async => Success({'message': 'OTP sent'}));
-
-        // Act
-        final result = await repository.loginWithPhone('+1234567890');
-
-        // Assert
-        expect(result, isA<Success<void>>());
-        verify(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            ApiEndpoints.loginPhone,
-            data: {'phone_number': '+1234567890'},
-            fromJson: any(named: 'fromJson'),
-          ),
-        ).called(1);
-      });
-
-      test('does not store tokens on OTP request', () async {
-        // Arrange
-        when(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            ApiEndpoints.loginPhone,
-            data: any(named: 'data'),
-            fromJson: any(named: 'fromJson'),
-          ),
-        ).thenAnswer((_) async => Success({'message': 'OTP sent'}));
-
-        // Act
-        await repository.loginWithPhone('+1234567890');
-
-        // Assert - verify no storage calls
-        verifyNever(
-          () => mockSecureStorage.write(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
+          () => mockPhoneAuthService.verifyPhoneNumber('invalid'),
+        ).thenThrow(
+          const PhoneAuthException(
+            message: 'Invalid phone number',
+            code: 'invalid-phone-number',
           ),
         );
-      });
-
-      test('returns Failure on invalid phone number', () async {
-        // Arrange
-        final exception = ValidationException(
-          message: 'Invalid phone number',
-        );
-        when(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            any(),
-            data: any(named: 'data'),
-            fromJson: any(named: 'fromJson'),
-          ),
-        ).thenAnswer((_) async => Failure(exception));
 
         // Act
-        final result = await repository.loginWithPhone('invalid');
+        final result = await repository.loginWithPhone(
+          phoneAuthService: mockPhoneAuthService,
+          phoneNumber: 'invalid',
+        );
 
         // Assert
         expect(result, isA<Failure<void>>());
+        expect(result.errorOrNull, isA<AuthException>());
       });
     });
 
@@ -329,12 +336,17 @@ void main() {
       });
     });
 
-    group('verifyOtp', () {
+    group('verifyOtp (Firebase)', () {
       test('returns Success with user on valid OTP', () async {
-        // Arrange
+        // Arrange - PhoneAuthService returns Firebase ID token
+        when(
+          () => mockPhoneAuthService.verifyOtpCode('123456'),
+        ).thenAnswer((_) async => 'firebase_id_token');
+
+        // Backend exchanges Firebase token for app tokens
         when(
           () => mockApiClient.post<Map<String, dynamic>>(
-            ApiEndpoints.verifyOtp,
+            ApiEndpoints.loginPhoneFirebase,
             data: any(named: 'data'),
             fromJson: any(named: 'fromJson'),
           ),
@@ -348,68 +360,82 @@ void main() {
         ).thenAnswer((_) async => Future.value());
 
         // Act
-        final result = await repository.verifyOtp('+1234567890', '123456');
+        final result = await repository.verifyOtp(
+          phoneAuthService: mockPhoneAuthService,
+          smsCode: '123456',
+        );
 
         // Assert
         expect(result, isA<Success<User>>());
         expect(result.dataOrNull?.id, equals('123'));
+        verify(
+          () => mockPhoneAuthService.verifyOtpCode('123456'),
+        ).called(1);
       });
 
       test('returns Failure on invalid OTP', () async {
         // Arrange
-        final exception = ValidationException(
-          message: 'Invalid OTP code',
-        );
         when(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            any(),
-            data: any(named: 'data'),
-            fromJson: any(named: 'fromJson'),
+          () => mockPhoneAuthService.verifyOtpCode('wrong'),
+        ).thenThrow(
+          const PhoneAuthException(
+            message: 'Invalid OTP code',
+            code: 'invalid-verification-code',
           ),
-        ).thenAnswer((_) async => Failure(exception));
+        );
 
         // Act
-        final result = await repository.verifyOtp('+1234567890', 'wrong');
+        final result = await repository.verifyOtp(
+          phoneAuthService: mockPhoneAuthService,
+          smsCode: 'wrong',
+        );
 
         // Assert
         expect(result, isA<Failure<User>>());
+        expect(result.errorOrNull, isA<AuthException>());
       });
     });
 
-    group('resendOtp', () {
+    group('resendOtp (Firebase)', () {
       test('returns Success on OTP resend', () async {
         // Arrange
         when(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            ApiEndpoints.resendOtp,
-            data: any(named: 'data'),
-            fromJson: any(named: 'fromJson'),
-          ),
-        ).thenAnswer((_) async => Success({'message': 'OTP resent'}));
+          () => mockPhoneAuthService.resendOtp('+1234567890'),
+        ).thenAnswer((_) async => Future.value());
 
         // Act
-        final result = await repository.resendOtp('+1234567890');
+        final result = await repository.resendOtp(
+          phoneAuthService: mockPhoneAuthService,
+          phoneNumber: '+1234567890',
+        );
 
         // Assert
         expect(result, isA<Success<void>>());
+        verify(
+          () => mockPhoneAuthService.resendOtp('+1234567890'),
+        ).called(1);
       });
 
       test('returns Failure on resend error', () async {
         // Arrange
-        final exception = NetworkException(message: 'Rate limit exceeded');
         when(
-          () => mockApiClient.post<Map<String, dynamic>>(
-            any(),
-            data: any(named: 'data'),
-            fromJson: any(named: 'fromJson'),
+          () => mockPhoneAuthService.resendOtp('+1234567890'),
+        ).thenThrow(
+          const PhoneAuthException(
+            message: 'Too many requests',
+            code: 'too-many-requests',
           ),
-        ).thenAnswer((_) async => Failure(exception));
+        );
 
         // Act
-        final result = await repository.resendOtp('+1234567890');
+        final result = await repository.resendOtp(
+          phoneAuthService: mockPhoneAuthService,
+          phoneNumber: '+1234567890',
+        );
 
         // Assert
         expect(result, isA<Failure<void>>());
+        expect(result.errorOrNull, isA<AuthException>());
       });
     });
 

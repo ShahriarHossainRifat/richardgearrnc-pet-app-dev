@@ -1,4 +1,5 @@
 import 'package:petzy_app/core/google_signin/google_signin_service.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 
@@ -8,20 +9,36 @@ abstract interface class AuthRepository {
   /// Attempt to login with email and password.
   Future<Result<User>> login(final String email, final String password);
 
-  /// Attempt to login with phone number.
-  /// This sends an OTP code to the phone number.
-  /// Returns void on success (only OTP sent, user not authenticated yet).
-  /// User will be authenticated after calling verifyOtp().
-  Future<Result<void>> loginWithPhone(final String phoneNumber);
+  /// Attempt to login with phone number using Firebase Phone Auth.
+  ///
+  /// This triggers Firebase to send an OTP to the phone number.
+  /// Returns void on success (OTP sent, user not authenticated yet).
+  /// User will be authenticated after calling [verifyOtp].
+  ///
+  /// Requires [PhoneAuthService] for dependency injection.
+  Future<Result<void>> loginWithPhone({
+    required final PhoneAuthService phoneAuthService,
+    required final String phoneNumber,
+  });
 
   /// Verify OTP code for phone number authentication.
-  Future<Result<User>> verifyOtp(
-    final String phoneNumber,
-    final String code,
-  );
+  ///
+  /// Uses Firebase credentials to verify, then exchanges the Firebase ID
+  /// token with the backend for app session tokens.
+  ///
+  /// Requires [PhoneAuthService] for dependency injection.
+  Future<Result<User>> verifyOtp({
+    required final PhoneAuthService phoneAuthService,
+    required final String smsCode,
+  });
 
   /// Resend OTP code to the provided phone number.
-  Future<Result<void>> resendOtp(final String phoneNumber);
+  ///
+  /// Requires [PhoneAuthService] for dependency injection.
+  Future<Result<void>> resendOtp({
+    required final PhoneAuthService phoneAuthService,
+    required final String phoneNumber,
+  });
 
   /// Attempt to login with Google using Firebase Auth.
   ///

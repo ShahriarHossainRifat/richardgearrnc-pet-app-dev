@@ -5,6 +5,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:petzy_app/core/analytics/analytics_service.dart';
 import 'package:petzy_app/core/google_signin/google_signin_provider.dart';
+import 'package:petzy_app/core/phone_auth/phone_auth_service_provider.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/core/widgets/buttons.dart';
 import 'package:petzy_app/features/auth/data/repositories/auth_repository_provider.dart';
@@ -24,25 +25,37 @@ final testUser = User(
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// FALLBACK VALUES FOR MOCKTAIL
+// ─────────────────────────────────────────────────────────────────────────────
+
+class FakeMockGoogleSignInService extends Fake
+    implements MockGoogleSignInService {}
+
+class FakeMockPhoneAuthService extends Fake implements MockPhoneAuthService {}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // TEST SETUP
 // ─────────────────────────────────────────────────────────────────────────────
 
 void main() {
   setUpAll(() {
     // Register fallback values for mocktail
-    registerFallbackValue(MockGoogleSignInService());
+    registerFallbackValue(FakeMockGoogleSignInService());
+    registerFallbackValue(FakeMockPhoneAuthService());
   });
 
   group('LoginPage', () {
     late MockAuthRepository mockAuthRepository;
     late MockAnalyticsService mockAnalyticsService;
     late MockGoogleSignInService mockGoogleSignInService;
+    late MockPhoneAuthService mockPhoneAuthService;
     late ProviderContainer providerContainer;
 
     setUp(() {
       mockAuthRepository = MockAuthRepository();
       mockAnalyticsService = MockAnalyticsService();
       mockGoogleSignInService = MockGoogleSignInService();
+      mockPhoneAuthService = MockPhoneAuthService();
 
       // Setup default mocks
       when(
@@ -51,7 +64,10 @@ void main() {
         (_) async => Failure<User>(UnexpectedException(message: 'Failed')),
       );
       when(
-        () => mockAuthRepository.loginWithPhone(any<String>()),
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: any(named: 'phoneNumber'),
+        ),
       ).thenAnswer(
         (_) async => Failure<void>(UnexpectedException(message: 'Failed')),
       );
@@ -71,6 +87,12 @@ void main() {
         () => mockAnalyticsService.logEvent(any()),
       ).thenAnswer((_) async => null);
 
+      // Configure MockPhoneAuthService defaults
+      when(
+        () => mockPhoneAuthService.onAutoVerificationCompleted,
+      ).thenAnswer((_) => const Stream.empty());
+      when(() => mockPhoneAuthService.signOut()).thenAnswer((_) async {});
+
       providerContainer = ProviderContainer(
         overrides: [
           authRepositoryProvider.overrideWithValue(mockAuthRepository),
@@ -78,6 +100,7 @@ void main() {
           googleSignInServiceProvider.overrideWithValue(
             mockGoogleSignInService,
           ),
+          phoneAuthServiceProvider.overrideWithValue(mockPhoneAuthService),
         ],
       );
     });
@@ -390,8 +413,11 @@ void main() {
     ) async {
       // Arrange
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
-      ).thenAnswer((_) async => Success(testUser));
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+821234567890',
+        ),
+      ).thenAnswer((_) async => const Success(null));
 
       await pumpLoginPage(tester);
       await tester.pump();
@@ -409,8 +435,11 @@ void main() {
     ) async {
       // Arrange
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
-      ).thenAnswer((_) async => Success(testUser));
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+821234567890',
+        ),
+      ).thenAnswer((_) async => const Success(null));
 
       await pumpLoginPage(tester);
       await tester.pumpAndSettle();
@@ -426,7 +455,10 @@ void main() {
     ) async {
       // Arrange
       when(
-        () => mockAuthRepository.loginWithPhone('+821234567890'),
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: '+821234567890',
+        ),
       ).thenAnswer(
         (_) async =>
             Failure(UnexpectedException(message: 'Authentication failed')),
@@ -445,11 +477,14 @@ void main() {
     ) async {
       // Arrange
       when(
-        () => mockAuthRepository.loginWithPhone(any()),
+        () => mockAuthRepository.loginWithPhone(
+          phoneAuthService: any(named: 'phoneAuthService'),
+          phoneNumber: any(named: 'phoneNumber'),
+        ),
       ).thenAnswer(
         (_) => Future.delayed(
           const Duration(seconds: 2),
-          () => Success(testUser),
+          () => const Success(null),
         ),
       );
 
