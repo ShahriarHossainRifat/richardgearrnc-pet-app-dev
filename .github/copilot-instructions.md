@@ -1,8 +1,42 @@
-# Flutter Boilerplate AI Instructions
+# Flutter Boilerplate AI Instructions (2026 Edition)
 
 You are an expert Flutter developer working on a production-grade boilerplate project. Your goal is to maintain the highest standards of code quality, architecture, and maintainability.
 
-**Reference**: For detailed documentation of all reusable components, see `DEVELOPER_GUIDE.md`.
+**This guide is optimized for Flutter 3.x and Dart 3.10+ with 2026 best practices.**
+
+---
+
+## 🎯 2026 Modern Patterns Quick Reference
+
+**Key technologies and patterns you MUST use:**
+
+| Category              | 2026 Standard                                         | Why                                                         |
+| :-------------------- | :---------------------------------------------------- | :---------------------------------------------------------- |
+| **State Management**  | Riverpod 3.0 with code generation                     | Compile-time safety, offline persistence, mutations API     |
+| **Rendering Engine**  | Impeller (default)                                    | Eliminates shader jank, 120fps support, precompiled shaders |
+| **Language Features** | Dart 3.10+ (extension types, dot shorthand, patterns) | Zero-cost abstractions, cleaner code, type safety           |
+| **Persistence**       | Riverpod offline with `@JsonPersist()`                | Automatic stale-while-revalidate caching                    |
+| **Side Effects**      | Mutations API                                         | Declarative loading/error states for write operations       |
+| **Testing**           | Unit + Widget + Golden + Integration                  | 80%+ coverage with visual regression testing                |
+| **Architecture**      | Feature-first clean architecture                      | Modular, testable, scalable                                 |
+
+**Critical 2026 changes from earlier versions:**
+
+- ✅ Use `@JsonPersist()` for offline persistence (Riverpod 3.0)
+- ✅ Use Mutations API for form submissions and button actions
+- ✅ Use extension types for domain-specific type safety (zero-cost)
+- ✅ Use dot shorthand syntax: `variant: .primary` not `AppButtonVariant.primary`
+- ✅ Use pattern matching: `if (data case Success(:final value))` over traditional conditionals
+- ✅ Impeller eliminates need for render optimization - focus on logic performance
+- ✅ Multiple `_` wildcards allowed in same scope (Dart 3.7+)
+- ✅ Golden tests for visual regression (catch UI changes)
+
+**How to use this guide:**
+
+- 📌 **Quick reference first**: Check this section for 2026 patterns
+- 🔍 **Deep dive when needed**: Jump to specific sections for detailed guidance
+- ✅ **Pre-submission checklist**: Review "Code Review Baseline Checklist" before submitting
+- 📚 **Comprehensive reference**: This is a living document - search for specific topics
 
 ---
 
@@ -28,7 +62,6 @@ Add new sections or update existing ones when:
 2. **Add documentation** following the existing format (tables, code examples, bullet points)
 3. **Keep it concise** — focus on what AI needs to know to write correct code
 4. **Include examples** — show correct ✅ and incorrect ❌ usage where applicable
-5. **Update `DEVELOPER_GUIDE.md`** if the change affects developer-facing documentation
 
 ### Example: Adding a New Core Module
 
@@ -235,7 +268,7 @@ features/<feature_name>/
 
 ---
 
-## 🔄 State Management (Riverpod)
+## 🔄 State Management (Riverpod 3.0)
 
 ### Widget Class Selection
 
@@ -253,8 +286,8 @@ Choose the appropriate widget class based on your needs:
 
 ### Rules
 
-- **Mandatory**: Use **Riverpod** for all state management.
-- **Code Generation**: Use `@riverpod` / `@Riverpod(keepAlive: true)`.
+- **Mandatory**: Use **Riverpod 3.0** for all state management.
+- **Code Generation**: Use `@riverpod` / `@Riverpod(keepAlive: true)` with `riverpod_generator`.
 - **Logic Location**: Business logic resides in **Notifiers** (Presentation) or **Services** (Domain/Data).
 - **UI Role**: Widgets only `watch` state and `read` methods. No complex logic in `build()`.
 - **Avoid**: `StatefulWidget` for logic (use only for animation/input controllers).
@@ -268,6 +301,74 @@ Use `@Riverpod(keepAlive: true)` **ONLY** for:
 - State that must survive navigation (audio player, download manager)
 
 **Default to autoDispose** for page-specific providers.
+
+### Offline Persistence with Riverpod 3.0
+
+**Critical 2026 Pattern**: Use Riverpod's native offline persistence for stale-while-revalidate caching:
+
+```dart
+@freezed
+class Todo with _$Todo {
+  const factory Todo({required String task}) = _Todo;
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
+}
+
+@riverpod
+Future<JsonSqFliteStorage> storage(Ref ref) async {
+  return JsonSqFliteStorage.open(
+    join(await getDatabasesPath(), 'app.db'),
+  );
+}
+
+@riverpod
+@JsonPersist()  // ✅ Auto-handles JSON serialization with Freezed
+class TodoList extends _$TodoList {
+  @override
+  Future<List<Todo>> build() async {
+    persist(
+      ref.watch(storageProvider.future),
+      // No encode/decode needed with @JsonPersist!
+    );
+
+    // Shows cached data instantly, then updates from network
+    return fetchTodosFromServer();
+  }
+
+  Future<void> add(Todo todo) async {
+    // Automatically persisted to DB
+    state = AsyncData([...await future, todo]);
+  }
+}
+```
+
+### Mutations API for Side-Effects (Riverpod 3.0)
+
+**Use Mutations for write operations** (form submissions, button actions):
+
+```dart
+// Define mutation
+final addTodoMutation = Mutation<void>();
+
+// In notifier
+Future<void> addTodo(String task) async {
+  await addTodoMutation.execute(ref, () async {
+    await repository.addTodo(task);
+    ref.invalidate(todoListProvider);
+  });
+}
+
+// In UI - mutations expose state (Idle, Pending, Success, Error)
+Widget build(BuildContext context, WidgetRef ref) {
+  final mutation = ref.watch(addTodoMutation);
+
+  return mutation.when(
+    idle: () => ElevatedButton(onPressed: () => addTodo('..'), child: Text('Add')),
+    pending: () => CircularProgressIndicator(),
+    success: (_) => Text('Added!'),
+    error: (e, retry) => ErrorWidget(error: e, onRetry: retry),
+  );
+}
+```
 
 ### Example Provider
 
@@ -639,7 +740,9 @@ test('loginWithGoogle distinguishes cancellation from errors', () async {
 - **No Custom Loading Widgets**: Use `LoadingWidget`.
 - **No Custom Error Widgets**: Use `AppErrorWidget`.
 - **No Hardcoded Strings**: ALL user-facing text must be localized (see section below).
-- **Enum Shorthand**: Use Dart 3 enum shorthand syntax (e.g., `variant: .primary` instead of `variant: AppButtonVariant.primary`).
+- **Dot Shorthand Syntax**: Use Dart 3.10+ dot shorthand (e.g., `variant: .primary`, `alignment: .center`, `mainAxisSize: .min`).
+- **Wildcard Variables**: Use `_` for unused parameters (Dart 3.7+ allows multiple `_` in same scope).
+- **Pattern Matching**: Prefer pattern matching over traditional conditionals for destructuring and type checks.
 
 ### No Magic Numbers - Detailed Rules
 
@@ -710,16 +813,80 @@ padding: const EdgeInsets.all(AppSpacing.md)
 4. **Replace all raw numbers** with the corresponding constant
 5. **Never add a magic number thinking "it's just this once"** - the boilerplate is a template that will be reused across projects
 
+### Modern Dart Language Features (2026)
+
+**Use these Dart 3.3+ features to write cleaner, safer code:**
+
+#### Extension Types (Dart 3.3+)
+
+Create zero-cost type-safe abstractions:
+
+```dart
+// ✅ Type-safe ID wrapper with no runtime overhead
+extension type UserId(int _id) {
+  bool get isValid => _id > 0;
+}
+
+// Compiler prevents passing wrong int types
+void fetchUser(UserId id) { ... }
+fetchUser(UserId(123)); // ✅ OK
+fetchUser(123); // ❌ Compile error
+```
+
+#### Dot Shorthand Syntax (Dart 3.10+)
+
+Omit type names when context is clear:
+
+```dart
+// ❌ Verbose
+Column(mainAxisAlignment: MainAxisAlignment.center)
+FloatingActionButton(child: Icon(Icons.add))
+
+// ✅ Clean with dot shorthand
+Column(mainAxisAlignment: .center)
+FloatingActionButton(child: Icon(.add))
+```
+
+#### Wildcard Variables (Dart 3.7+)
+
+Use `_` for all unused parameters:
+
+```dart
+// ✅ Multiple underscores allowed
+button.onPressed = (_, __, ___) => doSomething();
+```
+
+#### Pattern Matching
+
+Destructure and match data declaratively:
+
+```dart
+// ✅ Pattern matching with records
+final (lat, lng) = await getCoordinates();
+
+// ✅ Switch expressions with patterns
+final message = switch (result) {
+  Success(value: final v) => 'Got: $v',
+  Failure(error: final e) => 'Error: $e',
+};
+
+// ✅ If-case for single pattern match
+if (user case User(:final email, isVerified: true)) {
+  sendEmail(email);
+}
+```
+
 ### Naming Conventions
 
-| Type            | Convention  | Example                |
-| :-------------- | :---------- | :--------------------- |
-| Files           | snake_case  | `user_repository.dart` |
-| Classes         | PascalCase  | `UserRepository`       |
-| Variables       | camelCase   | `userData`             |
-| Private Members | \_camelCase | `_privateField`        |
-| Constants       | camelCase   | `maxRetryAttempts`     |
-| JSON Fields     | snake_case  | `user_name`            |
+| Type            | Convention  | Example                  |
+| :-------------- | :---------- | :----------------------- |
+| Files           | snake_case  | `user_repository.dart`   |
+| Classes         | PascalCase  | `UserRepository`         |
+| Variables       | camelCase   | `userData`               |
+| Private Members | \_camelCase | `_privateField`          |
+| Constants       | camelCase   | `maxRetryAttempts`       |
+| JSON Fields     | snake_case  | `user_name`              |
+| Extension Types | PascalCase  | `UserId`, `EmailAddress` |
 
 ### API Endpoint Constants
 
@@ -921,10 +1088,81 @@ make prepare   # Full setup (clean + l10n + gen)
 
 - **Unit Tests**: For business logic, repositories, and services (no UI)
 - **Widget Tests**: For UI components and pages (uses `testWidgets()`)
+- **Integration Tests**: End-to-end flows on real devices (critical user journeys)
+- **Golden Tests**: Visual regression testing for UI components
 - **Pattern**: Arrange-Act-Assert (AAA) for all tests
 - **Shared Mocks**: Place in `test/helpers/mocks.dart`
 - **Mocking Library**: Use `mocktail` for all mocking
 - **Test Structure**: 1 test file per domain/service, feature pages get their own test file
+- **Coverage Goal**: 80%+ code coverage minimum
+
+#### Golden Tests (Visual Regression)
+
+**Use golden tests to catch unintended UI changes:**
+
+```dart
+testWidgets('MyButton matches golden file', (tester) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        body: AppButton(
+          label: 'Click Me',
+          onPressed: () {},
+          variant: .primary,
+        ),
+      ),
+    ),
+  );
+
+  // Compare against golden file
+  await expectLater(
+    find.byType(AppButton),
+    matchesGoldenFile('goldens/app_button_primary.png'),
+  );
+});
+```
+
+**Run golden tests:**
+
+```bash
+# Generate/update golden files
+flutter test --update-goldens
+
+# Run golden tests
+flutter test
+```
+
+#### Integration Tests
+
+**Test critical user flows end-to-end:**
+
+```dart
+// test_driver/app_test.dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('Complete login flow', (tester) async {
+    await tester.pumpWidget(MyApp());
+
+    // Navigate to login
+    await tester.tap(find.text('Login'));
+    await tester.pumpAndSettle();
+
+    // Enter credentials
+    await tester.enterText(find.byType(TextField).first, 'user@test.com');
+    await tester.enterText(find.byType(TextField).last, 'password');
+
+    // Submit and verify navigation to home
+    await tester.tap(find.text('Sign In'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Welcome'), findsOneWidget);
+  });
+}
+```
 
 #### Unit Tests (Repositories & Services)
 
@@ -1134,6 +1372,34 @@ when(() => repo.logout())
 - **Spacing**: Use `VerticalSpace` / `HorizontalSpace` widgets.
 - **Lists**: Use `ListView.builder` for performance.
 - **Safe Areas**: Respect `SafeArea`.
+
+### Impeller Rendering Engine (2026 Standard)
+
+**Impeller is now the default rendering engine** - eliminates shader compilation jank:
+
+- **Smooth animations**: Precompiled shaders = no first-frame stutters
+- **120fps support**: Consistent frame times on high-refresh displays
+- **Performance expectations**: Complex UI effects run smoothly without optimization
+- **Debugging**: Use Flutter DevTools Impeller view to inspect draw calls
+
+**Impact on development:**
+
+```dart
+// ✅ Safe to use complex effects now
+Container(
+  decoration: BoxDecoration(
+    gradient: LinearGradient(...),
+    boxShadow: [...],  // Multiple shadows OK
+    borderRadius: BorderRadius.circular(AppConstants.borderRadiusMD),
+  ),
+  child: BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+    child: ...,
+  ),
+)
+```
+
+**When frame drops occur with Impeller, it's logic issues, not rendering issues.**
 
 ---
 
@@ -1564,6 +1830,328 @@ See `lib/core/network/auth_interceptor.dart` for implementation.
 
 ---
 
+## 🏛️ Modern Architecture Patterns (2026)
+
+### Design System First
+
+**Token-driven theming** ensures consistency across platforms:
+
+```dart
+// Define design tokens
+class DesignTokens {
+  static const spacing = SpacingTokens();
+  static const colors = ColorTokens();
+  static const typography = TypographyTokens();
+}
+
+// Use tokens everywhere
+padding: EdgeInsets.all(DesignTokens.spacing.md),
+color: DesignTokens.colors.primary,
+style: DesignTokens.typography.headlineSmall,
+```
+
+**Test design system with golden tests** to catch unintended visual changes.
+
+### Modular Feature Architecture
+
+**Features should be independent modules** with clear boundaries:
+
+```
+features/
+├── auth/          # Self-contained - doesn't import from other features
+│   ├── data/
+│   ├── domain/
+│   └── presentation/
+├── home/          # Communicates via dependency injection only
+│   ├── data/
+│   ├── domain/
+│   └── presentation/
+```
+
+**Benefits:**
+
+- Teams work on features in parallel without conflicts
+- Features testable in isolation
+- Clear ownership and responsibility
+- Easy to extract features into packages if needed
+
+### Full-Stack Dart with Dart Frog
+
+**Consider Dart Frog for backend** to keep entire stack in Dart:
+
+```dart
+// routes/api/users/[id].dart (Dart Frog backend)
+import 'package:dart_frog/dart_frog.dart';
+
+Future<Response> onRequest(RequestContext context, String id) async {
+  return Response.json(body: {'id': id, 'name': 'User'});
+}
+```
+
+**Advantages:**
+
+- Shared models between frontend and backend
+- Single language for entire team
+- Null safety across full stack
+- Hot reload on server code
+
+### Adaptive UI for Multi-Platform
+
+**Build once, adapt everywhere:**
+
+```dart
+// Adaptive layouts
+class MyPage extends HookConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ResponsiveBuilder(
+      mobile: (context) => SingleColumnLayout(),
+      tablet: (context) => TwoColumnLayout(),
+      desktop: (context) => ThreeColumnLayout(),
+    );
+  }
+}
+
+// Foldable device support
+if (context.isFoldable) {
+  // Adapt around hinge line
+  return FoldableLayout(hingePosition: context.hingePosition);
+}
+```
+
+### Stale-While-Revalidate Pattern
+
+**Always show data immediately, refresh in background:**
+
+```dart
+@riverpod
+@JsonPersist()  // Automatic cache management
+class UserProfile extends _$UserProfile {
+  @override
+  Future<User> build(String userId) async {
+    persist(ref.watch(storageProvider.future));
+
+    // 1. Cached data shows instantly (if exists)
+    // 2. Network fetch happens in background
+    // 3. UI updates when fresh data arrives
+    // 4. On error, cached data remains visible
+    return fetchUserFromApi(userId);
+  }
+}
+```
+
+---
+
+## 🎨 Figma Integration & Design Asset Management
+
+### Overview
+
+This project uses the **Figma MCP Server** to seamlessly integrate designs into the Flutter application. The MCP server provides tools to fetch Figma file data, download images, and maintain design-code consistency.
+
+### Available MCP Tools
+
+| Tool                                      | Purpose                                             |
+| :---------------------------------------- | :-------------------------------------------------- |
+| `mcp_figma-context_get_figma_data`        | Fetch design metadata, layout, and component info   |
+| `mcp_figma-context_download_figma_images` | Export and download PNG/SVG assets from Figma nodes |
+
+### Prerequisites
+
+**Before using Figma MCP tools:**
+
+1. **Figma File Key**: Extract from Figma URL: `figma.com/file/{fileKey}/...`
+2. **Node IDs**: Right-click elements in Figma → Copy/Copy as → Copy link → Extract node ID from URL (`node-id=1234:5678`)
+3. **Figma Access Token**: Configure in MCP settings (server handles authentication)
+4. **Asset Directory**: Use `assets/images/` or `assets/icons/` for downloaded files
+
+### Workflow: Fetching Design Data
+
+**Use `get_figma_data` to inspect design structure before exporting assets:**
+
+```typescript
+// Example: Get all components in a Figma file
+mcp_figma -
+  context_get_figma_data({
+    fileKey: "abc123def456", // From Figma URL
+    nodeId: "1234:5678", // Optional: specific node/frame
+    depth: 2, // Optional: traversal depth (default: all)
+  });
+
+// Returns: Layout, colors, typography, component hierarchy
+// Use this data to:
+// - Identify which assets to export
+// - Extract design tokens (colors, spacing, typography)
+// - Validate dimensions before implementation
+```
+
+**When to use:**
+
+- ✅ Starting implementation of a new screen/component
+- ✅ Verifying design specifications (spacing, colors, sizes)
+- ✅ Finding node IDs for image export
+- ✅ Understanding component structure before coding
+
+### Workflow: Downloading Images
+
+**Use `download_figma_images` to export assets:**
+
+```typescript
+// Example: Export app logo and icon assets
+mcp_figma -
+  context_download_figma_images({
+    fileKey: "abc123def456", // Figma file key
+    localPath: "/absolute/path/to/assets/images", // MUST be absolute path
+    pngScale: 3, // @3x for Retina displays (default: 2)
+    nodes: [
+      {
+        nodeId: "1234:5678", // Figma node ID
+        fileName: "app_logo.png", // Output filename with extension
+        requiresImageDimensions: false, // Set true if need CSS vars
+      },
+      {
+        nodeId: "5678:9012",
+        fileName: "icon_home.svg", // SVG format
+        needsCropping: false, // Set true if transform matrix exists
+      },
+      {
+        nodeId: "9012:3456",
+        fileName: "product_image.png",
+        imageRef: "imageHash123", // Required for image fills
+      },
+    ],
+  });
+```
+
+**Critical Rules:**
+
+1. **Absolute Paths Only**: `localPath` must be full system path (e.g., `/Users/username/project/assets/images`)
+2. **File Extensions**: Always include `.png` or `.svg` in `fileName`
+3. **Image Fills**: If node has image fill (not vector), provide `imageRef` from `get_figma_data`
+4. **Cropping**: Set `needsCropping: true` if Figma node has transform matrix (rotated/scaled images)
+5. **PNG Scale**: Use `pngScale: 2` for @2x (default), `3` for @3x (iOS Retina)
+
+### Integration Pattern: New Feature with Figma Assets
+
+**Step-by-step workflow when implementing a feature with design assets:**
+
+```dart
+// 1. Fetch design data to understand structure
+mcp_figma-context_get_figma_data({
+  fileKey: "designFileKey",
+  nodeId: "screenNodeId"
+})
+// Review: colors, spacing, component hierarchy, asset nodes
+
+// 2. Download required assets
+mcp_figma-context_download_figma_images({
+  fileKey: "designFileKey",
+  localPath: "/full/path/to/assets/images/feature_name",
+  nodes: [
+    { nodeId: "icon1", fileName: "icon_feature.svg" },
+    { nodeId: "hero1", fileName: "hero_image.png" }
+  ]
+})
+
+// 3. Add assets to constants
+// lib/core/constants/assets.dart
+class Assets {
+  static const featureIcon = 'assets/images/feature_name/icon_feature.svg';
+  static const featureHero = 'assets/images/feature_name/hero_image.png';
+}
+
+// 4. Use in Flutter code
+CachedImage(
+  imageUrl: Assets.featureHero,  // ✅ Use constant
+  width: AppConstants.heroImageWidth,
+  height: AppConstants.heroImageHeight,
+)
+```
+
+### Asset Organization
+
+**Follow this structure for Figma-exported assets:**
+
+```
+assets/
+├── images/
+│   ├── onboarding/          # Onboarding screens
+│   │   ├── onboarding_1.png
+│   │   └── onboarding_2.png
+│   ├── auth/                # Auth feature
+│   │   ├── login_hero.png
+│   │   └── otp_illustration.png
+│   └── home/                # Home feature
+│       └── dashboard_header.png
+├── icons/
+│   ├── navigation/          # Navigation icons
+│   │   ├── home.svg
+│   │   └── settings.svg
+│   └── actions/             # Action icons
+│       ├── edit.svg
+│       └── delete.svg
+```
+
+**Rules:**
+
+- ✅ Organize by feature/category
+- ✅ Use descriptive, lowercase names with underscores
+- ✅ Add all assets to `Assets` constants class
+- ✅ Always use constants, never hardcode asset paths
+
+### Design Token Extraction
+
+**When fetching Figma data, extract design tokens for consistency:**
+
+```dart
+// After using get_figma_data, create design tokens:
+
+// lib/core/constants/design_tokens.dart
+class DesignTokens {
+  // Primary colors from Figma
+  static const Color primaryBlue = Color(0xFF2196F3);
+  static const Color secondaryOrange = Color(0xFFFF9800);
+
+  // Spacing from Figma (match design spec)
+  static const double spacingComponent = 12.0;  // Between components
+  static const double spacingSection = 24.0;    // Between sections
+
+  // Typography sizes from Figma
+  static const double fontSizeHeading = 24.0;
+  static const double fontSizeBody = 16.0;
+}
+```
+
+**Best Practices:**
+
+- ✅ Extract colors, spacing, typography from Figma
+- ✅ Create constants instead of hardcoding values
+- ✅ Use `AppConstants` for reusable dimensions
+- ✅ Match design specs exactly (pixel-perfect)
+
+### Troubleshooting
+
+| Issue                        | Solution                                                     |
+| :--------------------------- | :----------------------------------------------------------- |
+| "File key not found"         | Verify Figma file key from URL, ensure access token is valid |
+| "Node ID invalid"            | Copy node link from Figma, extract ID in format `1234:5678`  |
+| "Permission denied"          | Check Figma access token has read permissions for file       |
+| "Downloaded file is empty"   | Node may not be exportable; try parent frame or check fills  |
+| "Image dimensions incorrect" | Use `requiresImageDimensions: true` and verify `pngScale`    |
+| "Cropped incorrectly"        | Set `needsCropping: true` and provide `cropTransform` matrix |
+
+### Anti-Patterns
+
+1. **🔴 Don't** hardcode Figma URLs in code — extract fileKey and nodeId
+2. **🔴 Don't** use relative paths for `localPath` — always absolute paths
+3. **🔴 Don't** commit Figma access tokens — use MCP server configuration
+4. **🔴 Don't** skip asset constants — always add to `Assets` class
+5. **🔴 Don't** export all Figma nodes — only export what's needed
+6. **✅ Do** organize assets by feature/category
+7. **✅ Do** use SVG for icons (scalable), PNG for photos/illustrations
+8. **✅ Do** extract design tokens (colors, spacing) for consistency
+
+---
+
 ## ❌ Anti-Patterns to Avoid
 
 1. **Don't** use `StatefulWidget` for business logic
@@ -1614,3 +2202,21 @@ See `lib/core/network/auth_interceptor.dart` for implementation.
     - Test with backend to ensure JSON keys match: `json['field_name']` ↔ `fieldName` property
     - **Example**: See `user.dart` for correct Freezed JSON configuration
 16. **Do** use `.staggered()` factories for list animations instead of manually calculating delays
+17. **Don't** use deprecated Flutter APIs - always migrate to latest stable APIs:
+
+- Example: Use `color.withValues(alpha: 0.5)` instead of deprecated `.withOpacity()`
+
+18. **Don't** ignore Impeller rendering - complex effects are now performant by default
+19. **Don't** manually manage cache invalidation - use Riverpod 3.0 offline persistence with automatic stale-while-revalidate
+20. **Don't** create manual loading states for mutations - use Riverpod 3.0 Mutations API that exposes state (Idle, Pending, Success, Error)
+21. **Don't** use old pattern matching syntax - leverage Dart 3.0+ patterns, records, and switch expressions:
+
+- Use `if (data case Success(:final value))` over traditional type checks
+- Use switch expressions over switch statements when returning values
+- Use records for multiple return values: `(String, int) getData() => ('name', 42);`
+
+22. **Don't** create extension methods when extension types are more appropriate:
+
+- Extension types provide compile-time type safety with zero runtime cost
+- Perfect for wrapping primitives (UserId, EmailAddress, PositiveInt)
+- Use extension methods for adding behavior to existing types

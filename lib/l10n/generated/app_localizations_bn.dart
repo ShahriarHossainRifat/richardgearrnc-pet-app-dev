@@ -544,4 +544,20 @@ class AppLocalizationsBn extends AppLocalizations {
   String authErrorValidation(String error) {
     return 'যাচাইকরণ ত্রুটি: $error';
   }
+
+  @override
+  String get updateRequired => 'আপডেট প্রয়োজন';
+
+  @override
+  String get updateRequiredDescription =>
+      'অ্যাপের একটি নতুন সংস্করণ উপলব্ধ। অ্যাপ ব্যবহার চালিয়ে যেতে অনুগ্রহ করে আপডেট করুন।';
+
+  @override
+  String get updateNow => 'এখনই আপডেট করুন';
+
+  @override
+  String get pageNotFound => 'পৃষ্ঠা পাওয়া যায়নি';
+
+  @override
+  String get goHome => 'হোমে যান';
 }

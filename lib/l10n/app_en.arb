@@ -824,5 +824,30 @@
         "example": "Email is required"
       }
     }
+  },
+
+  "updateRequired": "Update Required",
+  "@updateRequired": {
+    "description": "Title for force update page"
+  },
+
+  "updateRequiredDescription": "A new version of the app is available. Please update to continue using the app.",
+  "@updateRequiredDescription": {
+    "description": "Description for force update page"
+  },
+
+  "updateNow": "Update Now",
+  "@updateNow": {
+    "description": "Button text to update the app"
+  },
+
+  "pageNotFound": "Page Not Found",
+  "@pageNotFound": {
+    "description": "Error message when a route is not found"
+  },
+
+  "goHome": "Go Home",
+  "@goHome": {
+    "description": "Button text to navigate to home page"
   }
 }

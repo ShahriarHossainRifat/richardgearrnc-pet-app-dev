@@ -6,6 +6,7 @@ import 'package:petzy_app/core/review/in_app_review_service.dart';
 import 'package:petzy_app/core/version/app_version_service.dart';
 import 'package:petzy_app/core/widgets/buttons.dart';
 import 'package:petzy_app/core/widgets/spacing.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Force update page shown when app version is below minimum required.
 ///
@@ -38,7 +39,7 @@ class ForceUpdatePage extends ConsumerWidget {
               const VerticalSpace.lg(),
               _buildVersionInfo(context, versionAsync),
               const Spacer(),
-              _buildUpdateButton(ref),
+              _buildUpdateButton(ref, context),
               const VerticalSpace.md(),
             ],
           ),
@@ -68,9 +69,10 @@ class ForceUpdatePage extends ConsumerWidget {
   /// Builds the title text.
   Widget _buildTitle(final BuildContext context) {
     final textTheme = context.textTheme;
+    final l10n = AppLocalizations.of(context);
 
     return Text(
-      'Update Required',
+      l10n.updateRequired,
       style: textTheme.headlineMedium?.copyWith(
         fontWeight: .bold,
       ),
@@ -82,10 +84,10 @@ class ForceUpdatePage extends ConsumerWidget {
   Widget _buildDescription(final BuildContext context) {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
+    final l10n = AppLocalizations.of(context);
 
     return Text(
-      'A new version of the app is available. '
-      'Please update to continue using the app.',
+      l10n.updateRequiredDescription,
       style: textTheme.bodyLarge?.copyWith(
         color: colorScheme.onSurfaceVariant,
       ),
@@ -106,14 +108,15 @@ class ForceUpdatePage extends ConsumerWidget {
   }
 
   /// Builds the update button.
-  Widget _buildUpdateButton(final WidgetRef ref) {
+  Widget _buildUpdateButton(final WidgetRef ref, final BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AppButton(
       variant: .primary,
       size: .large,
       isExpanded: true,
       onPressed: () => _openStore(ref),
       icon: Icons.download,
-      label: 'Update Now',
+      label: l10n.updateNow,
     );
   }
 

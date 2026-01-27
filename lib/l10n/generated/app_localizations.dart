@@ -1009,6 +1009,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Validation error: {error}'**
   String authErrorValidation(String error);
+
+  /// Title for force update page
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequired;
+
+  /// Description for force update page
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available. Please update to continue using the app.'**
+  String get updateRequiredDescription;
+
+  /// Button text to update the app
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get updateNow;
+
+  /// Error message when a route is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Page Not Found'**
+  String get pageNotFound;
+
+  /// Button text to navigate to home page
+  ///
+  /// In en, this message translates to:
+  /// **'Go Home'**
+  String get goHome;
 }
 
 class _AppLocalizationsDelegate

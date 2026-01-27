@@ -4,6 +4,7 @@ import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/extensions/context_extensions.dart';
 import 'package:petzy_app/core/widgets/buttons.dart';
 import 'package:petzy_app/core/widgets/spacing.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
 /// Error page shown when a route is not found (404).
 ///
@@ -62,9 +63,10 @@ class ErrorPage extends StatelessWidget {
   /// Builds the title text.
   Widget _buildTitle(final BuildContext context) {
     final textTheme = context.textTheme;
+    final l10n = AppLocalizations.of(context);
 
     return Text(
-      'Page Not Found',
+      l10n.pageNotFound,
       style: textTheme.headlineSmall?.copyWith(
         fontWeight: .bold,
       ),
@@ -99,11 +101,12 @@ class ErrorPage extends StatelessWidget {
 
   /// Builds the home navigation button.
   Widget _buildHomeButton(final BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AppButton(
       variant: .primary,
       onPressed: () => context.goRoute(.home),
       icon: Icons.home,
-      label: 'Go Home',
+      label: l10n.goHome,
     );
   }
 }

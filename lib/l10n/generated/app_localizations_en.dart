@@ -538,4 +538,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String authErrorValidation(String error) {
     return 'Validation error: $error';
   }
+
+  @override
+  String get updateRequired => 'Update Required';
+
+  @override
+  String get updateRequiredDescription =>
+      'A new version of the app is available. Please update to continue using the app.';
+
+  @override
+  String get updateNow => 'Update Now';
+
+  @override
+  String get pageNotFound => 'Page Not Found';
+
+  @override
+  String get goHome => 'Go Home';
 }

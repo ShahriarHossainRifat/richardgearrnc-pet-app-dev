@@ -10,680 +10,207 @@
 ![GoRouter](https://img.shields.io/badge/GoRouter-17.x-4CAF50?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-9C27B0?style=for-the-badge)
 
-**Clone → Build → Ship.** No architecture debates. No rewrites at scale.
-
-[Features](#-features) • [Quick Start](#-quick-start) • [Developer Guide](DEVELOPER_GUIDE.md) • [Architecture](#-architecture)
+**A modern Flutter boilerplate with production-grade architecture, state management, and built-in Firebase integration.**
 
 </div>
 
 ---
 
-## 📖 Table of Contents
+## 📖 Overview
 
-- [Why This Boilerplate?](#-why-this-boilerplate)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Quick Start](#-quick-start)
-- [Step-by-Step Setup](#-step-by-step-setup)
-- [Architecture](#-architecture)
-- [Project Structure](#-project-structure)
-- [Core Concepts](#-core-concepts)
-- [Commands](#-commands)
-- [Creating Your First Feature](#-creating-your-first-feature)
-- [Firebase Setup](#-firebase-setup)
-- [Testing](#-testing)
-- [CI/CD Pipeline](#-cicd-pipeline)
-- [Changelog](#-changelog)
-- [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
-- [License](#-license)
+This boilerplate provides a **feature-first clean architecture** foundation for Flutter applications. It enforces best practices, ensures consistency, and accelerates development with pre-built core modules and reusable components.
 
----
+**Key Highlights:**
 
-## 🤔 Why This Boilerplate?
-
-<table>
-<tr>
-<td width="50%">
-
-### ✅ This IS For You If...
-
-- You want a **production-ready** starting point
-- You prefer **conventions over configuration**
-- You value **clean architecture** and **testability**
-- You're building apps that need to **scale**
-- You want to skip weeks of initial setup
-- You need **offline-first** capabilities
-- You want built-in **Firebase integration**
-
-</td>
-<td width="50%">
-
-### ❌ This Is NOT...
-
-- A tutorial or learning resource
-- A minimal starter (it's comprehensive)
-- A flexible "choose your own adventure" template
-- A playground for experimentation
-- A beginner-level project
-
-</td>
-</tr>
-</table>
-
-> 💡 **Philosophy**: This boilerplate enforces **feature-first Clean Architecture** with **Riverpod Code Generation** to ensure consistency across teams and projects. Every decision is made for you—just code your features.
-
----
-
-## ✨ Features
-
-<table>
-<tr>
-<td width="33%">
-
-### 🏗️ Architecture
-
-- ✅ Feature-first Clean Architecture
-- ✅ Riverpod 3.x (Code Generation)
-- ✅ Dependency Injection
-- ✅ Result Pattern (Error Handling)
-- ✅ Strict Lints (very_good_analysis)
-- ✅ SOLID Principles
-
-</td>
-<td width="33%">
-
-### 📱 State & Navigation
-
-- ✅ Type-safe GoRouter 17.x
-- ✅ Auth Guards & Redirects
-- ✅ Deep Links (Universal Links)
-- ✅ Event-driven Startup Logic
-- ✅ Reactive Forms
-- ✅ Flutter Hooks Integration
-
-</td>
-<td width="33%">
-
-### 🌐 Networking
-
-- ✅ Dio with Interceptors
-- ✅ Offline-First Caching (Drift)
-- ✅ Auto Token Refresh & Retry
-- ✅ HTTP/3 & Brotli Support
-- ✅ ETag Caching
-
-</td>
-</tr>
-<tr>
-<td width="33%">
-
-### 💾 Storage
-
-- ✅ Secure Storage (Encrypted)
-- ✅ SQLite (Drift ORM)
-- ✅ SharedPreferences
-- ✅ Fresh Install Handler (iOS)
-- ✅ Cache Expiry Management
-
-</td>
-<td width="33%">
-
-### 🔐 Security & Auth
-
-- ✅ Biometric Auth (Face/Touch ID)
-- ✅ Secure Token Management
-- ✅ Auto-Session Expiry
-- ✅ Concurrent Token Refresh
-- ✅ iOS Keychain Handling
-
-</td>
-<td width="33%">
-
-### 🎨 UI/UX
-
-- ✅ Material 3 Theming
-- ✅ Light/Dark/System Modes
-- ✅ 25+ Animation Widgets
-- ✅ Shimmer Loading States
-- ✅ Localized (en/bn)
-
-</td>
-</tr>
-<tr>
-<td width="33%">
-
-### 📊 Firebase Suite
-
-- ✅ Crashlytics (Crash Reporting)
-- ✅ Analytics (User Tracking)
-- ✅ Performance Monitoring
-- ✅ Remote Config (Feature Flags)
-- ✅ Screen Trace Auto-Tracking
-
-</td>
-<td width="33%">
-
-### 🔔 Notifications
-
-- ✅ Local Notifications
-- ✅ Scheduled Notifications
-- ✅ In-App Review Prompts
-- ✅ Badge Management
-
-</td>
-<td width="33%">
-
-### 🛡️ Permissions
-
-- ✅ Runtime Permissions
-- ✅ Permission Rationale
-- ✅ Settings Deep Links
-- ✅ Platform-Specific Handling
-
-</td>
-</tr>
-</table>
+- 🏗️ **Clean Architecture** - Feature-first modular design
+- ⚡ **Modern State Management** - Riverpod 3.0 with code generation
+- 🎨 **Rich UI Components** - 25+ reusable widgets and animations
+- 🔐 **Enterprise-Grade Security** - Biometric auth, secure storage, token management
+- 🌐 **Offline-First** - Built-in caching with Drift ORM
+- 📊 **Firebase Suite** - Analytics, Crashlytics, Performance, Remote Config
+- 🌍 **Internationalization** - Multi-language support (en/bn)
+- 🧪 **Testing Ready** - Unit, widget, golden, and integration tests
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category          | Technology                      | Description                      |
-| :---------------- | :------------------------------ | :------------------------------- |
-| **Framework**     | `Flutter 3.10+`                 | Cross-platform UI toolkit        |
-| **Language**      | `Dart 3.x`                      | Modern, null-safe language       |
-| **State**         | `riverpod_generator`            | Compile-safe state management    |
-| **Hooks**         | `flutter_hooks`                 | React-like hooks for Flutter     |
-| **Routing**       | `go_router`                     | Declarative routing with guards  |
-| **Network**       | `dio` + `native_dio_adapter`    | HTTP client with HTTP/3 support  |
-| **Database**      | `drift`                         | Reactive SQLite ORM              |
-| **Forms**         | `reactive_forms`                | Model-driven form validation     |
-| **Auth**          | `local_auth`                    | Biometric authentication         |
-| **Firebase**      | `firebase_*`                    | Analytics, Crashlytics, Perf, RC |
-| **I18n**          | `flutter_localizations`         | Intl with ARB files              |
-| **Animations**    | `flutter_animate`               | Declarative animations           |
-| **Code Style**    | `very_good_analysis`            | Strict lint rules (500+ rules)   |
-| **Testing**       | `mocktail` + `flutter_test`     | Unit & Widget tests              |
-| **Serialization** | `freezed` + `json_serializable` | Immutable models with codegen    |
+### Core Technologies
 
----
+| Category          | Technology             | Purpose                                 |
+| :---------------- | :--------------------- | :-------------------------------------- |
+| **Framework**     | Flutter 3.10+          | Cross-platform UI toolkit               |
+| **Language**      | Dart 3.10+             | Null-safe, modern language              |
+| **State**         | Riverpod 3.0           | Compile-safe state management           |
+| **Routing**       | GoRouter 17.x          | Declarative navigation with auth guards |
+| **Networking**    | Dio + Native Adapter   | HTTP/3 client with interceptors         |
+| **Database**      | Drift (SQLite)         | Reactive offline-first persistence      |
+| **Serialization** | Freezed + JSON Serial. | Immutable models with codegen           |
 
-## 🚀 Quick Start
+### Additional Tools
 
-### Prerequisites
-
-- Flutter SDK **3.10+** ([Install Flutter](https://docs.flutter.dev/get-started/install))
-- Dart SDK **3.x** (included with Flutter)
-- Git ([Download](https://git-scm.com/downloads))
-- A code editor (VS Code recommended with Flutter extension)
-- Xcode (for iOS development on macOS)
-- Android Studio (for Android development)
-
-### 5-Minute Setup
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/ShahriarHossainRifat/riverpod_go_router_boilerplate.git my_app
-cd my_app
-
-# 2. Remove existing git history and start fresh
-rm -rf .git && git init
-
-# 3. Rename project to your app name
-make rename NAME=my_app ORG=com.example DISPLAY="My Awesome App"
-
-# 4. Setup dependencies and generate code
-make prepare
-
-# 5. Run the app
-flutter run
-```
-
-That's it! 🎉 Your app is running.
-
----
-
-## 📋 Step-by-Step Setup
-
-For beginners, here's a detailed walkthrough:
-
-### Step 1: Clone the Repository
-
-```bash
-git clone https://github.com/ShahriarHossainRifat/riverpod_go_router_boilerplate.git my_app
-cd my_app
-```
-
-This downloads the boilerplate code into a folder called `my_app`.
-
-### Step 2: Remove Git History
-
-```bash
-rm -rf .git
-git init
-```
-
-This removes the boilerplate's git history so you can start fresh with your own commits.
-
-### Step 3: Rename the Project
-
-```bash
-make rename NAME=myapp ORG=com.yourcompany DISPLAY="Your App Name"
-```
-
-This updates:
-
-- Package name in pubspec.yaml
-- Bundle identifiers (iOS/Android)
-- Display name shown on devices
-
-**Parameters:**
-
-- `NAME`: lowercase, no spaces (e.g., `myshoppingapp`)
-- `ORG`: reverse domain notation (e.g., `com.yourcompany`)
-- `DISPLAY`: Human-readable name with spaces allowed
-
-### Step 4: Install Dependencies & Generate Code
-
-```bash
-make prepare
-```
-
-This command:
-
-1. Cleans any previous builds
-2. Gets all Flutter dependencies (`flutter pub get`)
-3. Generates localization files
-4. Runs build_runner to generate Riverpod code
-
-### Step 5: Run the App
-
-```bash
-# iOS Simulator
-flutter run -d iPhone
-
-# Android Emulator
-flutter run -d emulator
-
-# All connected devices
-flutter run
-```
-
-### Step 6: Verify Everything Works
-
-The app should launch with:
-
-- A splash screen
-- Demo login page
-- Home page after "login"
+- **Forms:** reactive_forms
+- **Hooks:** flutter_hooks
+- **Auth:** local_auth (biometric)
+- **Animations:** flutter_animate
+- **Linting:** very_good_analysis (500+ rules)
+- **Testing:** mocktail + flutter_test
+- **i18n:** flutter_localizations (ARB)
 
 ---
 
 ## 🏛️ Architecture
 
-We follow a strict **Feature-First Clean Architecture**:
-
-```
-lib/features/my_feature/
-├── data/                  # 💾 Data Layer
-│   ├── datasources/       # API/DB calls
-│   ├── models/            # DTOs (Data Transfer Objects)
-│   └── repositories/      # Repository Implementations
-│
-├── domain/                # 🧠 Domain Layer (Pure Dart)
-│   ├── entities/          # Business Objects
-│   └── repositories/      # Repository Interfaces
-│
-└── presentation/          # 🎨 Presentation Layer
-    ├── pages/             # Full-screen Widgets
-    ├── providers/         # Riverpod Notifiers
-    └── widgets/           # Feature-specific Widgets
-```
-
-### Key Architecture Rules
-
-| Rule                 | Description                                                                |
-| :------------------- | :------------------------------------------------------------------------- |
-| **Dependency Rule**  | Domain depends on nothing. Data implements Domain. Presentation uses both. |
-| **Logic Placement**  | Business logic goes in Notifiers or Services. Never in UI widgets.         |
-| **State Management** | Use `@riverpod` codegen exclusively. No raw `StateProvider`.               |
-| **Error Handling**   | Use `Result<T>` monad for all fallible operations.                         |
-
----
-
-## 📁 Project Structure
+This project follows **Feature-First Clean Architecture**:
 
 ```
 lib/
-├── app/                   # Global app config
-│   ├── router/            # GoRouter configuration & routes
-│   └── startup/           # App lifecycle & startup logic
+├── app/                   # Global app configuration
+│   ├── router/            # GoRouter setup & routes
+│   └── startup/           # App lifecycle logic
 ├── config/                # Environment configuration
 ├── core/                  # Shared kernel (27 modules)
 │   ├── analytics/         # Firebase Analytics
-│   ├── biometric/         # Biometric authentication
+│   ├── biometric/         # Face ID / Touch ID
 │   ├── cache/             # Offline caching (Drift)
-│   ├── constants/         # App constants, API endpoints
-│   ├── crashlytics/       # Firebase Crashlytics
-│   ├── deep_link/         # Deep links & universal links
+│   ├── constants/         # App constants, endpoints
+│   ├── deep_link/         # Universal/app links
 │   ├── extensions/        # Dart/Flutter extensions
-│   ├── feedback/          # Context-free snackbars/dialogs
-│   ├── forms/             # Reactive Forms configs
+│   ├── feedback/          # Snackbars/dialogs
 │   ├── hooks/             # Custom Flutter Hooks
-│   ├── localization/      # Locale management & persistence
-│   ├── network/           # Dio, interceptors, API client
-│   ├── notifications/     # Local notifications
+│   ├── network/           # API client, interceptors
 │   ├── performance/       # Firebase Performance
-│   ├── permissions/       # Permission handling
-│   ├── remote_config/     # Firebase Remote Config
-│   ├── result/            # Result monad
-│   ├── review/            # In-app review prompts
-│   ├── session/           # Session state
+│   ├── remote_config/     # Feature flags
 │   ├── storage/           # Secure storage
-│   ├── theme/             # App theming
-│   ├── utils/             # Validators, logger, etc.
+│   ├── theme/             # Material 3 theming
+│   ├── utils/             # Validators, logger
 │   ├── version/           # App version & force update
-│   └── widgets/           # Reusable UI components (25+)
+│   └── widgets/           # 25+ reusable components
 ├── features/              # Feature modules
 │   ├── auth/              # Authentication
 │   ├── home/              # Home screen
 │   ├── onboarding/        # Onboarding flow
 │   └── settings/          # App settings
-├── l10n/                  # Localization (ARB files)
-└── main.dart              # Entry point
+└── l10n/                  # Localization (ARB files)
 ```
 
-### Core Module Highlights
+### Feature Module Structure
 
-| Directory       | Contents                                                       |
-| :-------------- | :------------------------------------------------------------- |
-| `constants/`    | `AppConstants`, `ApiEndpoints`, `Assets`, `StorageKeys`        |
-| `extensions/`   | `context.colorScheme`, `'str'.capitalized`, `123.formatted`    |
-| `widgets/`      | 25+ reusable widgets (buttons, animations, dialogs, inputs)    |
-| `hooks/`        | `useOnMount`, `useDebounce`, `useToggle`, `usePagination`      |
-| `analytics/`    | Screen tracking, event logging, user properties                |
-| `network/`      | API client, interceptors, caching, token refresh               |
-| `deep_link/`    | Universal links (iOS) & App Links (Android) handling           |
-| `feedback/`     | Context-free `FeedbackService` for snackbars/dialogs           |
-| `review/`       | Smart in-app review prompting with eligibility tracking        |
-| `version/`      | App version checking, force update & optional update prompts   |
-| `localization/` | `LocaleNotifier` with persistence, supports en/bn (extensible) |
+Each feature follows this pattern:
+
+```
+features/<feature>/
+├── data/               # Repository implementations
+├── domain/             # Entities & repository interfaces
+└── presentation/       # Pages, widgets, providers
+```
+
+**Dependency Rule:** Domain → Pure Dart | Data → Implements Domain | Presentation → Uses Both
 
 ---
 
-## 🎯 Core Concepts
+## ✨ Core Features
 
-### Result Pattern (Error Handling)
+### State Management (Riverpod 3.0)
 
-Instead of throwing exceptions, we use the `Result<T>` monad:
+- **Code Generation:** Type-safe providers with `@riverpod`
+- **Offline Persistence:** `@JsonPersist()` for automatic caching
+- **Mutations API:** Declarative loading/error states for write operations
+- **Auto-dispose:** Automatic cleanup for page-scoped state
 
-```dart
-// In repository
-Future<Result<User>> fetchUser(String id) async {
-  try {
-    final response = await apiClient.get('/users/$id');
-    return Success(User.fromJson(response));
-  } catch (e) {
-    return Failure(ApiException.from(e));
-  }
-}
+### Networking & Caching
 
-// In UI/Notifier
-final result = await repo.fetchUser('123');
-result.fold(
-  onSuccess: (user) => state = AsyncData(user),
-  onFailure: (error) => state = AsyncError(error, StackTrace.current),
-);
-```
+- **HTTP/3 Support:** Native Cronet adapter on Android
+- **Auto Token Refresh:** Concurrent-safe token renewal
+- **Offline-First:** Drift ORM with ETag caching
+- **Retry Logic:** Exponential backoff for failed requests
 
-### Riverpod Patterns
+### Security
 
-```dart
-// Read-only async data
-@riverpod
-Future<User> currentUser(Ref ref) async {
-  final repo = ref.watch(userRepositoryProvider);
-  final result = await repo.getCurrentUser();
-  return result.getOrThrow();
-}
+- **Biometric Auth:** Face ID / Touch ID integration
+- **Secure Storage:** Encrypted token management
+- **Session Management:** Auto-expiry and restoration
+- **iOS Keychain Handler:** Fresh install detection
 
-// Mutable state with notifier
-@riverpod
-class Counter extends _$Counter {
-  @override
-  int build() => 0;
+### UI/UX Components
 
-  void increment() => state++;
-  void decrement() => state--;
-}
-```
+**25+ Reusable Widgets:**
 
-### Reusable Widgets
+- **Async State:** `AsyncValueWidget`, `LoadingWidget`, `AppErrorWidget`
+- **Buttons:** `AppButton`, `AppIconButton` with variants
+- **Forms:** `AppTextField`, `AppSearchField`, `AppChip`
+- **Animations:** Entry, attention, flip, expand, shimmer
+- **Dialogs:** Confirm, alert, input, loading, selection
+- **Layout:** `ResponsiveBuilder`, `ContentContainer`, spacing utilities
 
-```dart
-// ✅ Use built-in components
-AsyncValueWidget<User>(
-  value: ref.watch(userProvider),
-  data: (user) => Text(user.name),
-)
+### Firebase Integration
 
-AppButton(
-  label: 'Submit',
-  onPressed: _submit,
-  variant: AppButtonVariant.primary,
-)
+- **Analytics:** User tracking & event logging
+- **Crashlytics:** Crash reporting with custom logs
+- **Performance:** Screen traces & HTTP monitoring
+- **Remote Config:** Feature flags & A/B testing
 
-VerticalSpace.md()  // 16px gap
-HorizontalSpace.sm() // 8px gap
+---
 
-// Staggered list animations
-ListView.builder(
-  itemCount: items.length,
-  itemBuilder: (context, index) => FadeIn.staggered(
-    index: index,
-    child: ListTile(title: Text(items[index].name)),
-  ),
-)
+## 🚀 Quick Start
 
-// ❌ Don't create custom alternatives
-SizedBox(height: 16)  // Use VerticalSpace.md() instead
-Duration(milliseconds: 300)  // Use AppConstants.animationNormal instead
-```
+```bash
+# Clone the repository
+git clone https://github.com/ShahriarHossainRifat/riverpod_go_router_boilerplate.git my_app
+cd my_app
 
-### Screen Analytics (Important!)
+# Rename project
+make rename NAME=my_app ORG=com.example DISPLAY="My Awesome App"
 
-```dart
-// ✅ Track screen views using useOnMount (HookConsumerWidget)
-class MyPage extends HookConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    useOnMount(() {
-      ref.read(analyticsServiceProvider).logScreenView(screenName: 'my_page');
-    });
-    return Scaffold(...);
-  }
-}
+# Setup dependencies & generate code
+make prepare
 
-// ❌ NEVER track analytics in build() - fires on every rebuild!
+# Run the app
+flutter run
 ```
 
 ---
 
 ## 💻 Commands
 
-We use `make` to simplify common tasks:
-
-| Command               | Description                            |
-| :-------------------- | :------------------------------------- |
-| `make prepare`        | Full setup: Clean + L10n + Gen Code    |
-| `make gen`            | Run code gen (build_runner + l10n)     |
-| `make l10n`           | Generate localization files only       |
-| `make watch`          | Run `build_runner watch` (Development) |
-| `make clean`          | Clean build artifacts & deps           |
-| `make format`         | Format code & Apply fixes              |
-| `make lint`           | Run static analysis                    |
-| `make test`           | Run all tests                          |
-| `make upgrade`        | Upgrade dependencies                   |
-| `make ci`             | Run CI checks (Lint + Test)            |
-| `make feature NAME=x` | Create new feature module              |
-| `make rename NAME=x`  | Rename the project                     |
-| `make help`           | Show all available commands            |
+| Command               | Description                    |
+| :-------------------- | :----------------------------- |
+| `make prepare`        | Full setup (clean + gen code)  |
+| `make gen`            | Run code generation            |
+| `make watch`          | Run build_runner in watch mode |
+| `make format`         | Format code & apply fixes      |
+| `make lint`           | Run static analysis            |
+| `make test`           | Run all tests                  |
+| `make feature NAME=x` | Create new feature module      |
+| `make ci`             | Run CI checks (lint + test)    |
 
 ---
 
-## 🛠️ Creating Your First Feature
+## 📝 Development Principles
 
-### Using the Generator
+### Best Practices Enforced
 
-**Always use the generator to create new features:**
+1. **No Magic Numbers** - All values use constants (`AppConstants`, `AppSpacing`)
+2. **No Hardcoded Strings** - All text uses localization (`l10n`)
+3. **No Direct Colors** - Use `context.colorScheme.primary`
+4. **Result Pattern** - Use `Result<T>` monad for error handling
+5. **Analytics on Mount** - Use `useOnMount()` hook, never in `build()`
+6. **Reusability First** - Use existing components before creating new ones
 
-```bash
-make feature NAME=products
-```
+### Code Review Checklist
 
-This creates the correct folder structure:
-
-```
-lib/features/products/
-├── data/
-│   └── repositories/
-├── domain/
-│   ├── entities/
-│   └── repositories/
-└── presentation/
-    ├── pages/
-    ├── providers/
-    └── widgets/
-```
-
-### Implementation Steps
-
-1. **Define Entity** (`domain/entities/product.dart`):
-
-```dart
-class Product {
-  final String id;
-  final String name;
-  final double price;
-
-  const Product({required this.id, required this.name, required this.price});
-}
-```
-
-2. **Define Repository Interface** (`domain/repositories/product_repository.dart`):
-
-```dart
-abstract class ProductRepository {
-  Future<Result<List<Product>>> getProducts();
-  Future<Result<Product>> getProduct(String id);
-}
-```
-
-3. **Implement Repository** (`data/repositories/product_repository_impl.dart`):
-
-```dart
-class ProductRepositoryImpl implements ProductRepository {
-  final ApiClient _apiClient;
-
-  ProductRepositoryImpl(this._apiClient);
-
-  @override
-  Future<Result<List<Product>>> getProducts() async {
-    // Implementation
-  }
-}
-```
-
-4. **Create Provider** (`presentation/providers/products_provider.dart`):
-
-```dart
-@riverpod
-Future<List<Product>> products(Ref ref) async {
-  final repo = ref.watch(productRepositoryProvider);
-  final result = await repo.getProducts();
-  return result.getOrThrow();
-}
-```
-
-5. **Build Page** (`presentation/pages/products_page.dart`):
-
-```dart
-class ProductsPage extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final productsAsync = ref.watch(productsProvider);
-
-    return AsyncValueWidget<List<Product>>(
-      value: productsAsync,
-      data: (products) => ProductsList(products: products),
-    );
-  }
-}
-```
-
-6. **Add Route** (`lib/app/router/app_router.dart`):
-
-```dart
-// Add to AppRoute enum
-enum AppRoute {
-  // ...existing routes
-  products,
-}
-
-// Add route definition
-GoRoute(
-  path: '/products',
-  name: AppRoute.products.name,
-  builder: (context, state) => const ProductsPage(),
-),
-```
-
----
-
-## 🔥 Firebase Setup
-
-### Prerequisites
-
-1. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
-2. Install Firebase CLI: `npm install -g firebase-tools`
-3. Install FlutterFire CLI: `dart pub global activate flutterfire_cli`
-
-### Configuration Steps
-
-```bash
-# 1. Login to Firebase
-firebase login
-
-# 2. Configure FlutterFire (run in project root)
-flutterfire configure
-```
-
-This generates `lib/firebase_options.dart` automatically.
-
-### Enable Services
-
-In Firebase Console, enable:
-
-- **Analytics**: Automatically enabled
-- **Crashlytics**: Dashboard → Crashlytics → Enable
-- **Performance**: Dashboard → Performance → Get Started
-- **Remote Config**: Dashboard → Remote Config → Create configuration
-
-### Uncomment Initialization
-
-In `lib/app/bootstrap.dart`, uncomment the Firebase initialization:
-
-```dart
-// Uncomment this line:
-await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-```
+- ✅ Unit tests for business logic
+- ✅ Widget tests for UI components
+- ✅ No magic numbers or hardcoded strings
+- ✅ All API calls use `ApiEndpoints` constants
+- ✅ Proper error handling with `Result<T>`
+- ✅ Analytics tracking on mount
+- ✅ Code formatted (`make format`)
+- ✅ Zero lint errors (`make lint`)
 
 ---
 
 ## 🧪 Testing
-
-### Running Tests
 
 ```bash
 # Run all tests
@@ -696,225 +223,59 @@ flutter test test/core/validators_test.dart
 flutter test --coverage
 ```
 
-### Test Structure
+**Test Types:**
 
-```
-test/
-├── core/
-│   ├── validators_test.dart
-│   └── widgets_test.dart
-├── features/
-│   └── auth/
-│       └── auth_repository_test.dart
-├── helpers/
-│   └── mocks.dart           # Shared mock classes
-└── widget_test.dart
-```
-
-### Writing Tests
-
-```dart
-// Unit test example
-test('email validator returns error for invalid email', () {
-  final validator = Validators.email('Invalid email');
-  expect(validator('not-an-email'), equals('Invalid email'));
-  expect(validator('valid@email.com'), isNull);
-});
-
-// Widget test example
-testWidgets('AppButton shows loading state', (tester) async {
-  await tester.pumpWidget(
-    MaterialApp(
-      home: AppButton(
-        label: 'Submit',
-        onPressed: () {},
-        isLoading: true,
-      ),
-    ),
-  );
-
-  expect(find.byType(CircularProgressIndicator), findsOneWidget);
-});
-```
-
-### Mocking with Mocktail
-
-```dart
-// In test/helpers/mocks.dart
-class MockAuthRepository extends Mock implements AuthRepository {}
-
-// In test file
-final mockRepo = MockAuthRepository();
-when(() => mockRepo.login(any(), any()))
-    .thenAnswer((_) async => const Success(mockUser));
-```
+- **Unit Tests:** Business logic, repositories, services
+- **Widget Tests:** UI components and pages
+- **Golden Tests:** Visual regression testing
+- **Integration Tests:** End-to-end user flows
 
 ---
 
-## � CI/CD Pipeline
+## 📦 Project Structure Highlights
 
-The project includes a comprehensive GitHub Actions workflow (`.github/workflows/ci.yml`).
+### Constants (`lib/core/constants/`)
 
-### Pipeline Overview
+- `app_constants.dart` - Durations, dimensions, validation
+- `api_endpoints.dart` - All API endpoint paths
+- `assets.dart` - Image, icon, animation paths
+- `storage_keys.dart` - Secure storage keys
 
-| Trigger            | Jobs                           | Output                       |
-| ------------------ | ------------------------------ | ---------------------------- |
-| **Pull Request**   | Analyze & Test                 | Coverage report              |
-| **Push to `main`** | Analyze & Test → Build Release | GitHub Release with APKs     |
-| **Push to `dev`**  | Analyze & Test → Build Debug   | GitHub Pre-release with APKs |
+### Reusable Widgets (`lib/core/widgets/`)
 
-### Analyze & Test Job
+Organized into dedicated files:
 
-Runs on every PR and push:
+- `async_value_widget.dart` - Loading/error/data states
+- `buttons.dart` - Primary, secondary, icon buttons
+- `text_fields.dart` - Input fields with validation
+- `animations.dart` - Entry, attention, flip animations
+- `dialogs.dart` - Confirmation, alert, input dialogs
+- `spacing.dart` - Vertical/horizontal spacing
 
-- ✅ Dependency installation
-- ✅ Code generation verification
-- ✅ Format checking (`dart format`)
-- ✅ Static analysis (`flutter analyze --fatal-infos`)
-- ✅ Unit & widget tests with coverage
-- ✅ Coverage upload to Codecov
+### Extensions (`lib/core/extensions/`)
 
-### Build Outputs
+Convenient extensions for cleaner code:
 
-APKs are built with `--split-per-abi` for optimized file sizes. The project name is automatically extracted from `pubspec.yaml`:
+- `context.colorScheme` - Theme access
+- `context.screenWidth` - Media query shortcuts
+- `'text'.capitalized` - String utilities
+- `DateTime.now().timeAgo` - Date formatting
 
-| Architecture  | Target Devices                | APK Name Format                        |
-| ------------- | ----------------------------- | -------------------------------------- |
-| `arm64-v8a`   | Modern Android phones (2017+) | `{project}-v{version}-arm64-v8a.apk`   |
-| `armeabi-v7a` | Older 32-bit Android phones   | `{project}-v{version}-armeabi-v7a.apk` |
-| `x86_64`      | Emulators, Chromebooks        | `{project}-v{version}-x86_64.apk`      |
+---
 
-> **Note**: When you rename your project using `scripts/rename_project.sh`, the CI/CD pipeline automatically uses the new project name for APK artifacts.
+## 🔥 Firebase Setup
 
-### Version Control Philosophy
-
-Versioning is **manual and intentional**:
-
-```yaml
-# pubspec.yaml
-version: 1.0.0+1 # X.Y.Z+build_number
-```
-
-- **X.Y.Z** = Semantic version (developer controls)
-- **+N** = Build number (optional tracking)
-
-**CI Guardrails:**
-
-- ❌ Blocks `-dev` versions from shipping to `main`
-- ✅ Validates CHANGELOG.md is updated
-- ✅ Creates proper GitHub Releases with tags
+1. Create Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+2. Install Firebase CLI: `npm install -g firebase-tools`
+3. Install FlutterFire CLI: `dart pub global activate flutterfire_cli`
+4. Run: `flutterfire configure`
+5. Enable services: Analytics, Crashlytics, Performance, Remote Config
 
 ---
 
 ## 📋 Changelog
 
-All notable changes are documented in [CHANGELOG.md](CHANGELOG.md), following the [Keep a Changelog](https://keepachangelog.com/) format.
-
-### Version Format
-
-```
-X.Y.Z+N
-```
-
-| Part   | Meaning                               | Example   |
-| ------ | ------------------------------------- | --------- |
-| **X**  | Major (breaking changes)              | `2.0.0`   |
-| **Y**  | Minor (new features, backward compat) | `1.1.0`   |
-| **Z**  | Patch (bug fixes)                     | `1.0.1`   |
-| **+N** | Build number (optional)               | `1.0.0+5` |
-
-### Updating the Changelog
-
-When releasing a new version:
-
-1. Move items from `[Unreleased]` to a new version section
-2. Update `pubspec.yaml` version
-3. Commit: `git commit -m "chore: release vX.Y.Z"`
-4. Push to `main` — CI creates the GitHub Release automatically
-
----
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-<details>
-<summary><strong>Build runner errors</strong></summary>
-
-```bash
-# Clean and regenerate
-make clean
-make prepare
-```
-
-</details>
-
-<details>
-<summary><strong>iOS Pod install fails</strong></summary>
-
-```bash
-cd ios
-pod deintegrate
-pod install --repo-update
-cd ..
-flutter clean
-flutter pub get
-```
-
-</details>
-
-<details>
-<summary><strong>Android Gradle sync issues</strong></summary>
-
-```bash
-cd android
-./gradlew clean
-cd ..
-flutter clean
-flutter pub get
-```
-
-</details>
-
-<details>
-<summary><strong>Code generation not working</strong></summary>
-
-Make sure you have the `part` directive in files using `@riverpod`:
-
-```dart
-// At top of file
-part 'my_provider.g.dart';
-
-@riverpod
-// ...
-```
-
-Then run:
-
-```bash
-make gen
-```
-
-</details>
-
-<details>
-<summary><strong>iOS Keychain issues after reinstall</strong></summary>
-
-The boilerplate includes `FreshInstallHandler` that automatically clears stale Keychain data. If you're still having issues:
-
-1. Delete the app from simulator/device
-2. Reset the simulator (iOS Simulator → Device → Erase All Content and Settings)
-3. Reinstall the app
-</details>
-
-### Getting Help
-
-1. Check existing [Issues](https://github.com/ShahriarHossainRifat/riverpod_go_router_boilerplate/issues)
-2. Read the [Developer Guide](DEVELOPER_GUIDE.md)
-3. Open a new issue with:
-   - Flutter version (`flutter --version`)
-   - Error message/logs
-   - Steps to reproduce
+See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 
 ---
 
@@ -923,39 +284,21 @@ The boilerplate includes `FreshInstallHandler` that automatically clears stale K
 Contributions are welcome! Please:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Contribution Guidelines
-
-- Follow the existing code style
-- Add tests for new features
-- Update documentation as needed
-- Keep PRs focused and small
+2. Create a feature branch
+3. Commit your changes
+4. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [Riverpod](https://riverpod.dev/) - Reactive caching and data-binding framework
-- [GoRouter](https://pub.dev/packages/go_router) - Declarative routing package
-- [Dio](https://pub.dev/packages/dio) - Powerful HTTP client
-- [Drift](https://drift.simonbinder.eu/) - Reactive persistence library
-- Flutter team for an amazing framework
+This project is licensed under the MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
 <div align="center">
 
-**Made with ❤️ for the Flutter community**
+**Built with ❤️ for the Flutter community**
 
 ⭐ Star this repo if you find it helpful!
 

@@ -142,14 +142,6 @@ class _HomeContent extends ConsumerWidget {
                 icon: Icons.logout,
                 label: AppLocalizations.of(context).logout,
               ),
-            const VerticalSpace.md(),
-
-            AppButton(
-              onPressed: () {
-                throw Exception('Test Crash');
-              },
-              label: 'Crash!',
-            ),
             const VerticalSpace.lg(),
           ],
         ),
