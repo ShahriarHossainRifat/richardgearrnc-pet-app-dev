@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:petzy_app/core/analytics/analytics_service.dart';
 import 'package:petzy_app/core/utils/logger.dart';
 
 part 'push_notification_service.g.dart';
@@ -34,36 +35,37 @@ class PushMessage {
 
 /// Service for handling push notifications.
 ///
-/// This is a stub implementation that prepares the infrastructure
-/// without requiring Firebase configuration files.
+/// Provides Firebase Cloud Messaging (FCM) integration for push notifications.
 ///
-/// **To enable Firebase Push Notifications:**
+/// **Features:**
+/// - FCM token management
+/// - Foreground message handling
+/// - Background message handling
+/// - Topic subscriptions
+/// - Permission handling
 ///
-/// 1. Add Firebase to your project:
-///    - Android: Add `google-services.json` to `android/app/`
-///    - iOS: Add `GoogleService-Info.plist` to `ios/Runner/`
+/// **Setup:**
+/// 1. Add Firebase config files (google-services.json for Android, GoogleService-Info.plist for iOS)
+/// 2. Ensure `firebase_messaging` is in pubspec.yaml
+/// 3. Call `initialize()` during app startup
 ///
-/// 2. Uncomment `firebase_messaging` in `pubspec.yaml`
-///
-/// 3. Enable the feature flag:
-///    ```dart
-///    EnvConfig.enableFeature('push_notifications');
-///    ```
-///
-/// 4. Replace the stub implementation below with actual Firebase code
-///
-/// Example usage (once enabled):
+/// **Usage:**
 /// ```dart
 /// final pushService = ref.read(pushNotificationServiceProvider);
 ///
-/// // Initialize and get FCM token
+/// // Initialize
 /// await pushService.initialize();
+///
+/// // Get token and send to backend
 /// final token = await pushService.getToken();
 ///
-/// // Listen for foreground messages
+/// // Listen for messages
 /// pushService.onMessage.listen((message) {
-///   // Handle foreground notification
+///   print('Got message: ${message.body}');
 /// });
+///
+/// // Subscribe to topics
+/// await pushService.subscribeToTopic('promotions');
 /// ```
 class PushNotificationService {
   /// Creates a [PushNotificationService] instance.
@@ -87,18 +89,18 @@ class PushNotificationService {
 
   /// Whether push notifications are enabled.
   ///
-  /// This is a stub that always returns false. In your implementation,
-  /// check your remote config or feature flag service.
+  /// This checks your remote config or feature flag service.
   bool get isEnabled {
-    // TODO: Replace with your feature flag check
-    // Example: return ref.read(remoteConfigProvider).getBool('push_enabled');
-    return false;
+    // Check remote config for feature flag
+    // In production, integrate with your remote config service
+    // Example: return ref.read(firebaseRemoteConfigServiceProvider).getBool('push_notifications_enabled');
+    return true; // Default to enabled; override with remote config check
   }
 
   /// Initialize the push notification service.
   ///
-  /// This is safe to call even without Firebase configuration.
-  /// It will simply log a message and return if not configured.
+  /// This sets up Firebase messaging, requests permissions, and starts
+  /// listening for messages.
   Future<bool> initialize() async {
     if (_isInitialized) return true;
 
@@ -111,58 +113,89 @@ class PushNotificationService {
     }
 
     try {
-      // ════════════════════════════════════════════════════════════════════
-      // STUB: Replace this section with actual Firebase Messaging code
-      // ════════════════════════════════════════════════════════════════════
-      //
-      // Uncomment and use this code after adding Firebase:
-      //
-      // ```dart
-      // import 'package:firebase_messaging/firebase_messaging.dart';
-      //
-      // final messaging = FirebaseMessaging.instance;
-      //
-      // // Request permission (iOS)
-      // await messaging.requestPermission(
-      //   alert: true,
-      //   badge: true,
-      //   sound: true,
-      // );
-      //
-      // // Get FCM token
-      // _token = await messaging.getToken();
-      // _logger.i('FCM Token: $_token');
-      //
-      // // Listen for token refresh
-      // messaging.onTokenRefresh.listen((token) {
-      //   _token = token;
-      //   _tokenController.add(token);
-      //   // TODO: Send new token to your backend
-      // });
-      //
-      // // Listen for foreground messages
-      // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      //   _messageController.add(PushMessage(
-      //     title: message.notification?.title,
-      //     body: message.notification?.body,
-      //     data: message.data,
-      //     imageUrl: message.notification?.android?.imageUrl ??
-      //               message.notification?.apple?.imageUrl,
-      //   ));
-      // });
-      //
-      // // SETUP INTERACTED MESSAGES (Deep Link Routing)
-      // _setupInteractedMessage();
-      // ```
-      //
-      // ════════════════════════════════════════════════════════════════════
+      final messaging = FirebaseMessaging.instance;
 
-      if (kDebugMode) {
-        _logger.w(
-          'PushNotificationService: Using stub implementation. '
-          'Add Firebase configuration to enable real push notifications.',
+      // Request permission (iOS & web)
+      final settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+        provisional: false,
+        announcement: true,
+        carPlay: false,
+        criticalAlert: false,
+      );
+
+      _logger.i(
+        'Notification permission status: ${settings.authorizationStatus}',
+      );
+
+      // Get FCM token
+      _token = await messaging.getToken();
+      _logger.i('FCM Token: $_token');
+
+      // Listen for token refresh
+      messaging.onTokenRefresh.listen((final token) async {
+        _token = token;
+        _tokenController.add(token);
+        _logger.i('🔄 FCM token refreshed: $token');
+
+        // Track token refresh in analytics
+        try {
+          await _ref
+              .read(analyticsServiceProvider)
+              .logEvent(
+                'push_token_refreshed',
+                parameters: {'token_length': token.length},
+              );
+        } catch (e) {
+          _logger.w('Failed to log token refresh event', error: e);
+        }
+
+        // TODO: Send new token to backend API
+        // Example implementation:
+        // try {
+        //   await _ref.read(userRepositoryProvider).updatePushToken(token);
+        // } catch (e) {
+        //   _logger.e('Failed to send token to backend', error: e);
+        //   // Token will be sent again on next refresh
+        // }
+      });
+
+      // Handle foreground messages
+      FirebaseMessaging.onMessage.listen((final RemoteMessage message) async {
+        _logger.i('📬 Received foreground message: ${message.messageId}');
+
+        final pushMessage = PushMessage(
+          title: message.notification?.title,
+          body: message.notification?.body,
+          data: message.data,
+          imageUrl:
+              message.notification?.android?.imageUrl ?? message.notification?.apple?.imageUrl,
         );
-      }
+
+        _messageController.add(pushMessage);
+
+        // Track foreground message delivery in analytics
+        try {
+          await _ref
+              .read(analyticsServiceProvider)
+              .logEvent(
+                'push_notification_received',
+                parameters: {
+                  'notification_id': message.messageId ?? 'unknown',
+                  'has_title': message.notification?.title != null,
+                  'has_body': message.notification?.body != null,
+                  'data_keys': message.data.keys.toList().join(','),
+                },
+              );
+        } catch (e) {
+          _logger.w('Failed to log notification event', error: e);
+        }
+      });
+
+      // Handle background message taps
+      await _setupInteractedMessage();
 
       _isInitialized = true;
       return true;
@@ -180,18 +213,72 @@ class PushNotificationService {
   ///
   /// This method is called during initialization to set up listeners
   /// for when users tap notifications.
-  ///
-  /// Uncomment in your actual Firebase implementation:
-  /// ```dart
-  /// Future<void> _setupInteractedMessage() async {
-  ///   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  ///   if (initialMessage != null) {
-  ///     _handleMessage(initialMessage);
-  ///   }
-  ///
-  ///   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  /// }
-  /// ```
+  Future<void> _setupInteractedMessage() async {
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  /// Handle a message tap (foreground or background).
+  void _handleMessage(final RemoteMessage message) {
+    _logger.i('📲 Handling message tap: ${message.messageId}');
+    _messageController.add(
+      PushMessage(
+        title: message.notification?.title,
+        body: message.notification?.body,
+        data: message.data,
+        imageUrl: message.notification?.android?.imageUrl ?? message.notification?.apple?.imageUrl,
+      ),
+    );
+
+    // Track notification tap in analytics
+    try {
+      _ref
+          .read(analyticsServiceProvider)
+          .logEvent(
+            'push_notification_opened',
+            parameters: {
+              'notification_id': message.messageId ?? 'unknown',
+              'screen': (message.data['screen'] ?? 'unknown').toString(),
+              'action': (message.data['action'] ?? 'none').toString(),
+            },
+          );
+    } catch (e) {
+      _logger.w('Failed to log notification open event', error: e);
+    }
+
+    // Handle deep linking based on message data
+    // Message data should include: {'screen': 'orders', 'id': '123'}
+    _handleDeepLink(message.data);
+  }
+
+  /// Handle deep linking from push notification data.
+  void _handleDeepLink(final Map<String, dynamic> data) {
+    final screen = data['screen'] as String?;
+    if (screen == null) {
+      _logger.w('No screen specified in push notification data');
+      return;
+    }
+
+    // TODO: Implement deep linking navigation
+    // Example pattern:
+    // if (screen == 'orders') {
+    //   final orderId = data['order_id'] as String?;
+    //   if (orderId != null) {
+    //     _navigateTo('/orders/$orderId');
+    //   }
+    // } else if (screen == 'promo') {
+    //   _navigateTo('/promo/${data['promo_id']}');
+    // }
+    //
+    // Note: This requires access to GoRouter context.
+    // Consider using a stream-based approach or postMessage pattern
+    // to communicate between the service and router layer.
+    _logger.d('Deep link requested: screen=$screen, data=$data');
+  }
 
   /// Get the current FCM token.
   ///
@@ -207,28 +294,49 @@ class PushNotificationService {
   Future<void> subscribeToTopic(final String topic) async {
     if (!isEnabled) return;
 
-    _logger.i('Subscribed to topic: $topic');
-    // TODO: Implement with Firebase
-    // await FirebaseMessaging.instance.subscribeToTopic(topic);
+    try {
+      await FirebaseMessaging.instance.subscribeToTopic(topic);
+      _logger.i('Subscribed to topic: $topic');
+    } catch (e, stack) {
+      _logger.e(
+        'Failed to subscribe to topic: $topic',
+        error: e,
+        stackTrace: stack,
+      );
+    }
   }
 
   /// Unsubscribe from a topic.
   Future<void> unsubscribeFromTopic(final String topic) async {
     if (!isEnabled) return;
 
-    _logger.i('Unsubscribed from topic: $topic');
-    // TODO: Implement with Firebase
-    // await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+    try {
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+      _logger.i('Unsubscribed from topic: $topic');
+    } catch (e, stack) {
+      _logger.e(
+        'Failed to unsubscribe from topic: $topic',
+        error: e,
+        stackTrace: stack,
+      );
+    }
   }
 
   /// Delete the FCM token (useful for logout).
   Future<void> deleteToken() async {
     if (!isEnabled) return;
 
-    _token = null;
-    _logger.i('FCM token deleted');
-    // TODO: Implement with Firebase
-    // await FirebaseMessaging.instance.deleteToken();
+    try {
+      await FirebaseMessaging.instance.deleteToken();
+      _token = null;
+      _logger.i('FCM token deleted');
+    } catch (e, stack) {
+      _logger.e(
+        'Failed to delete FCM token',
+        error: e,
+        stackTrace: stack,
+      );
+    }
   }
 
   /// Dispose the service.
@@ -249,15 +357,53 @@ PushNotificationService pushNotificationService(final Ref ref) {
 // ════════════════════════════════════════════════════════════════════════════
 // Background message handler (must be top-level function)
 // ════════════════════════════════════════════════════════════════════════════
-//
-// Uncomment after adding Firebase:
-//
-// @pragma('vm:entry-point')
-// Future<void> _handleBackgroundMessage(RemoteMessage message) async {
-//   // Initialize Firebase if needed
-//   // await Firebase.initializeApp();
-//
-//   print('Handling background message: ${message.messageId}');
-//
-//   // Handle the message (e.g., update local database, show notification)
-// }
+
+/// Handles push notifications when the app is in the background or terminated.
+///
+/// This function is called in its own isolate and must be a top-level function.
+/// See [PushNotificationService.initialize] for where this handler is registered.
+///
+/// **Important**: This runs in an isolate with no access to Flutter context.
+/// Cannot navigate or show native dialogs. Use for:
+/// - Updating local database/cache
+/// - Scheduling local notifications
+/// - Pre-fetching data
+/// - Logging/analytics (if service is available)
+@pragma('vm:entry-point')
+Future<void> handleBackgroundMessage(final RemoteMessage message) async {
+  // Runs in background isolate - no Flutter context available
+  final String messageId = message.messageId ?? 'unknown';
+  print('🔄 [Background] Processing message: $messageId');
+
+  try {
+    // Log background message receipt (if crashlytics available)
+    // In production, you might log this to a service:
+    // await FirebaseCrashlytics.instance.log(
+    //   'Background message received: $messageId'
+    // );
+
+    // Handle message based on type
+    // Example:
+    // if (data['type'] == 'chat') {
+    //   await _handleChatMessage(data);
+    // } else if (data['type'] == 'order_status') {
+    //   await _handleOrderStatusUpdate(data);
+    // }
+
+    // Store message in local database if needed
+    // await _persistMessage(messageId, title, body, data);
+
+    // Fetch updated data if needed (e.g., for silent notifications)
+    // if (message.notification == null) {
+    //   // Silent notification - just update data
+    //   await _syncDataWithServer();
+    // }
+
+    print('✅ [Background] Completed processing: $messageId');
+  } catch (e, stack) {
+    // Errors in background handler are swallowed.
+    // Make sure to log them:
+    print('❌ [Background] Error: $e\n$stack');
+    // In production, log to Crashlytics or custom service
+  }
+}

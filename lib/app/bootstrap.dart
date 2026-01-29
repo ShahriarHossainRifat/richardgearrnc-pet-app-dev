@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:petzy_app/app/app.dart';
 import 'package:petzy_app/config/env_config.dart';
 import 'package:petzy_app/core/crashlytics/crashlytics_service.dart';
+import 'package:petzy_app/core/notifications/push_notification_service.dart';
 import 'package:petzy_app/core/storage/fresh_install_handler.dart';
 import 'package:petzy_app/core/utils/connectivity.dart';
 import 'package:petzy_app/core/utils/logger.dart';
@@ -60,9 +62,16 @@ class AppBootstrap extends StatelessWidget {
       enableInDebug: true,
     );
 
-    // Note: Analytics, Performance, and RemoteConfig services are lazily initialized
-    // when first accessed through their Riverpod providers. They don't require
-    // explicit initialization here since they handle Firebase setup internally.
+    // Note: Analytics initialization should happen early for proper event tracking
+    // during app lifecycle. RemoteConfig and Performance are lazily initialized
+    // when first accessed through their Riverpod providers.
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Firebase Cloud Messaging (FCM) - Background Message Handler
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Register background message handler (must be done before initialize)
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    AppLogger.instance.i('✅ Background message handler registered');
 
     // Set up error handling (falls back to local logging if Crashlytics not initialized)
     _setupErrorHandling();
