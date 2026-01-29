@@ -82,3 +82,4 @@ export 'widgets/responsive_builder.dart';
 export 'widgets/shimmer_loading.dart';
 export 'widgets/spacing.dart';
 export 'widgets/typewriter_text.dart';
+export 'widgets/adaptive_scaffold.dart';

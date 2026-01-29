@@ -2,22 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
-import 'package:petzy_app/features/auth/domain/entities/user.dart';
-import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:petzy_app/features/home/presentation/widgets/feature_showcase.dart';
-import 'package:petzy_app/features/home/presentation/widgets/welcome_card.dart';
+import 'package:petzy_app/features/home/presentation/widgets/ai_chat_pill.dart';
+import 'package:petzy_app/features/home/presentation/widgets/service_rail.dart';
+import 'package:petzy_app/features/home/presentation/widgets/social_post_card.dart';
 import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
-/// Home page shown after successful authentication.
+/// Social Home Page with Instagram-style layout.
+///
+/// Structure:
+/// - Layer 1 (Pinned Header): Brand logo + action icons
+/// - Layer 2 (Scrollable): AI chat pill + Service rail
+/// - Layer 3 (Infinite Feed): Social posts
 class HomePage extends HookConsumerWidget {
   /// Creates a [HomePage] instance.
   const HomePage({super.key});
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final authState = ref.watch(authProvider);
     final theme = context.theme;
     final l10n = AppLocalizations.of(context);
+    final colorScheme = context.colorScheme;
 
     // Track screen view once on mount
     useOnMount(() {
@@ -25,157 +29,164 @@ class HomePage extends HookConsumerWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.home),
-        actions: [
-          const ConnectivityIndicator(),
-          AppIconButton(
-            icon: Icons.settings_outlined,
-            onPressed: () => context.pushRoute(AppRoute.settings),
+      body: CustomScrollView(
+        slivers: [
+          // Layer 1: Pinned header with brand and actions
+          SliverAppBar(
+            pinned: true,
+            floating: false,
+            backgroundColor: colorScheme.surface,
+            surfaceTintColor: Colors.transparent,
+            title: Text(
+              'PUPPIsh',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+              ),
+            ),
+            actions: [
+              // QR Scanner button
+              AppIconButton(
+                icon: Icons.qr_code_scanner,
+                onPressed: () {
+                  // TODO: Implement QR scanner
+                  ref.read(feedbackServiceProvider).showInfo(l10n.comingSoon);
+                },
+              ),
+              // Notifications button
+              AppIconButton(
+                icon: Icons.notifications_outlined,
+                onPressed: () => context.pushRoute(AppRoute.notifications),
+              ),
+            ],
+          ),
+
+          // Layer 2: AI chat pill
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              child: AiChatPill(
+                onTap: () => context.pushRoute(AppRoute.aiChat),
+              ),
+            ),
+          ),
+
+          // Layer 2: Service rail (horizontal scroll)
+          const SliverToBoxAdapter(
+            child: ServiceRail(),
+          ),
+
+          // Divider before feed
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+              child: Divider(
+                height: 1,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              ),
+            ),
+          ),
+
+          // Layer 3: Social feed
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (final context, final index) {
+                // Demo posts - in production this would come from a provider
+                return SocialPostCard(
+                  username: _mockPosts[index % _mockPosts.length].username,
+                  userAvatar: _mockPosts[index % _mockPosts.length].avatar,
+                  timeAgo: _mockPosts[index % _mockPosts.length].timeAgo,
+                  content: _mockPosts[index % _mockPosts.length].content,
+                  imageUrl: _mockPosts[index % _mockPosts.length].imageUrl,
+                  likes: _mockPosts[index % _mockPosts.length].likes,
+                  comments: _mockPosts[index % _mockPosts.length].comments,
+                );
+              },
+              childCount: 10, // Demo: show 10 posts
+            ),
+          ),
+
+          // Bottom padding for FAB clearance
+          const SliverToBoxAdapter(
+            child: VerticalSpace.xl(),
           ),
         ],
       ),
-      body: AsyncValueWidget<User?>(
-        value: authState,
-        data: (final user) {
-          return _HomeContent(user: user, theme: theme);
+      // Floating action button for creating posts
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ref.read(feedbackServiceProvider).showInfo(l10n.comingSoon);
         },
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-class _HomeContent extends ConsumerWidget {
-  const _HomeContent({required this.user, required this.theme});
+// Mock data for demo posts
+final _mockPosts = [
+  _MockPost(
+    username: 'Luna\'s Mom',
+    avatar: 'L',
+    timeAgo: '2h ago',
+    content:
+        'Luna had her first grooming session today! She was such a good girl. 🐕✨',
+    imageUrl: null,
+    likes: 24,
+    comments: 5,
+  ),
+  _MockPost(
+    username: 'Max & Charlie',
+    avatar: 'M',
+    timeAgo: '4h ago',
+    content: 'Morning walk at the park. These two are inseparable! 🐾❤️',
+    imageUrl:
+        'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400',
+    likes: 56,
+    comments: 12,
+  ),
+  _MockPost(
+    username: 'Whiskers Fan',
+    avatar: 'W',
+    timeAgo: '5h ago',
+    content:
+        'Anyone recommend a good vet in the area? Whiskers needs a checkup.',
+    imageUrl: null,
+    likes: 8,
+    comments: 15,
+  ),
+  _MockPost(
+    username: 'Bella\'s Dad',
+    avatar: 'B',
+    timeAgo: 'Yesterday',
+    content: 'Bella learned a new trick today! Proud pet parent moment 🎉',
+    imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400',
+    likes: 89,
+    comments: 23,
+  ),
+];
 
-  final User? user;
-  final ThemeData theme;
+class _MockPost {
+  const _MockPost({
+    required this.username,
+    required this.avatar,
+    required this.timeAgo,
+    required this.content,
+    required this.imageUrl,
+    required this.likes,
+    required this.comments,
+  });
 
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    return ResponsivePadding(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Show user info if authenticated, otherwise show sign-in prompt
-            if (user != null) ...[
-              // User avatar
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: theme.colorScheme.primaryContainer,
-                child: Text(
-                  user!.email.substring(0, 1).toUpperCase(),
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-              const VerticalSpace.md(),
-
-              // User info
-              Text(
-                user!.name ?? 'User',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const VerticalSpace.sm(),
-              Text(
-                user!.email,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const VerticalSpace.md(),
-            ] else ...[
-              // Sign-in prompt for unauthenticated users
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: theme.colorScheme.surfaceContainer,
-                child: Icon(
-                  Icons.person_outline,
-                  size: AppConstants.iconSizeLG,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const VerticalSpace.md(),
-              Text(
-                AppLocalizations.of(context).login,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const VerticalSpace.sm(),
-              Text(
-                AppLocalizations.of(context).signInToUnlock,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const VerticalSpace.md(),
-              AppButton(
-                variant: AppButtonVariant.primary,
-                size: AppButtonSize.large,
-                isExpanded: true,
-                onPressed: () => context.pushRoute(AppRoute.login),
-                icon: Icons.login,
-                label: AppLocalizations.of(context).login,
-              ),
-              const VerticalSpace.md(),
-            ],
-
-            // Welcome message (shown to all users)
-            WelcomeCard(theme: theme),
-            const VerticalSpace.md(),
-
-            // Feature showcase demonstrating boilerplate capabilities
-            const FeatureShowcase(),
-            const VerticalSpace.md(),
-
-            // Logout button (only shown to authenticated users)
-            if (user != null)
-              AppButton(
-                variant: AppButtonVariant.secondary,
-                size: AppButtonSize.large,
-                isExpanded: true,
-                onPressed: () => _handleLogout(context, ref),
-                icon: Icons.logout,
-                label: AppLocalizations.of(context).logout,
-              ),
-            const VerticalSpace.lg(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _handleLogout(
-    final BuildContext context,
-    final WidgetRef ref,
-  ) async {
-    final l10n = AppLocalizations.of(context);
-    final confirmed = await AppDialogs.confirm(
-      context,
-      title: l10n.logout,
-      message: l10n.confirmLogout,
-      confirmText: l10n.logout,
-      cancelText: l10n.cancel,
-    );
-
-    if (confirmed ?? false) {
-      try {
-        final authNotifier = ref.read(authProvider.notifier);
-        await authNotifier.logout();
-        // Router will automatically redirect to login when authState becomes null
-      } catch (e) {
-        if (context.mounted) {
-          ref
-              .read(feedbackServiceProvider)
-              .showError(
-                l10n.logoutFailed,
-              );
-        }
-      }
-    }
-  }
+  final String username;
+  final String avatar;
+  final String timeAgo;
+  final String content;
+  final String? imageUrl;
+  final int likes;
+  final int comments;
 }

@@ -171,7 +171,8 @@ class PushNotificationService {
           body: message.notification?.body,
           data: message.data,
           imageUrl:
-              message.notification?.android?.imageUrl ?? message.notification?.apple?.imageUrl,
+              message.notification?.android?.imageUrl ??
+              message.notification?.apple?.imageUrl,
         );
 
         _messageController.add(pushMessage);
@@ -230,7 +231,9 @@ class PushNotificationService {
         title: message.notification?.title,
         body: message.notification?.body,
         data: message.data,
-        imageUrl: message.notification?.android?.imageUrl ?? message.notification?.apple?.imageUrl,
+        imageUrl:
+            message.notification?.android?.imageUrl ??
+            message.notification?.apple?.imageUrl,
       ),
     );
 

@@ -57,6 +57,56 @@
     "description": "Home navigation label"
   },
 
+  "booking": "Booking",
+  "@booking": {
+    "description": "Booking navigation label"
+  },
+
+  "chat": "Chat",
+  "@chat": {
+    "description": "Chat/Messages navigation label"
+  },
+
+  "comingSoon": "Coming soon! This feature is under development.",
+  "@comingSoon": {
+    "description": "Placeholder text for features under development"
+  },
+
+  "aiChatPrompt": "How is your baby feeling today?",
+  "@aiChatPrompt": {
+    "description": "AI chat pill prompt text"
+  },
+
+  "serviceSitter": "Sitter",
+  "@serviceSitter": {
+    "description": "Pet sitter service label"
+  },
+
+  "serviceMarket": "Market",
+  "@serviceMarket": {
+    "description": "Pet market service label"
+  },
+
+  "serviceSchool": "School",
+  "@serviceSchool": {
+    "description": "Pet school service label"
+  },
+
+  "serviceHotel": "Hotel",
+  "@serviceHotel": {
+    "description": "Pet hotel service label"
+  },
+
+  "serviceMore": "More",
+  "@serviceMore": {
+    "description": "More services label"
+  },
+
+  "share": "Share",
+  "@share": {
+    "description": "Share button label"
+  },
+
   "darkMode": "Dark Mode",
   "@darkMode": {
     "description": "Dark mode toggle label"

@@ -42,6 +42,36 @@ class AppLocalizationsBn extends AppLocalizations {
   String get home => 'হোম';
 
   @override
+  String get booking => 'বুকিং';
+
+  @override
+  String get chat => 'চ্যাট';
+
+  @override
+  String get comingSoon => 'শীঘ্রই আসছে! এই ফিচারটি উন্নয়নাধীন।';
+
+  @override
+  String get aiChatPrompt => 'আজ আপনার বেবি কেমন অনুভব করছে?';
+
+  @override
+  String get serviceSitter => 'সিটার';
+
+  @override
+  String get serviceMarket => 'মার্কেট';
+
+  @override
+  String get serviceSchool => 'স্কুল';
+
+  @override
+  String get serviceHotel => 'হোটেল';
+
+  @override
+  String get serviceMore => 'আরও';
+
+  @override
+  String get share => 'শেয়ার';
+
+  @override
   String get darkMode => 'ডার্ক মোড';
 
   @override

@@ -42,6 +42,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get home => 'Home';
 
   @override
+  String get booking => 'Booking';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get comingSoon => 'Coming soon! This feature is under development.';
+
+  @override
+  String get aiChatPrompt => 'How is your baby feeling today?';
+
+  @override
+  String get serviceSitter => 'Sitter';
+
+  @override
+  String get serviceMarket => 'Market';
+
+  @override
+  String get serviceSchool => 'School';
+
+  @override
+  String get serviceHotel => 'Hotel';
+
+  @override
+  String get serviceMore => 'More';
+
+  @override
+  String get share => 'Share';
+
+  @override
   String get darkMode => 'Dark Mode';
 
   @override

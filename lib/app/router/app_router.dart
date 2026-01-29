@@ -66,6 +66,18 @@ enum AppRoute {
 
   /// Settings screen for user preferences.
   settings('/settings', requiresAuth: true),
+
+  /// Booking screen for pet services.
+  booking('/booking', requiresAuth: true),
+
+  /// Chat/Messages screen for conversations.
+  chat('/chat', requiresAuth: true),
+
+  /// Notifications screen.
+  notifications('/notifications', requiresAuth: true),
+
+  /// AI Chat screen for pet health assistant.
+  aiChat('/ai-chat', requiresAuth: true),
   // Example dynamic routes (uncomment and customize as needed):
   // productDetail('/product/:id', requiresAuth: true),
   // userProfile('/user/:userId', requiresAuth: true),

@@ -164,6 +164,66 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
+  /// Booking navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Booking'**
+  String get booking;
+
+  /// Chat/Messages navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// Placeholder text for features under development
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon! This feature is under development.'**
+  String get comingSoon;
+
+  /// AI chat pill prompt text
+  ///
+  /// In en, this message translates to:
+  /// **'How is your baby feeling today?'**
+  String get aiChatPrompt;
+
+  /// Pet sitter service label
+  ///
+  /// In en, this message translates to:
+  /// **'Sitter'**
+  String get serviceSitter;
+
+  /// Pet market service label
+  ///
+  /// In en, this message translates to:
+  /// **'Market'**
+  String get serviceMarket;
+
+  /// Pet school service label
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get serviceSchool;
+
+  /// Pet hotel service label
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel'**
+  String get serviceHotel;
+
+  /// More services label
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get serviceMore;
+
+  /// Share button label
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
   /// Dark mode toggle label
   ///
   /// In en, this message translates to:
