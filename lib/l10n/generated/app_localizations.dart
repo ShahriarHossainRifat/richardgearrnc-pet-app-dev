@@ -830,7 +830,7 @@ abstract class AppLocalizations {
   /// **'Login To Explore'**
   String get loginToExplore;
 
-  /// Phone number input label
+  /// Label for phone number
   ///
   /// In en, this message translates to:
   /// **'Phone Number'**
