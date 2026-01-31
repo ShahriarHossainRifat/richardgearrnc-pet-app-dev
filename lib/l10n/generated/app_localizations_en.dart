@@ -351,10 +351,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get basicNotification => 'Send Notification';
 
   @override
-  String get confirmLogout => 'Are you sure you want to sign out?';
+  String get confirmLogout => 'Are you sure you want to logout?';
 
   @override
-  String get logoutFailed => 'Failed to sign out. Please try again.';
+  String get logoutFailed => 'Failed to logout. Please try again.';
 
   @override
   String get youAreAllSet => 'You\'re all set!';
@@ -432,7 +432,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsDisabled => 'Notifications disabled';
 
   @override
-  String get signInToUnlock => 'Sign in to unlock exclusive features';
+  String get signInToUnlock => 'Sign in to unlock all features';
 
   @override
   String get loginToExplore => 'Login To Explore';
@@ -554,4 +554,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goHome => 'Go Home';
+
+  @override
+  String get bookings => 'Bookings';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get shorts => 'Shorts';
+
+  @override
+  String get searchMessages => 'Search messages...';
 }

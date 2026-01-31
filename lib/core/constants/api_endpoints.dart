@@ -49,11 +49,11 @@ abstract class ApiEndpoints {
   static const String resendVerification = '/auth/resend-verification';
 
   /// Login with Google endpoint (Firebase ID token).
-  static const String loginGoogle = '/auth/login/google';
+  static const String loginGoogle = '/auth/users/exists/email';
 
   /// Login with Firebase phone auth (ID token exchange).
   /// Used after Firebase Phone Auth verification to create app session.
-  static const String loginPhoneFirebase = '/auth/login/phone-firebase';
+  static const String loginPhoneFirebase = '/auth/users/exists/phone';
 
   // ─────────────────────────────────────────────────────────────────────────────
   // USER

@@ -433,7 +433,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get notificationsDisabled => 'নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে';
 
   @override
-  String get signInToUnlock => 'এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন';
+  String get signInToUnlock => 'সমস্ত বৈশিষ্ট্য আনলক করতে সাইন ইন করুন';
 
   @override
   String get loginToExplore => 'এক্সপ্লোর করতে লগইন করুন';
@@ -560,4 +560,16 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get goHome => 'হোমে যান';
+
+  @override
+  String get bookings => 'বুকিং';
+
+  @override
+  String get messages => 'বার্তা';
+
+  @override
+  String get shorts => 'শর্টস';
+
+  @override
+  String get searchMessages => 'বার্তা অনুসন্ধান করুন...';
 }
