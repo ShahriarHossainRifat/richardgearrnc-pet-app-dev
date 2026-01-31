@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:petzy_app/app/router/app_router.dart';
@@ -208,7 +209,7 @@ class _LoginCard extends HookConsumerWidget {
     ///
     /// Responsibilities:
     /// - Trigger login via notifier
-    /// - Navigate on success
+    /// - Navigate to role-specific page on success
     /// - Show error UI on real failures (not cancellations)
     ///
     /// Note: Cancellations (user tapping "Cancel" in Google UI) do NOT
@@ -224,11 +225,25 @@ class _LoginCard extends HookConsumerWidget {
         data: (final user) {
           // Successful authentication
           if (user != null) {
-            context.goRoute(AppRoute.home);
+            // Navigate to role-specific default route
+            final defaultRoute = user.role.defaultRoute;
+            context.goRoute(defaultRoute);
           }
           // If user is null, Google sign-in was cancelled - no error shown
         },
         error: (final error, _) {
+          // Check if user needs to sign up
+          if (error is AuthException && error.isUserNeedsSignup) {
+            // Extract email from error message
+            final email = error.message.replaceFirst('User needs to complete signup: ', '');
+            // Navigate to signup page with email parameter
+            context.goNamed(
+              AppRoute.signup.name,
+              queryParameters: {'email': email},
+            );
+            return;
+          }
+
           // Show error only for real failures (network, backend, etc.)
           context.showErrorSnackBar(l10n.googleSignInFailed);
         },
@@ -296,11 +311,15 @@ class _LoginCard extends HookConsumerWidget {
             _GoogleSignInButton(
               isLoading: isLoading.value,
               onPressed: () async {
+                if (!context.mounted) return;
                 isLoading.value = true;
                 try {
                   await handleGoogleLogin();
                 } finally {
-                  isLoading.value = false;
+                  // Only update loading state if widget is still mounted
+                  if (context.mounted) {
+                    isLoading.value = false;
+                  }
                 }
               },
             ),

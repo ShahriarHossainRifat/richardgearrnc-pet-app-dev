@@ -351,10 +351,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get basicNotification => 'Send Notification';
 
   @override
-  String get confirmLogout => 'Are you sure you want to sign out?';
+  String get confirmLogout => 'Are you sure you want to logout?';
 
   @override
-  String get logoutFailed => 'Failed to sign out. Please try again.';
+  String get logoutFailed => 'Failed to logout. Please try again.';
 
   @override
   String get youAreAllSet => 'You\'re all set!';
@@ -432,7 +432,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationsDisabled => 'Notifications disabled';
 
   @override
-  String get signInToUnlock => 'Sign in to unlock exclusive features';
+  String get signInToUnlock => 'Sign in to unlock all features';
 
   @override
   String get loginToExplore => 'Login To Explore';
@@ -554,4 +554,112 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goHome => 'Go Home';
+
+  @override
+  String get bookings => 'Bookings';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get shorts => 'Shorts';
+
+  @override
+  String get searchMessages => 'Search messages...';
+
+  @override
+  String get petSchoolProfile => 'Pet School Profile';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get contactInformation => 'Contact Information';
+
+  @override
+  String get schoolInformation => 'School Information';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get memberSince => 'Member Since';
+
+  @override
+  String get addressInformation => 'Address Information';
+
+  @override
+  String get streetAddress => 'Street Address';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get noAddress => 'No address provided';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get courses => 'Courses';
+
+  @override
+  String get noCourses => 'No courses available';
+
+  @override
+  String get off => 'OFF';
+
+  @override
+  String get weeks => 'weeks';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get beginner => 'Beginner';
+
+  @override
+  String get intermediate => 'Intermediate';
+
+  @override
+  String get advanced => 'Advanced';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get seatsAvailable => 'Seats Available';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get aboutTrainer => 'About Trainer';
 }

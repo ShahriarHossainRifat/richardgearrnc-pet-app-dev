@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:petzy_app/features/home/presentation/widgets/feature_showcase.dart';
-import 'package:petzy_app/features/home/presentation/widgets/welcome_card.dart';
+import 'package:petzy_app/features/home/presentation/widgets/home_feed.dart';
+import 'package:petzy_app/features/home/presentation/widgets/services_showcase.dart';
+import 'package:petzy_app/features/home/presentation/widgets/stories_row.dart';
+import 'package:petzy_app/features/shorts/presentation/pages/shorts_page.dart';
 import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
-/// Home page shown after successful authentication.
+/// Home page - main entry point of the app.
+///
+/// Features:
+/// - Accessible to all users (logged in and anonymous)
+/// - Tabs: Shorts and Home feed
+/// - Service showcase section
+/// - Stories section
+/// - Home feed with posts
 class HomePage extends HookConsumerWidget {
   /// Creates a [HomePage] instance.
   const HomePage({super.key});
@@ -16,7 +26,6 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    final theme = context.theme;
     final l10n = AppLocalizations.of(context);
 
     // Track screen view once on mount
@@ -24,158 +33,140 @@ class HomePage extends HookConsumerWidget {
       ref.read(analyticsServiceProvider).logScreenView(screenName: 'home');
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.home),
-        actions: [
-          const ConnectivityIndicator(),
-          AppIconButton(
-            icon: Icons.settings_outlined,
-            onPressed: () => context.pushRoute(AppRoute.settings),
-          ),
-        ],
-      ),
-      body: AsyncValueWidget<User?>(
-        value: authState,
-        data: (final user) {
-          return _HomeContent(user: user, theme: theme);
-        },
-      ),
-    );
-  }
-}
-
-class _HomeContent extends ConsumerWidget {
-  const _HomeContent({required this.user, required this.theme});
-
-  final User? user;
-  final ThemeData theme;
-
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    return ResponsivePadding(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Show user info if authenticated, otherwise show sign-in prompt
-            if (user != null) ...[
-              // User avatar
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: theme.colorScheme.primaryContainer,
-                child: Text(
-                  user!.email.substring(0, 1).toUpperCase(),
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ),
-              const VerticalSpace.md(),
-
-              // User info
-              Text(
-                user!.name ?? 'User',
-                style: theme.textTheme.headlineSmall?.copyWith(
+    return SizedBox.expand(
+      child: Material(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: DefaultTabController(
+          length: 2,
+          initialIndex: 1, // Default to Home tab
+          child: Column(
+            children: [
+              _buildAppBar(context, ref, authState),
+              // Tabs: Shorts and Home
+              TabBar(
+                tabs: [
+                  Tab(text: l10n.shorts),
+                  Tab(text: l10n.home),
+                ],
+                labelColor: context.colorScheme.primary,
+                unselectedLabelColor: context.colorScheme.onSurfaceVariant,
+                indicatorColor: context.colorScheme.primary,
+                indicatorSize: TabBarIndicatorSize.label,
+                labelStyle: context.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const VerticalSpace.sm(),
-              Text(
-                user!.email,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+              // Tab content
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    // Shorts tab
+                    const ShortsPage(),
+
+                    // Home tab - feed with services and posts
+                    const _HomeTabContent(),
+                  ],
                 ),
               ),
-              const VerticalSpace.md(),
-            ] else ...[
-              // Sign-in prompt for unauthenticated users
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: theme.colorScheme.surfaceContainer,
-                child: Icon(
-                  Icons.person_outline,
-                  size: AppConstants.iconSizeLG,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const VerticalSpace.md(),
-              Text(
-                AppLocalizations.of(context).login,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const VerticalSpace.sm(),
-              Text(
-                AppLocalizations.of(context).signInToUnlock,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const VerticalSpace.md(),
-              AppButton(
-                variant: AppButtonVariant.primary,
-                size: AppButtonSize.large,
-                isExpanded: true,
-                onPressed: () => context.pushRoute(AppRoute.login),
-                icon: Icons.login,
-                label: AppLocalizations.of(context).login,
-              ),
-              const VerticalSpace.md(),
             ],
-
-            // Welcome message (shown to all users)
-            WelcomeCard(theme: theme),
-            const VerticalSpace.md(),
-
-            // Feature showcase demonstrating boilerplate capabilities
-            const FeatureShowcase(),
-            const VerticalSpace.md(),
-
-            // Logout button (only shown to authenticated users)
-            if (user != null)
-              AppButton(
-                variant: AppButtonVariant.secondary,
-                size: AppButtonSize.large,
-                isExpanded: true,
-                onPressed: () => _handleLogout(context, ref),
-                icon: Icons.logout,
-                label: AppLocalizations.of(context).logout,
-              ),
-            const VerticalSpace.lg(),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _handleLogout(
+  /// Build the app bar with Petzy logo and login button.
+  static Widget _buildAppBar(
     final BuildContext context,
     final WidgetRef ref,
-  ) async {
-    final l10n = AppLocalizations.of(context);
-    final confirmed = await AppDialogs.confirm(
-      context,
-      title: l10n.logout,
-      message: l10n.confirmLogout,
-      confirmText: l10n.logout,
-      cancelText: l10n.cancel,
+    final AsyncValue<User?> authState,
+  ) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Petzy',
+                style: context.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colorScheme.primary,
+                ),
+              ),
+              authState.when(
+                data: (final user) {
+                  if (user != null) {
+                    // User is logged in - show settings
+                    return AppIconButton(
+                      icon: Icons.settings_outlined,
+                      onPressed: () => context.pushRoute(AppRoute.settings),
+                    );
+                  } else {
+                    // User is not logged in - show login button
+                    return AppButton(
+                      variant: AppButtonVariant.primary,
+                      size: AppButtonSize.small,
+                      isExpanded: false,
+                      onPressed: () => context.pushRoute(AppRoute.login),
+                      label: 'Login',
+                    );
+                  }
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (_, final __) => const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+}
 
-    if (confirmed ?? false) {
-      try {
-        final authNotifier = ref.read(authProvider.notifier);
-        await authNotifier.logout();
-        // Router will automatically redirect to login when authState becomes null
-      } catch (e) {
-        if (context.mounted) {
-          ref
-              .read(feedbackServiceProvider)
-              .showError(
-                l10n.logoutFailed,
-              );
-        }
-      }
-    }
+/// Home tab content with services and feed.
+class _HomeTabContent extends StatelessWidget {
+  const _HomeTabContent();
+
+  @override
+  Widget build(final BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        const VerticalSpace.md(),
+        // Top Services section
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Top Services',
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const ServicesShowcase(),
+            ],
+          ),
+        ),
+
+        const VerticalSpace.lg(),
+
+        // Stories / Status Section
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: const StoriesRow(),
+        ),
+
+        const Divider(thickness: 0.5),
+
+        // Home feed
+        const HomeFeed(),
+      ],
+    );
   }
 }
