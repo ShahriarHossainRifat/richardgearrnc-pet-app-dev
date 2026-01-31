@@ -14,6 +14,7 @@ class ServicesShowcase extends StatelessWidget {
     return GridView.count(
       crossAxisCount: 4,
       shrinkWrap: true,
+      padding: EdgeInsets.symmetric(vertical: 32),
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,

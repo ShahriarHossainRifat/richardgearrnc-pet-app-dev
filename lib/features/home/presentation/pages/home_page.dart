@@ -137,7 +137,6 @@ class _HomeTabContent extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: [
         const VerticalSpace.md(),
-
         // Top Services section
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -150,7 +149,6 @@ class _HomeTabContent extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const VerticalSpace.md(),
               const ServicesShowcase(),
             ],
           ),
