@@ -53,6 +53,17 @@ class HomePage extends HookConsumerWidget {
               ),
             ),
             actions: [
+              // QR Scanner button
+              ScaleIn(
+                delay: const Duration(milliseconds: 100),
+                child: AppIconButton(
+                  icon: Icons.qr_code_scanner,
+                  onPressed: () {
+                    // TODO: Implement QR scanner
+                    ref.read(feedbackServiceProvider).showInfo(l10n.comingSoon);
+                  },
+                ),
+              ),
               // Login/Notification buttons with scale animation
               ScaleIn(
                 delay: const Duration(milliseconds: 100),
