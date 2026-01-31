@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:petzy_app/features/pet_market/views/screens/pet_market_screen.dart';
+import 'package:petzy_app/features/pet_school/views/screens/pet_school_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:petzy_app/app/app_config.dart';
 import 'package:petzy_app/app/presentation/main_wrapper.dart';
@@ -53,6 +54,7 @@ enum AppRoute {
   profileHotel('/profile/hotel', requiresAuth: true),
   petSitter('/pet-sitter', requiresAuth: true),
   petMarket('/pet-market', requiresAuth: true),
+  petSchool('/pet-school', requiresAuth: true),
   ;
 
   const AppRoute(this.path, {required this.requiresAuth});
@@ -163,6 +165,12 @@ GoRouter appRouter(final Ref ref) {
                     path: 'pet-market',
                     name: AppRoute.petMarket.name,
                     builder: (context, state) => const PetMarketScreen(),
+                  ),
+
+                  GoRoute(
+                    path: 'pet-school',
+                    name: AppRoute.petSchool.name,
+                    builder: (context, state) => const PetSchoolScreen(),
                   ),
                 ],
               ),
