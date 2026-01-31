@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/pet_school/courses/domain/entities/course.dart';
 import 'package:petzy_app/features/pet_school/courses/presentation/providers/courses_provider.dart';

@@ -10,7 +10,7 @@ import 'package:petzy_app/features/messages/presentation/pages/messages_page.dar
 import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_hotel_profile_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_owner_profile_page.dart';
-import 'package:petzy_app/features/profile/presentation/pages/pet_school_profile_page.dart';
+import 'package:petzy_app/features/pet_school/profile/presentation/pages/pet_school_profile_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_sitter_profile_page.dart';
 import 'package:petzy_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:petzy_app/features/shorts/presentation/pages/shorts_page.dart';

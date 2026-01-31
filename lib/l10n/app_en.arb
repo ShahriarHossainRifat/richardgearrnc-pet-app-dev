@@ -889,6 +889,166 @@
   "cancel": "Cancel",
   "@cancel": {
     "description": "Cancel button text"
+  },
+
+  "petSchoolProfile": "Pet School Profile",
+  "@petSchoolProfile": {
+    "description": "Pet school profile page title"
+  },
+
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Edit profile button text"
+  },
+
+  "contactInformation": "Contact Information",
+  "@contactInformation": {
+    "description": "Contact information section title"
+  },
+
+  "schoolInformation": "School Information",
+  "@schoolInformation": {
+    "description": "School information section title"
+  },
+
+  "description": "Description",
+  "@description": {
+    "description": "Description label"
+  },
+
+  "status": "Status",
+  "@status": {
+    "description": "Status label"
+  },
+
+  "memberSince": "Member Since",
+  "@memberSince": {
+    "description": "Member since label"
+  },
+
+  "addressInformation": "Address Information",
+  "@addressInformation": {
+    "description": "Address information section title"
+  },
+
+  "streetAddress": "Street Address",
+  "@streetAddress": {
+    "description": "Street address label"
+  },
+
+  "city": "City",
+  "@city": {
+    "description": "City label"
+  },
+
+  "country": "Country",
+  "@country": {
+    "description": "Country label"
+  },
+
+  "postalCode": "Postal Code",
+  "@postalCode": {
+    "description": "Postal code label"
+  },
+
+  "noAddress": "No address provided",
+  "@noAddress": {
+    "description": "Message shown when no address is available"
+  },
+
+  "active": "Active",
+  "@active": {
+    "description": "Active status text"
+  },
+
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Inactive status text"
+  },
+
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending status text"
+  },
+
+  "rating": "Rating",
+  "@rating": {
+    "description": "Rating label"
+  },
+
+  "reviews": "Reviews",
+  "@reviews": {
+    "description": "Reviews label"
+  },
+
+  "verified": "Verified",
+  "@verified": {
+    "description": "Verified status text"
+  },
+
+  "courses": "Courses",
+  "@courses": {
+    "description": "Courses page title"
+  },
+
+  "noCourses": "No courses available",
+  "@noCourses": {
+    "description": "Message shown when no courses are available"
+  },
+
+  "off": "OFF",
+  "@off": {
+    "description": "Discount off text"
+  },
+
+  "weeks": "weeks",
+  "@weeks": {
+    "description": "Weeks duration text"
+  },
+
+  "price": "Price",
+  "@price": {
+    "description": "Price label"
+  },
+
+  "viewDetails": "View Details",
+  "@viewDetails": {
+    "description": "View details button text"
+  },
+
+  "beginner": "Beginner",
+  "@beginner": {
+    "description": "Beginner level text"
+  },
+
+  "intermediate": "Intermediate",
+  "@intermediate": {
+    "description": "Intermediate level text"
+  },
+
+  "advanced": "Advanced",
+  "@advanced": {
+    "description": "Advanced level text"
+  },
+
+  "duration": "Duration",
+  "@duration": {
+    "description": "Duration label"
+  },
+
+  "seatsAvailable": "Seats Available",
+  "@seatsAvailable": {
+    "description": "Seats available label"
+  },
+
+  "overview": "Overview",
+  "@overview": {
+    "description": "Overview section title"
+  },
+
+  "aboutTrainer": "About Trainer",
+  "@aboutTrainer": {
+    "description": "About trainer section title"
   }
 }
 
