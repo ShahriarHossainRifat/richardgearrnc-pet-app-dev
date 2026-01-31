@@ -150,9 +150,7 @@ final class Success<T> extends Result<T> {
   @override
   bool operator ==(final Object other) =>
       identical(this, other) ||
-      other is Success<T> &&
-          runtimeType == other.runtimeType &&
-          data == other.data;
+      other is Success<T> && runtimeType == other.runtimeType && data == other.data;
 
   @override
   int get hashCode => data.hashCode;
@@ -173,9 +171,7 @@ final class Failure<T> extends Result<T> {
   @override
   bool operator ==(final Object other) =>
       identical(this, other) ||
-      other is Failure<T> &&
-          runtimeType == other.runtimeType &&
-          error == other.error;
+      other is Failure<T> && runtimeType == other.runtimeType && error == other.error;
 
   @override
   int get hashCode => error.hashCode;
@@ -199,8 +195,7 @@ sealed class AppException implements Exception {
   final StackTrace? stackTrace;
 
   @override
-  String toString() =>
-      'AppException: $message${code != null ? ' (code: $code)' : ''}';
+  String toString() => 'AppException: $message${code != null ? ' (code: $code)' : ''}';
 }
 
 /// Network-related exceptions.
@@ -224,12 +219,11 @@ final class NetworkException extends AppException {
       const NetworkException(message: 'Request timed out', code: 'TIMEOUT');
 
   /// Server error (5xx)
-  factory NetworkException.serverError([final int? statusCode]) =>
-      NetworkException(
-        message: 'Server error occurred',
-        code: 'SERVER_ERROR',
-        statusCode: statusCode,
-      );
+  factory NetworkException.serverError([final int? statusCode]) => NetworkException(
+    message: 'Server error occurred',
+    code: 'SERVER_ERROR',
+    statusCode: statusCode,
+  );
 
   /// Unauthorized (401)
   factory NetworkException.unauthorized() => const NetworkException(
@@ -274,8 +268,22 @@ final class AuthException extends AppException {
     code: isCancelled ? 'GOOGLE_SIGN_IN_CANCELLED' : 'GOOGLE_SIGN_IN_FAILED',
   );
 
+  /// User needs to complete signup.
+  ///
+  /// Thrown when checking user existence returns `isUserExists: false`.
+  /// Contains the user's email or phone for pre-filling signup form.
+  factory AuthException.userNeedsSignup({
+    required final String identifier,
+  }) => AuthException(
+    message: 'User needs to complete signup: $identifier',
+    code: 'USER_NEEDS_SIGNUP',
+  );
+
   /// Check if this is a Google sign-in cancellation.
   bool get isGoogleSignInCancelled => code == 'GOOGLE_SIGN_IN_CANCELLED';
+
+  /// Check if user needs to complete signup.
+  bool get isUserNeedsSignup => code == 'USER_NEEDS_SIGNUP';
 }
 
 /// Validation-related exceptions.

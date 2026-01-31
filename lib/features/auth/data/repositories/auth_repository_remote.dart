@@ -8,7 +8,9 @@ import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
+import 'package:petzy_app/core/utils/logger.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/features/auth/domain/entities/user_exists_response.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
 /// Remote implementation of [AuthRepository] for actual API calls.
@@ -28,6 +30,50 @@ class AuthRepositoryRemote implements AuthRepository {
 
   /// Secure storage for storing tokens.
   final FlutterSecureStorage secureStorage;
+
+  @override
+  Future<Result<UserExistsResponse>> checkUserExistsByEmail(
+    final String email,
+  ) async {
+    final result = await _apiClient.post<Map<String, dynamic>>(
+      ApiEndpoints.checkUserExistsByEmail,
+      data: {'email': email},
+      fromJson: (final json) => json as Map<String, dynamic>,
+    );
+
+    return result.fold(
+      onSuccess: (final response) {
+        AppLogger.instance.i('📧 User existence check response: $response');
+        final existsResponse = UserExistsResponse.fromJson(response);
+        AppLogger.instance.i(
+          '📧 Parsed: isUserExists=${existsResponse.isUserExists}, '
+          'role=${existsResponse.user?.role}, '
+          'hasToken=${existsResponse.accessToken != null}',
+        );
+        return Success(existsResponse);
+      },
+      onFailure: Failure.new,
+    );
+  }
+
+  @override
+  Future<Result<UserExistsResponse>> checkUserExistsByPhone(
+    final String phone,
+  ) async {
+    final result = await _apiClient.post<Map<String, dynamic>>(
+      ApiEndpoints.checkUserExistsByPhone,
+      data: {'phone': phone},
+      fromJson: (final json) => json as Map<String, dynamic>,
+    );
+
+    return result.fold(
+      onSuccess: (final response) {
+        final existsResponse = UserExistsResponse.fromJson(response);
+        return Success(existsResponse);
+      },
+      onFailure: Failure.new,
+    );
+  }
 
   @override
   Future<Result<User>> login(final String email, final String password) async {
@@ -76,19 +122,46 @@ class AuthRepositoryRemote implements AuthRepository {
   Future<Result<User>> loginWithGoogle({
     required final GoogleSignInService googleSignInService,
   }) async {
-    // 1. Authenticate with Google and get Firebase ID token
     try {
-      final firebaseIdToken = await googleSignInService.signIn();
+      // 1. Authenticate with Google and get user email + Firebase ID token
+      final googleSignInResult = await googleSignInService.signIn();
 
-      // 2. Exchange Firebase ID token for app auth token
-      final result = await _apiClient.post<Map<String, dynamic>>(
-        ApiEndpoints.loginGoogle,
-        data: {'id_token': firebaseIdToken},
-        fromJson: (final json) => json as Map<String, dynamic>,
+      // 2. Check if user exists by sending email to backend
+      final existsResult = await checkUserExistsByEmail(
+        googleSignInResult.email,
       );
 
-      return result.fold(
-        onSuccess: _handleAuthResponse,
+      // Handle existence check result
+      return existsResult.fold(
+        onSuccess: (final existsResponse) async {
+          // If user doesn't exist, return failure indicating signup needed
+          if (!existsResponse.isUserExists) {
+            return Failure(
+              AuthException.userNeedsSignup(
+                identifier: googleSignInResult.email,
+              ),
+            );
+          }
+
+          // User exists - store tokens and return user
+          if (existsResponse.accessToken != null &&
+              existsResponse.refreshToken != null &&
+              existsResponse.user != null) {
+            await _storeTokens(
+              existsResponse.accessToken!,
+              existsResponse.refreshToken!,
+            );
+            return Success(existsResponse.user!);
+          }
+
+          // User exists but tokens missing - this shouldn't happen
+          return Failure(
+            AuthException(
+              message: 'User exists but authentication data incomplete',
+              code: 'INCOMPLETE_AUTH_DATA',
+            ),
+          );
+        },
         onFailure: Failure.new,
       );
     } on GoogleSignInException catch (e) {
@@ -272,6 +345,17 @@ class AuthRepositoryRemote implements AuthRepository {
         ),
       );
     }
+  }
+
+  /// Stores authentication tokens in secure storage.
+  Future<void> _storeTokens(
+    final String accessToken,
+    final String refreshToken,
+  ) async {
+    await Future.wait([
+      secureStorage.write(key: StorageKeys.accessToken, value: accessToken),
+      secureStorage.write(key: StorageKeys.refreshToken, value: refreshToken),
+    ]);
   }
 
   /// Clears all stored authentication tokens and user data asynchronously.

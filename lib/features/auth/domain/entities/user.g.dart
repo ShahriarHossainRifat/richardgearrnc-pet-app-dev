@@ -15,6 +15,7 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
+  role: json['role'] == null ? UserRole.petOwner : _roleFromJson(json['role']),
 );
 
 Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
@@ -24,4 +25,5 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'avatar_url': instance.avatarUrl,
   'is_email_verified': instance.isEmailVerified,
   'created_at': instance.createdAt?.toIso8601String(),
+  'role': _roleToJson(instance.role),
 };

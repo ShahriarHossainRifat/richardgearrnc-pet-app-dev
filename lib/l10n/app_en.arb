@@ -851,194 +851,44 @@
     "description": "Button text to navigate to home page"
   },
 
-  "petSchoolProfile": "Pet School Profile",
-  "@petSchoolProfile": {
-    "description": "Pet school profile screen title"
+  "bookings": "Bookings",
+  "@bookings": {
+    "description": "Bookings page title and navigation label"
   },
 
-  "schoolInformation": "School Information",
-  "@schoolInformation": {
-    "description": "Section header for school information"
+  "messages": "Messages",
+  "@messages": {
+    "description": "Messages page title and navigation label"
   },
 
-  "contactInformation": "Contact Information",
-  "@contactInformation": {
-    "description": "Section header for contact information"
+  "shorts": "Shorts",
+  "@shorts": {
+    "description": "Shorts page title and navigation label"
   },
 
-  "addressInformation": "Address Information",
-  "@addressInformation": {
-    "description": "Section header for address information"
+  "searchMessages": "Search messages...",
+  "@searchMessages": {
+    "description": "Placeholder text for message search field"
   },
 
-  "statistics": "Statistics",
-  "@statistics": {
-    "description": "Section header for statistics"
+  "signInToUnlock": "Sign in to unlock all features",
+  "@signInToUnlock": {
+    "description": "Message shown to unauthenticated users on home page"
   },
 
-  "verified": "Verified",
-  "@verified": {
-    "description": "Badge text for verified school"
+  "confirmLogout": "Are you sure you want to logout?",
+  "@confirmLogout": {
+    "description": "Confirmation message for logout action"
   },
 
-  "rating": "Rating",
-  "@rating": {
-    "description": "Label for rating"
+  "logoutFailed": "Failed to logout. Please try again.",
+  "@logoutFailed": {
+    "description": "Error message when logout fails"
   },
 
-  "reviews": "Reviews",
-  "@reviews": {
-    "description": "Label for reviews"
-  },
-
-  "phoneNumber": "Phone Number",
-  "@phoneNumber": {
-    "description": "Label for phone number"
-  },
-
-  "description": "Description",
-  "@description": {
-    "description": "Label for description"
-  },
-
-  "streetAddress": "Street Address",
-  "@streetAddress": {
-    "description": "Label for street address"
-  },
-
-  "city": "City",
-  "@city": {
-    "description": "Label for city"
-  },
-
-  "country": "Country",
-  "@country": {
-    "description": "Label for country"
-  },
-
-  "postalCode": "Postal Code",
-  "@postalCode": {
-    "description": "Label for postal code"
-  },
-
-  "status": "Status",
-  "@status": {
-    "description": "Label for status"
-  },
-
-  "active": "Active",
-  "@active": {
-    "description": "Status text for active"
-  },
-
-  "inactive": "Inactive",
-  "@inactive": {
-    "description": "Status text for inactive"
-  },
-
-  "pending": "Pending",
-  "@pending": {
-    "description": "Status text for pending"
-  },
-
-  "editProfile": "Edit Profile",
-  "@editProfile": {
-    "description": "Button text to edit profile"
-  },
-
-  "noAddress": "No address information available",
-  "@noAddress": {
-    "description": "Message when no address is available"
-  },
-
-  "memberSince": "Member Since",
-  "@memberSince": {
-    "description": "Label for member since date"
-  },
-
-  "courses": "Courses",
-  "@courses": {
-    "description": "Title for courses screen"
-  },
-
-  "noCourses": "No courses available",
-  "@noCourses": {
-    "description": "Message when no courses are available"
-  },
-
-  "off": "OFF",
-  "@off": {
-    "description": "Text for discount label"
-  },
-
-  "courseFor": "Course For",
-  "@courseFor": {
-    "description": "Label for course target pet type"
-  },
-
-  "weeks": "weeks",
-  "@weeks": {
-    "description": "Duration unit for weeks"
-  },
-
-  "duration": "Duration",
-  "@duration": {
-    "description": "Label for course duration"
-  },
-
-  "seatsAvailable": "seats left",
-  "@seatsAvailable": {
-    "description": "Label for available seats"
-  },
-
-  "price": "Price",
-  "@price": {
-    "description": "Label for price"
-  },
-
-  "enroll": "Enroll",
-  "@enroll": {
-    "description": "Button text to enroll in course"
-  },
-
-  "enrollIn": "Enroll in",
-  "@enrollIn": {
-    "description": "Message text for enrolling in a course"
-  },
-
-  "beginner": "Beginner",
-  "@beginner": {
-    "description": "Course level beginner"
-  },
-
-  "intermediate": "Intermediate",
-  "@intermediate": {
-    "description": "Course level intermediate"
-  },
-
-  "advanced": "Advanced",
-  "@advanced": {
-    "description": "Course level advanced"
-  },
-
-  "viewDetails": "View Details",
-  "@viewDetails": {
-    "description": "Button text to view course details"
-  },
-
-  "courseDetails": "Course Details",
-  "@courseDetails": {
-    "description": "Title for course details screen"
-  },
-
-  "overview": "Overview",
-  "@overview": {
-    "description": "Section title for course overview"
-  },
-
-  "aboutTrainer": "About Trainer",
-  "@aboutTrainer": {
-    "description": "Section title for trainer information"
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
   }
 }
 
