@@ -26,6 +26,7 @@ part 'app_router.g.dart';
 enum AppRoute {
   splash('/splash', requiresAuth: false),
   login('/login', requiresAuth: false),
+  signup('/signup', requiresAuth: false),
   otpVerification('/otp-verification/:phoneNumber', requiresAuth: false),
   home('/', requiresAuth: false),
   shorts('/shorts', requiresAuth: false),

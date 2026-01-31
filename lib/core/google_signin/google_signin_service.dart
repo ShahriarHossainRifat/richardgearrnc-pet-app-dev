@@ -45,9 +45,7 @@ class GoogleSignInService {
         // iOS requires clientId from GoogleService-Info.plist
         clientId: Platform.isIOS ? GoogleSignInConfig.iosClientId : null,
         // Android requires serverClientId for Credential Manager integration
-        serverClientId: Platform.isAndroid
-            ? GoogleSignInConfig.androidServerClientId
-            : null,
+        serverClientId: Platform.isAndroid ? GoogleSignInConfig.androidServerClientId : null,
       );
       _isInitialized = true;
     } catch (e, stack) {
@@ -73,13 +71,13 @@ class GoogleSignInService {
   /// 4. Extracts ID token (required for Firebase)
   /// 5. Creates Firebase credential
   /// 6. Authenticates with Firebase
-  /// 7. Returns Firebase ID token (safe for APIs)
+  /// 7. Returns user email and Firebase ID token
   ///
-  /// Returns the Firebase ID token for use in backend API calls.
+  /// Returns [GoogleSignInResult] containing email and Firebase ID token.
   ///
   /// Throws [GoogleSignInException] on any error including user cancellation.
   /// User cancellation is indicated by [GoogleSignInException.isCancelled] = true.
-  Future<String> signIn() async {
+  Future<GoogleSignInResult> signIn() async {
     try {
       // 1️⃣ Ensure GoogleSignIn is initialized with serverClientId
       await _ensureInitialized();
@@ -96,8 +94,15 @@ class GoogleSignInService {
       final idToken = googleAuth.idToken;
       if (idToken == null) {
         throw const GoogleSignInException(
-          message:
-              'Missing Google ID token. Check serverClientId configuration.',
+          message: 'Missing Google ID token. Check serverClientId configuration.',
+        );
+      }
+
+      // Extract email from Google account
+      final email = googleAccount.email;
+      if (email.isEmpty) {
+        throw const GoogleSignInException(
+          message: 'Failed to retrieve email from Google account',
         );
       }
 
@@ -126,7 +131,10 @@ class GoogleSignInService {
         );
       }
 
-      return firebaseIdToken;
+      return GoogleSignInResult(
+        email: email,
+        firebaseIdToken: firebaseIdToken,
+      );
     } on firebase_auth.FirebaseAuthException catch (e, stack) {
       AppLogger.instance.e(
         'FirebaseAuthException during Google sign-in',
@@ -249,4 +257,19 @@ class GoogleSignInException implements Exception {
 
   @override
   String toString() => 'GoogleSignInException: $message';
+}
+
+/// Result of a successful Google Sign-In operation.
+class GoogleSignInResult {
+  /// Creates a [GoogleSignInResult].
+  const GoogleSignInResult({
+    required this.email,
+    required this.firebaseIdToken,
+  });
+
+  /// The user's email address from Google account.
+  final String email;
+
+  /// Firebase ID token for backend API authentication.
+  final String firebaseIdToken;
 }

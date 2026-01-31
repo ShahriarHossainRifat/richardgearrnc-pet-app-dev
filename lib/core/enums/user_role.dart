@@ -23,11 +23,19 @@ enum UserRole {
 
   /// Parse a string to UserRole.
   /// Returns null if the string doesn't match any role.
+  ///
+  /// Supports multiple formats:
+  /// - camelCase: "petOwner", "petSitter", "petSchool", "petHotel"
+  /// - UPPER_SNAKE_CASE: "PET_OWNER", "PET_SITTER", "PET_SCHOOL", "PET_HOTEL"
   static UserRole? fromString(final String? value) {
     if (value == null) return null;
+
+    // Normalize the input to handle different formats
+    final normalized = value.toLowerCase().replaceAll('_', '');
+
     try {
       return UserRole.values.firstWhere(
-        (final role) => role.name == value.toLowerCase(),
+        (final role) => role.name.toLowerCase() == normalized,
       );
     } catch (e) {
       return null;
