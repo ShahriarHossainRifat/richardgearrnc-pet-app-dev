@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String get id; String get email; String? get name;@JsonKey(name: 'avatar_url') String? get avatarUrl;@JsonKey(name: 'is_email_verified') bool get isEmailVerified;@JsonKey(name: 'created_at') DateTime? get createdAt;
+ String get id; String get email; String? get name;@JsonKey(name: 'avatar_url') String? get avatarUrl;@JsonKey(name: 'is_email_verified') bool get isEmailVerified;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(fromJson: _roleFromJson, toJson: _roleToJson) UserRole get role;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.isEmailVerified, isEmailVerified) || other.isEmailVerified == isEmailVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.isEmailVerified, isEmailVerified) || other.isEmailVerified == isEmailVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,avatarUrl,isEmailVerified,createdAt);
+int get hashCode => Object.hash(runtimeType,id,email,name,avatarUrl,isEmailVerified,createdAt,role);
 
 @override
 String toString() {
-  return 'User(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isEmailVerified: $isEmailVerified, createdAt: $createdAt)';
+  return 'User(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isEmailVerified: $isEmailVerified, createdAt: $createdAt, role: $role)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String email, String? name,@JsonKey(name: 'avatar_url') String? avatarUrl,@JsonKey(name: 'is_email_verified') bool isEmailVerified,@JsonKey(name: 'created_at') DateTime? createdAt
+ String id, String email, String? name,@JsonKey(name: 'avatar_url') String? avatarUrl,@JsonKey(name: 'is_email_verified') bool isEmailVerified,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(fromJson: _roleFromJson, toJson: _roleToJson) UserRole role
 });
 
 
@@ -65,7 +65,7 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? name = freezed,Object? avatarUrl = freezed,Object? isEmailVerified = null,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? name = freezed,Object? avatarUrl = freezed,Object? isEmailVerified = null,Object? createdAt = freezed,Object? role = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,8 @@ as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,isEmailVerified: null == isEmailVerified ? _self.isEmailVerified : isEmailVerified // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as UserRole,
   ));
 }
 
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String? name, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'is_email_verified')  bool isEmailVerified, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String? name, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'is_email_verified')  bool isEmailVerified, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(fromJson: _roleFromJson, toJson: _roleToJson)  UserRole role)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVerified,_that.createdAt);case _:
+return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVerified,_that.createdAt,_that.role);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVer
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String? name, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'is_email_verified')  bool isEmailVerified, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String? name, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'is_email_verified')  bool isEmailVerified, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(fromJson: _roleFromJson, toJson: _roleToJson)  UserRole role)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVerified,_that.createdAt);case _:
+return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVerified,_that.createdAt,_that.role);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVer
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String? name, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'is_email_verified')  bool isEmailVerified, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String? name, @JsonKey(name: 'avatar_url')  String? avatarUrl, @JsonKey(name: 'is_email_verified')  bool isEmailVerified, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(fromJson: _roleFromJson, toJson: _roleToJson)  UserRole role)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVerified,_that.createdAt);case _:
+return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVerified,_that.createdAt,_that.role);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.id,_that.email,_that.name,_that.avatarUrl,_that.isEmailVer
 @JsonSerializable()
 
 class _User implements User {
-  const _User({required this.id, required this.email, this.name, @JsonKey(name: 'avatar_url') this.avatarUrl, @JsonKey(name: 'is_email_verified') this.isEmailVerified = false, @JsonKey(name: 'created_at') this.createdAt});
+  const _User({required this.id, required this.email, this.name, @JsonKey(name: 'avatar_url') this.avatarUrl, @JsonKey(name: 'is_email_verified') this.isEmailVerified = false, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(fromJson: _roleFromJson, toJson: _roleToJson) this.role = UserRole.petOwner});
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 @override final  String id;
@@ -223,6 +224,7 @@ class _User implements User {
 @override@JsonKey(name: 'avatar_url') final  String? avatarUrl;
 @override@JsonKey(name: 'is_email_verified') final  bool isEmailVerified;
 @override@JsonKey(name: 'created_at') final  DateTime? createdAt;
+@override@JsonKey(fromJson: _roleFromJson, toJson: _roleToJson) final  UserRole role;
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.isEmailVerified, isEmailVerified) || other.isEmailVerified == isEmailVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.isEmailVerified, isEmailVerified) || other.isEmailVerified == isEmailVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,avatarUrl,isEmailVerified,createdAt);
+int get hashCode => Object.hash(runtimeType,id,email,name,avatarUrl,isEmailVerified,createdAt,role);
 
 @override
 String toString() {
-  return 'User(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isEmailVerified: $isEmailVerified, createdAt: $createdAt)';
+  return 'User(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isEmailVerified: $isEmailVerified, createdAt: $createdAt, role: $role)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String email, String? name,@JsonKey(name: 'avatar_url') String? avatarUrl,@JsonKey(name: 'is_email_verified') bool isEmailVerified,@JsonKey(name: 'created_at') DateTime? createdAt
+ String id, String email, String? name,@JsonKey(name: 'avatar_url') String? avatarUrl,@JsonKey(name: 'is_email_verified') bool isEmailVerified,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(fromJson: _roleFromJson, toJson: _roleToJson) UserRole role
 });
 
 
@@ -274,7 +276,7 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? name = freezed,Object? avatarUrl = freezed,Object? isEmailVerified = null,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? name = freezed,Object? avatarUrl = freezed,Object? isEmailVerified = null,Object? createdAt = freezed,Object? role = null,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -282,7 +284,8 @@ as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,isEmailVerified: null == isEmailVerified ? _self.isEmailVerified : isEmailVerified // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as UserRole,
   ));
 }
 

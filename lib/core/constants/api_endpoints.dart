@@ -48,12 +48,23 @@ abstract class ApiEndpoints {
   /// Resend verification email endpoint.
   static const String resendVerification = '/auth/resend-verification';
 
+  /// Check if user exists by email.
+  /// Sends {"email": "user@example.com"}.
+  /// Returns {"success": true, "message": "...", "data": {"isUserExists": bool}}.
+  static const String checkUserExistsByEmail = '/auth/users/exists/email';
+
+  /// Check if user exists by phone.
+  /// Sends {"phone": "+1234567890"}.
+  /// Returns {"success": true, "message": "...", "data": {"isUserExists": bool}}.
+  static const String checkUserExistsByPhone = '/auth/users/exists/phone';
+
   /// Login with Google endpoint (Firebase ID token).
-  static const String loginGoogle = '/auth/login/google';
+  /// Returns user existence, role, and tokens.
+  static const String loginGoogle = '/auth/users/exists/email';
 
   /// Login with Firebase phone auth (ID token exchange).
   /// Used after Firebase Phone Auth verification to create app session.
-  static const String loginPhoneFirebase = '/auth/login/phone-firebase';
+  static const String loginPhoneFirebase = '/auth/users/exists/phone';
 
   // ─────────────────────────────────────────────────────────────────────────────
   // USER

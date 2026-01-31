@@ -668,16 +668,16 @@ abstract class AppLocalizations {
   /// **'Send Notification'**
   String get basicNotification;
 
-  /// Logout confirmation message
+  /// Confirmation message for logout action
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to sign out?'**
+  /// **'Are you sure you want to logout?'**
   String get confirmLogout;
 
   /// Error message when logout fails
   ///
   /// In en, this message translates to:
-  /// **'Failed to sign out. Please try again.'**
+  /// **'Failed to logout. Please try again.'**
   String get logoutFailed;
 
   /// Welcome message on home page
@@ -818,10 +818,10 @@ abstract class AppLocalizations {
   /// **'Notifications disabled'**
   String get notificationsDisabled;
 
-  /// Sign-in prompt message on home screen for unauthenticated users
+  /// Message shown to unauthenticated users on home page
   ///
   /// In en, this message translates to:
-  /// **'Sign in to unlock exclusive features'**
+  /// **'Sign in to unlock all features'**
   String get signInToUnlock;
 
   /// Login page hero title
@@ -1039,6 +1039,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go Home'**
   String get goHome;
+
+  /// Bookings page title and navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookings;
+
+  /// Messages page title and navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messages;
+
+  /// Shorts page title and navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Shorts'**
+  String get shorts;
+
+  /// Placeholder text for message search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search messages...'**
+  String get searchMessages;
 }
 
 class _AppLocalizationsDelegate
