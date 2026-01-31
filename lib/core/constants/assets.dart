@@ -53,6 +53,9 @@ abstract class Assets {
   /// OTP screen background image.
   static const String otpBackground = '$imagesPath/otp_background.png';
 
+  /// dog image
+  static const String dogImage = '$imagesPath/Container.png';
+
   // ─────────────────────────────────────────────────────────────────────────────
   // PLACEHOLDERS
   // ─────────────────────────────────────────────────────────────────────────────

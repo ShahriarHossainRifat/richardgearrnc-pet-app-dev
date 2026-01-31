@@ -50,8 +50,8 @@ enum AppRoute {
   otpVerification('/otp-verification/:phoneNumber', requiresAuth: false),
 
   /// Home screen shown after successful login.
+  // home('/', requiresAuth: false),
   home('/', requiresAuth: false),
-
   /// Onboarding screen shown to new users.
   onboarding('/onboarding', requiresAuth: false),
 
