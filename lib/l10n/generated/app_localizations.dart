@@ -1159,6 +1159,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Member Since'**
   String get memberSince;
+
+  /// Title for courses screen
+  ///
+  /// In en, this message translates to:
+  /// **'Courses'**
+  String get courses;
+
+  /// Message when no courses are available
+  ///
+  /// In en, this message translates to:
+  /// **'No courses available'**
+  String get noCourses;
+
+  /// Text for discount label
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get off;
+
+  /// Label for course target pet type
+  ///
+  /// In en, this message translates to:
+  /// **'Course For'**
+  String get courseFor;
+
+  /// Duration unit for weeks
+  ///
+  /// In en, this message translates to:
+  /// **'weeks'**
+  String get weeks;
+
+  /// Label for course duration
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// Label for available seats
+  ///
+  /// In en, this message translates to:
+  /// **'seats left'**
+  String get seatsAvailable;
+
+  /// Label for price
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// Button text to enroll in course
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll'**
+  String get enroll;
+
+  /// Message text for enrolling in a course
+  ///
+  /// In en, this message translates to:
+  /// **'Enroll in'**
+  String get enrollIn;
+
+  /// Course level beginner
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get beginner;
+
+  /// Course level intermediate
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get intermediate;
+
+  /// Course level advanced
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advanced;
+
+  /// Button text to view course details
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// Title for course details screen
+  ///
+  /// In en, this message translates to:
+  /// **'Course Details'**
+  String get courseDetails;
+
+  /// Section title for course overview
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// Section title for trainer information
+  ///
+  /// In en, this message translates to:
+  /// **'About Trainer'**
+  String get aboutTrainer;
 }
 
 class _AppLocalizationsDelegate

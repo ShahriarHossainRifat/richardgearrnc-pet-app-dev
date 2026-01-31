@@ -954,6 +954,91 @@
   "memberSince": "Member Since",
   "@memberSince": {
     "description": "Label for member since date"
+  },
+
+  "courses": "Courses",
+  "@courses": {
+    "description": "Title for courses screen"
+  },
+
+  "noCourses": "No courses available",
+  "@noCourses": {
+    "description": "Message when no courses are available"
+  },
+
+  "off": "OFF",
+  "@off": {
+    "description": "Text for discount label"
+  },
+
+  "courseFor": "Course For",
+  "@courseFor": {
+    "description": "Label for course target pet type"
+  },
+
+  "weeks": "weeks",
+  "@weeks": {
+    "description": "Duration unit for weeks"
+  },
+
+  "duration": "Duration",
+  "@duration": {
+    "description": "Label for course duration"
+  },
+
+  "seatsAvailable": "seats left",
+  "@seatsAvailable": {
+    "description": "Label for available seats"
+  },
+
+  "price": "Price",
+  "@price": {
+    "description": "Label for price"
+  },
+
+  "enroll": "Enroll",
+  "@enroll": {
+    "description": "Button text to enroll in course"
+  },
+
+  "enrollIn": "Enroll in",
+  "@enrollIn": {
+    "description": "Message text for enrolling in a course"
+  },
+
+  "beginner": "Beginner",
+  "@beginner": {
+    "description": "Course level beginner"
+  },
+
+  "intermediate": "Intermediate",
+  "@intermediate": {
+    "description": "Course level intermediate"
+  },
+
+  "advanced": "Advanced",
+  "@advanced": {
+    "description": "Course level advanced"
+  },
+
+  "viewDetails": "View Details",
+  "@viewDetails": {
+    "description": "Button text to view course details"
+  },
+
+  "courseDetails": "Course Details",
+  "@courseDetails": {
+    "description": "Title for course details screen"
+  },
+
+  "overview": "Overview",
+  "@overview": {
+    "description": "Section title for course overview"
+  },
+
+  "aboutTrainer": "About Trainer",
+  "@aboutTrainer": {
+    "description": "Section title for trainer information"
   }
 }
 

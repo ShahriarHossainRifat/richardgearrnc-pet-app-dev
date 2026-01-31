@@ -614,4 +614,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get memberSince => 'Member Since';
+
+  @override
+  String get courses => 'Courses';
+
+  @override
+  String get noCourses => 'No courses available';
+
+  @override
+  String get off => 'OFF';
+
+  @override
+  String get courseFor => 'Course For';
+
+  @override
+  String get weeks => 'weeks';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get seatsAvailable => 'seats left';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get enroll => 'Enroll';
+
+  @override
+  String get enrollIn => 'Enroll in';
+
+  @override
+  String get beginner => 'Beginner';
+
+  @override
+  String get intermediate => 'Intermediate';
+
+  @override
+  String get advanced => 'Advanced';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get courseDetails => 'Course Details';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get aboutTrainer => 'About Trainer';
 }
