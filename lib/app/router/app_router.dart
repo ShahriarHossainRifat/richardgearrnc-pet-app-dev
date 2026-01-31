@@ -138,7 +138,7 @@ GoRouter appRouter(final Ref ref) {
     initialLocation: AppRoute.splash.path,
     debugLogDiagnostics: true,
     refreshListenable: lifecycleListenable,
-    routes: [splashRoute, ...authRoutes, ...protectedRoutes],
+    // routes: [splashRoute, ...authRoutes, ...protectedRoutes],
     routes: [
       splashRoute,
       ...authRoutes,
