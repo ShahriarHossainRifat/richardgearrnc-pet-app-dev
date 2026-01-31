@@ -3,14 +3,20 @@ import 'package:petzy_app/app/presentation/pages/placeholder_page.dart';
 import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/features/home/presentation/pages/home_page.dart';
 import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:petzy_app/features/petHotel/presentation/screen/pet_hotel_screen.dart';
 import 'package:petzy_app/features/settings/presentation/pages/settings_page.dart';
 
 /// Routes that require authentication.
 final protectedRoutes = [
-  GoRoute(
+  // GoRoute(
+  //   path: AppRoute.home.path,
+  //   name: AppRoute.home.name,
+  //   builder: (final context, final state) => const HomePage(),
+  // ),
+    GoRoute(
     path: AppRoute.home.path,
     name: AppRoute.home.name,
-    builder: (final context, final state) => const HomePage(),
+    builder: (final context, final state) =>  PetHotelScreen(authToken: '',),
   ),
   GoRoute(
     path: AppRoute.profile.path,
