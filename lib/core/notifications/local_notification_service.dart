@@ -21,20 +21,17 @@ class LocalNotificationService {
   LocalNotificationService(this._ref);
 
   final Ref _ref;
-  final FlutterLocalNotificationsPlugin _plugin =
-      FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
 
   AppLogger get _logger => _ref.read(loggerProvider);
 
   bool _isInitialized = false;
   String? _pendingDeepLink;
 
-  final _notificationTapController =
-      StreamController<NotificationResponse>.broadcast();
+  final _notificationTapController = StreamController<NotificationResponse>.broadcast();
 
   /// Stream of notification tap events.
-  Stream<NotificationResponse> get onNotificationTap =>
-      _notificationTapController.stream;
+  Stream<NotificationResponse> get onNotificationTap => _notificationTapController.stream;
 
   /// Initialize the notification service.
   Future<bool> initialize({final NotificationTapCallback? onTap}) async {
@@ -59,7 +56,7 @@ class LocalNotificationService {
       );
 
       final initialized = await _plugin.initialize(
-        initSettings,
+        settings: initSettings,
         onDidReceiveNotificationResponse: (final response) {
           _notificationTapController.add(response);
           onTap?.call(response);
@@ -97,18 +94,14 @@ class LocalNotificationService {
 
     if (Platform.isIOS || Platform.isMacOS) {
       final result = await _plugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(alert: true, badge: true, sound: true);
       return result ?? false;
     }
 
     if (Platform.isAndroid) {
       final androidPlugin = _plugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >();
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       return await androidPlugin?.requestNotificationsPermission() ?? false;
     }
     return false;
@@ -135,10 +128,10 @@ class LocalNotificationService {
     );
 
     await _plugin.show(
-      config.id,
-      config.title,
-      config.body,
-      NotificationDetails(android: androidDetails, iOS: darwinDetails),
+      id: config.id,
+      title: config.title,
+      body: config.body,
+      notificationDetails: NotificationDetails(android: androidDetails, iOS: darwinDetails),
       payload: config.payload,
     );
   }
@@ -158,18 +151,18 @@ class LocalNotificationService {
     );
 
     await _plugin.zonedSchedule(
-      config.id,
-      config.title,
-      config.body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      NotificationDetails(android: androidDetails),
+      id: config.id,
+      title: config.title,
+      body: config.body,
+      scheduledDate: tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails: NotificationDetails(android: androidDetails),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: config.payload,
     );
   }
 
   /// Cancel a notification by ID.
-  Future<void> cancel(final int id) => _plugin.cancel(id);
+  Future<void> cancel(final int id) => _plugin.cancel(id: id);
 
   /// Cancel all notifications.
   Future<void> cancelAll() => _plugin.cancelAll();
@@ -182,9 +175,7 @@ class LocalNotificationService {
   Future<List<ActiveNotification>> getActiveNotifications() async {
     if (!kIsWeb && Platform.isAndroid) {
       return await _plugin
-              .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin
-              >()
+              .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
               ?.getActiveNotifications() ??
           [];
     }
@@ -209,9 +200,7 @@ class LocalNotificationService {
 
   Future<void> _createAndroidChannels() async {
     final androidPlugin = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(defaultChannel);
     await androidPlugin?.createNotificationChannel(highPriorityChannel);
   }
