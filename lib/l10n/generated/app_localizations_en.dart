@@ -662,4 +662,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutTrainer => 'About Trainer';
+
+  @override
+  String get noPostsFound => 'No posts found';
+
+  @override
+  String get unknownError => 'An unknown error occurred';
 }

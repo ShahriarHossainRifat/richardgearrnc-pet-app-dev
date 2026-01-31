@@ -339,6 +339,21 @@ abstract class AppConstants {
   /// List tile height (56px).
   static const double listTileHeight = 56;
 
+  /// Avatar radius small (16px).
+  static const double avatarRadiusSM = 16;
+
+  /// Avatar radius medium (20px).
+  static const double avatarRadiusMD = 20;
+
+  /// Avatar radius large (28px).
+  static const double avatarRadiusLG = 28;
+
+  /// Post image height (300px).
+  static const double postImageHeight = 300;
+
+  /// Scroll load more threshold (pixels from bottom to trigger pagination).
+  static const double scrollLoadMoreThreshold = 500;
+
   // ─────────────────────────────────────────────────────────────────────────────
   // UI DIMENSIONS - LAYOUT
   // ─────────────────────────────────────────────────────────────────────────────

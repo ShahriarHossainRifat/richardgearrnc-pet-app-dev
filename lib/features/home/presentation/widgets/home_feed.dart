@@ -1,49 +1,113 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:petzy_app/core/extensions/extensions.dart';
+import 'package:flutter_hooks/flutter_hooks.dart' show useEffect, useState;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/home/domain/entities/post.dart';
+import 'package:petzy_app/features/home/presentation/providers/community_cursor_notifier.dart';
+import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
-/// Home feed widget showing posts.
+/// Home feed widget showing community posts with infinite scroll pagination.
 ///
-/// Displays posts from users in the community.
-class HomeFeed extends StatelessWidget {
+/// Displays posts from users in the community using cursor-based pagination.
+/// Automatically loads more posts when user scrolls near the bottom.
+class HomeFeed extends HookConsumerWidget {
   /// Creates a [HomeFeed] instance.
   const HomeFeed({super.key});
 
   @override
-  Widget build(final BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 16),
-      itemCount: _mockPosts.length,
-      itemBuilder: (final context, final index) {
-        final post = _mockPosts[index];
-        return _PostCard(post: post);
-      },
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final state = ref.watch<CommunityCursorState>(communityCursorProvider);
+    final notifier = ref.read(communityCursorProvider.notifier);
+
+    final scrollController = ScrollController();
+
+    // Load first page on mount
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (state.posts.isEmpty && state.isLoading == false) {
+          notifier.loadFirstPage();
+        }
+      });
+
+      return () => scrollController.dispose();
+    }, <dynamic>[]);
+
+    // Listen for scroll events to load more posts
+    useEffect(() {
+      void handleScroll() {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - AppConstants.scrollLoadMoreThreshold) {
+          notifier.loadNextPage();
+        }
+      }
+
+      scrollController.addListener(handleScroll);
+      return () => scrollController.removeListener(handleScroll);
+    }, [scrollController]);
+
+    return RefreshIndicator(
+      onRefresh: () => notifier.refreshFeed(),
+      child: state.posts.isEmpty
+          ? (state.isLoading == true
+                ? const LoadingWidget()
+                : (state.error != null
+                      ? AppErrorWidget(
+                          message: state.error ?? l10n.unknownError,
+                          onRetry: () => notifier.loadFirstPage(),
+                        )
+                      : EmptyWidget(
+                          message: l10n.noPostsFound,
+                        )))
+          : ListView.builder(
+              controller: scrollController,
+              padding: const EdgeInsets.only(bottom: 16),
+              itemCount: state.posts.length + (state.isLoading == true ? 1 : 0),
+              itemBuilder: (final context, final index) {
+                if (index == state.posts.length) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: LoadingWidget(),
+                  );
+                }
+
+                final post = state.posts[index];
+                return _PostCard(
+                  post: post,
+                  onLikeToggle: (final bool isLiked) => notifier.updatePostLike(post.id, isLiked),
+                  onSaveToggle: (final bool isSaved) => notifier.updatePostSave(post.id, isSaved),
+                );
+              },
+            ),
     );
   }
 }
 
 /// Individual post card in the feed.
-class _PostCard extends StatefulWidget {
-  const _PostCard({required this.post});
+class _PostCard extends HookConsumerWidget {
+  /// Creates a [_PostCard] instance.
+  const _PostCard({
+    required this.post,
+    required this.onLikeToggle,
+    required this.onSaveToggle,
+  });
 
-  final _Post post;
+  /// The post data.
+  final Post post;
+
+  /// Callback when like button is tapped.
+  final Function(bool) onLikeToggle;
+
+  /// Callback when save button is tapped.
+  final Function(bool) onSaveToggle;
 
   @override
-  State<_PostCard> createState() => _PostCardState();
-}
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final isLiked = useState(post.isLiked);
+    final isSaved = useState(post.isSaved);
+    final currentImageIndex = useState(0);
 
-class _PostCardState extends State<_PostCard> {
-  late bool _isLiked;
-
-  @override
-  void initState() {
-    super.initState();
-    _isLiked = false;
-  }
-
-  @override
-  Widget build(final BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,23 +117,25 @@ class _PostCardState extends State<_PostCard> {
           child: Row(
             children: [
               CircleAvatar(
-                radius: 20,
+                radius: AppConstants.avatarRadiusMD,
                 backgroundColor: context.colorScheme.primaryContainer,
-                backgroundImage: NetworkImage(widget.post.userImage),
+                backgroundImage: post.user.image != null
+                    ? CachedNetworkImageProvider(post.user.image!)
+                    : null,
               ),
-              const SizedBox(width: 12),
+              const HorizontalSpace.sm(),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.post.username,
+                      post.user.fullName,
                       style: context.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      widget.post.timeAgo,
+                      post.createdAt.timeAgo,
                       style: context.textTheme.labelSmall?.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
                       ),
@@ -77,26 +143,89 @@ class _PostCardState extends State<_PostCard> {
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.more_vert),
+              AppIconButton(
+                icon: Icons.more_vert,
                 onPressed: () {},
               ),
             ],
           ),
         ),
 
-        // Post image
-        Container(
-          width: double.infinity,
-          height: 300,
-          decoration: BoxDecoration(
-            color: context.colorScheme.surfaceContainer,
-            image: DecorationImage(
-              image: NetworkImage(widget.post.postImage),
-              fit: BoxFit.cover,
-            ),
+        // Post image carousel
+        if (post.media.isNotEmpty)
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: AppConstants.postImageHeight,
+                color: context.colorScheme.surfaceContainer,
+                child: CachedNetworkImage(
+                  imageUrl: post.media[currentImageIndex.value],
+                  fit: BoxFit.cover,
+                  placeholder: (final context, final url) => const LoadingWidget(),
+                  errorWidget: (final context, final url, final error) =>
+                      const Icon(Icons.image_not_supported),
+                ),
+              ),
+              // Image indicator dots
+              if (post.media.length > 1)
+                Positioned(
+                  bottom: 12,
+                  right: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.borderRadiusMD,
+                      ),
+                    ),
+                    child: Text(
+                      '${currentImageIndex.value + 1}/${post.media.length}',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              // Image navigation arrows
+              if (post.media.length > 1)
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: AppIconButton(
+                      icon: Icons.chevron_left,
+                      onPressed: () {
+                        if (currentImageIndex.value > 0) {
+                          currentImageIndex.value--;
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              if (post.media.length > 1)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: AppIconButton(
+                      icon: Icons.chevron_right,
+                      onPressed: () {
+                        if (currentImageIndex.value < post.media.length - 1) {
+                          currentImageIndex.value++;
+                        }
+                      },
+                    ),
+                  ),
+                ),
+            ],
           ),
-        ),
 
         // Post actions and stats
         Padding(
@@ -109,59 +238,91 @@ class _PostCardState extends State<_PostCard> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      setState(() => _isLiked = !_isLiked);
+                      isLiked.value = !isLiked.value;
+                      onLikeToggle(isLiked.value);
                     },
                     child: Row(
                       children: [
                         Icon(
-                          _isLiked ? Icons.favorite : Icons.favorite_outline,
-                          color: _isLiked ? Colors.red : null,
-                          size: 24,
+                          isLiked.value ? Icons.favorite : Icons.favorite_outline,
+                          color: isLiked.value ? Colors.red : null,
+                          size: AppConstants.iconSizeMD,
                         ),
-                        const SizedBox(width: 6),
+                        const HorizontalSpace.xs(),
                         Text(
-                          '${widget.post.likes}',
+                          '${post.likeCount + (isLiked.value && !post.isLiked ? 1 : 0)}',
                           style: context.textTheme.bodyMedium,
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 24),
+                  const HorizontalSpace.lg(),
                   Row(
                     children: [
                       const Icon(Icons.comment_outlined, size: 24),
-                      const SizedBox(width: 6),
+                      const HorizontalSpace.xs(),
                       Text(
-                        '${widget.post.comments}',
+                        '${post.commentCount}',
                         style: context.textTheme.bodyMedium,
                       ),
                     ],
                   ),
-                  const SizedBox(width: 24),
+                  const HorizontalSpace.lg(),
                   const Icon(Icons.share_outlined, size: 24),
                   const Spacer(),
-                  const Icon(Icons.bookmark_outline, size: 24),
+                  GestureDetector(
+                    onTap: () {
+                      isSaved.value = !isSaved.value;
+                      onSaveToggle(isSaved.value);
+                    },
+                    child: Icon(
+                      isSaved.value ? Icons.bookmark : Icons.bookmark_outline,
+                      size: AppConstants.iconSizeMD,
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const VerticalSpace.md(),
 
               // Post description
               Text(
-                widget.post.description,
+                post.caption,
                 style: context.textTheme.bodyMedium,
               ),
-              const SizedBox(height: 8),
+              const VerticalSpace.sm(),
+
+              // Location
+              if (post.location.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      size: AppConstants.iconSizeSM,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                    const HorizontalSpace.xs(),
+                    Text(
+                      post.location,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+
+              const VerticalSpace.md(),
 
               // View comments link
-              GestureDetector(
-                onTap: () {},
-                child: Text(
-                  'View all ${widget.post.comments} comments',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
+              if (post.commentCount > 0)
+                GestureDetector(
+                  onTap: () {},
+                  child: Text(
+                    'View all ${post.commentCount} comment${post.commentCount > 1 ? 's' : ''}',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -172,57 +333,3 @@ class _PostCardState extends State<_PostCard> {
     );
   }
 }
-
-/// Mock post data.
-class _Post {
-  const _Post({
-    required this.username,
-    required this.userImage,
-    required this.timeAgo,
-    required this.description,
-    required this.postImage,
-    required this.likes,
-    required this.comments,
-  });
-
-  final String username;
-  final String userImage;
-  final String timeAgo;
-  final String description;
-  final String postImage;
-  final int likes;
-  final int comments;
-}
-
-/// Mock posts data.
-final _mockPosts = [
-  const _Post(
-    username: 'Sarah',
-    userImage: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
-    timeAgo: '2h ago',
-    description:
-        'Luna had the best time at the dog park today! She made so many new friends and even learned to fetch... 🌳🐶',
-    postImage: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800', // Dog park
-    likes: 324,
-    comments: 28,
-  ),
-  const _Post(
-    username: 'Mike & Rocky',
-    userImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-    timeAgo: '4h ago',
-    description:
-        'Training session went great! Rocky is learning to sit and stay. #dogtraining #goodboy',
-    postImage: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800', // Dog training
-    likes: 156,
-    comments: 12,
-  ),
-  const _Post(
-    username: 'Bella Grooming',
-    userImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-    timeAgo: '6h ago',
-    description: 'Fresh cut for this little guy! ✂️🐩 Call us to book your appointment today!',
-    postImage: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=800', // Dog grooming
-    likes: 412,
-    comments: 45,
-  ),
-];

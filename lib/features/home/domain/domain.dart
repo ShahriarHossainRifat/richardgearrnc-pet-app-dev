@@ -1,5 +1,7 @@
 /// Domain layer for the Home feature.
 ///
-/// This layer contains business entities and repository interfaces.
-/// Currently empty as the Home feature primarily uses presentation layer.
-/// Add entities and repository contracts here as needed.
+/// Exports business entities and repository interfaces.
+export 'entities/community_feed_response.dart';
+export 'entities/post.dart';
+export 'entities/post_user.dart';
+export 'repositories/community_repository.dart';

@@ -668,4 +668,10 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get aboutTrainer => 'About Trainer';
+
+  @override
+  String get noPostsFound => 'কোন পোস্ট পাওয়া যায়নি';
+
+  @override
+  String get unknownError => 'একটি অজানা ত্রুটি ঘটেছে';
 }

@@ -131,6 +131,35 @@ abstract class ApiEndpoints {
   static const String contactSupport = '/support/contact';
 
   // ─────────────────────────────────────────────────────────────────────────────
+  // COMMUNITY
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Get all community posts with cursor pagination.
+  /// Query parameters: limit (max 50, default 20), cursor (optional)
+  static const String communityAll = '/api/community/all';
+
+  /// Get post by ID.
+  static const String postById = '/api/community/posts';
+
+  /// Like a post.
+  static const String likePost = '/api/community/posts/like';
+
+  /// Unlike a post.
+  static const String unlikePost = '/api/community/posts/unlike';
+
+  /// Save a post.
+  static const String savePost = '/api/community/posts/save';
+
+  /// Unsave a post.
+  static const String unsavePost = '/api/community/posts/unsave';
+
+  /// Get post comments.
+  static const String postComments = '/api/community/posts/comments';
+
+  /// Add comment to post.
+  static const String addComment = '/api/community/posts/comments/add';
+
+  // ─────────────────────────────────────────────────────────────────────────────
   // VERSIONING
   // ─────────────────────────────────────────────────────────────────────────────
 

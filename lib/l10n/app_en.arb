@@ -1049,6 +1049,16 @@
   "aboutTrainer": "About Trainer",
   "@aboutTrainer": {
     "description": "About trainer section title"
+  },
+
+  "noPostsFound": "No posts found",
+  "@noPostsFound": {
+    "description": "Message shown when no posts are available in the feed"
+  },
+
+  "unknownError": "An unknown error occurred",
+  "@unknownError": {
+    "description": "Generic error message"
   }
 }
 

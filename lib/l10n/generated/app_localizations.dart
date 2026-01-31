@@ -1255,6 +1255,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About Trainer'**
   String get aboutTrainer;
+
+  /// Message shown when no posts are available in the feed
+  ///
+  /// In en, this message translates to:
+  /// **'No posts found'**
+  String get noPostsFound;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown error occurred'**
+  String get unknownError;
 }
 
 class _AppLocalizationsDelegate

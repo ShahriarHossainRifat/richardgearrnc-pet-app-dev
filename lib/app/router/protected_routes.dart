@@ -5,7 +5,6 @@ import 'package:petzy_app/features/bookings/presentation/pages/pet_hotel_booking
 import 'package:petzy_app/features/bookings/presentation/pages/pet_owner_bookings_page.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/pet_school_bookings_page.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/pet_sitter_bookings_page.dart';
-import 'package:petzy_app/features/home/presentation/pages/home_page.dart';
 import 'package:petzy_app/features/messages/presentation/pages/messages_page.dart';
 import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:petzy_app/features/pet_sitter/views/screens/pet_sitter_screen.dart';
@@ -21,7 +20,7 @@ final protectedRoutes = [
   GoRoute(
     path: AppRoute.home.path,
     name: AppRoute.home.name,
-    builder: (final context, final state) =>  PetSitterScreen(),
+    builder: (final context, final state) => PetSitterScreen(),
   ),
   GoRoute(
     path: AppRoute.shorts.path,
