@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petzy_app/features/pet_market/views/screens/pet_market_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:petzy_app/app/app_config.dart';
 import 'package:petzy_app/app/presentation/main_wrapper.dart';
@@ -16,6 +17,9 @@ import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page
 import 'package:petzy_app/features/profile/presentation/pages/profile_wrapper_page.dart';
 import 'package:petzy_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:petzy_app/app/presentation/pages/placeholder_page.dart';
+
+import '../../features/pet_sitter/views/screens/pet_sitter_screen.dart';
+import '../../features/pet_sitter/views/screens/service_details.dart';
 
 part 'app_router.g.dart';
 
@@ -46,7 +50,9 @@ enum AppRoute {
   profileOwner('/profile/owner', requiresAuth: true),
   profileSitter('/profile/sitter', requiresAuth: true),
   profileSchool('/profile/school', requiresAuth: true),
-  profileHotel('/profile/hotel', requiresAuth: true)
+  profileHotel('/profile/hotel', requiresAuth: true),
+  petSitter('/pet-sitter', requiresAuth: true),
+  petMarket('/pet-market', requiresAuth: true),
   ;
 
   const AppRoute(this.path, {required this.requiresAuth});
@@ -93,8 +99,11 @@ enum AppRoute {
 extension AppRouteNavigation on BuildContext {
   void goRoute(final AppRoute route) => go(route.path);
   void pushRoute(final AppRoute route) => push(route.path);
-  void goRouteWith(final AppRoute route, final Map<String, String> params, {final Object? extra}) =>
-      go(route.pathWith(params), extra: extra);
+  void goRouteWith(
+    final AppRoute route,
+    final Map<String, String> params, {
+    final Object? extra,
+  }) => go(route.pathWith(params), extra: extra);
 }
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -121,12 +130,41 @@ GoRouter appRouter(final Ref ref) {
         },
         branches: [
           // Branch 0: Home (Index 0 in Navbar)
+          // Inside your StatefulShellRoute → branches → Home branch
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoute.home.path,
+                path: AppRoute.home.path, // '/'
                 name: AppRoute.home.name,
-                builder: (final context, final state) => const HomePage(),
+                builder: (context, state) => const HomePage(),
+                routes: [
+                  // ← Pet Sitter Screen (already there or add it)
+                  GoRoute(
+                    path: 'pet-sitter',
+                    name: AppRoute.petSitter.name,
+                    builder: (context, state) => const PetSitterScreen(),
+                    routes: [
+                      // ← THIS IS WHAT WAS MISSING ←
+                      GoRoute(
+                        path:
+                            'service-details/:serviceId', // or just 'service-details' if no ID
+                        name: 'service-details', // ← THIS NAME MUST EXIST!
+                        builder: (context, state) {
+                          final serviceId = state.pathParameters['serviceId'];
+                          // final extraData = state.extra;   // if you pass a model
+
+                          return ServiceDetails(serviceId: serviceId);
+                        },
+                      ),
+                    ],
+                  ),
+
+                  GoRoute(
+                    path: 'pet-market',
+                    name: AppRoute.petMarket.name,
+                    builder: (context, state) => const PetMarketScreen(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -137,7 +175,8 @@ GoRouter appRouter(final Ref ref) {
               GoRoute(
                 path: AppRoute.bookings.path,
                 name: AppRoute.bookings.name,
-                builder: (final context, final state) => const BookingsWrapperPage(),
+                builder: (final context, final state) =>
+                    const BookingsWrapperPage(),
               ),
             ],
           ),
@@ -159,13 +198,15 @@ GoRouter appRouter(final Ref ref) {
               GoRoute(
                 path: AppRoute.profile.path,
                 name: AppRoute.profile.name,
-                builder: (final context, final state) => const ProfileWrapperPage(),
+                builder: (final context, final state) =>
+                    const ProfileWrapperPage(),
                 routes: [
                   GoRoute(
                     path: 'settings',
                     name: AppRoute.settings.name,
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (final context, final state) => const SettingsPage(),
+                    builder: (final context, final state) =>
+                        const SettingsPage(),
                   ),
                 ],
               ),
@@ -184,11 +225,14 @@ GoRouter appRouter(final Ref ref) {
       GoRoute(
         path: AppRoute.shorts.path,
         name: AppRoute.shorts.name,
-        builder: (final context, final state) => const PlaceholderPage(title: 'Shorts'),
+        builder: (final context, final state) =>
+            const PlaceholderPage(title: 'Shorts'),
       ),
     ],
-    redirect: (final context, final state) => _handleRedirect(ref, state.uri.path),
-    errorBuilder: (final context, final state) => ErrorPage(path: state.uri.path),
+    redirect: (final context, final state) =>
+        _handleRedirect(ref, state.uri.path),
+    errorBuilder: (final context, final state) =>
+        ErrorPage(path: state.uri.path),
     observers: [
       if (analyticsObserver != null) analyticsObserver,
     ],

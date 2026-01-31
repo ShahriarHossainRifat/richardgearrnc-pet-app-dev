@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:petzy_app/core/extensions/extensions.dart';
+
+import '../../../../app/router/app_router.dart';
 
 /// Top services showcase widget.
 ///
@@ -23,12 +26,12 @@ class ServicesShowcase extends StatelessWidget {
         _ServiceCard(
           icon: Icons.person_outline,
           label: 'Pet sitter',
-          onTap: () {},
+          onTap: () => context.goNamed(AppRoute.petSitter.name),
         ),
         _ServiceCard(
           icon: Icons.shopping_bag_outlined,
           label: 'Pet Market',
-          onTap: () {},
+          onTap: () => context.goNamed(AppRoute.petMarket.name),
         ),
         _ServiceCard(
           icon: Icons.school_outlined,
