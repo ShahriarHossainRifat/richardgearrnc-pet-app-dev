@@ -240,7 +240,12 @@ void main() {
         final googleSignInService = MockGoogleSignInService();
         when(
           () => googleSignInService.signIn(),
-        ).thenAnswer((_) async => 'firebase_id_token');
+        ).thenAnswer(
+          (_) async => const GoogleSignInResult(
+            email: 'test@example.com',
+            firebaseIdToken: 'firebase_id_token',
+          ),
+        );
 
         when(
           () => mockApiClient.post<Map<String, dynamic>>(
@@ -311,7 +316,12 @@ void main() {
         final googleSignInService = MockGoogleSignInService();
         when(
           () => googleSignInService.signIn(),
-        ).thenAnswer((_) async => 'firebase_id_token');
+        ).thenAnswer(
+          (_) async => const GoogleSignInResult(
+            email: 'test@example.com',
+            firebaseIdToken: 'firebase_id_token',
+          ),
+        );
 
         final exception = NetworkException(
           message: 'Token exchange failed',
@@ -529,8 +539,7 @@ void main() {
             fromJson: any(named: 'fromJson'),
           ),
         ).thenAnswer(
-          (_) async =>
-              Success(testAuthResponse['user'] as Map<String, dynamic>),
+          (_) async => Success(testAuthResponse['user'] as Map<String, dynamic>),
         );
 
         // Act

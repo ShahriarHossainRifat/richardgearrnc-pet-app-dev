@@ -21,7 +21,7 @@ class CoursesRepositoryImpl implements CoursesRepository {
   Future<Result<List<Course>>> getCourses() async {
     try {
       final response = await apiClient.get<Map<String, dynamic>>(
-        '/api/course/my-courses?page=1&limit=10',
+        '/course/my-courses?page=1&limit=10',
         fromJson: (final json) => json as Map<String, dynamic>,
       );
 

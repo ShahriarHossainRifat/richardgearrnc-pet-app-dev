@@ -20,7 +20,7 @@ class PetSchoolProfileRepositoryImpl implements PetSchoolProfileRepository {
     try {
       // Call the actual API endpoint
       final response = await apiClient.get<Map<String, dynamic>>(
-        '/api/pet-school/profile',
+        '/pet-school/profile',
         fromJson: (final json) => json as Map<String, dynamic>,
       );
 
@@ -49,7 +49,7 @@ class PetSchoolProfileRepositoryImpl implements PetSchoolProfileRepository {
     try {
       // TODO: Implement actual API call when endpoint is ready
       final response = await apiClient.put<Map<String, dynamic>>(
-        '/api/pet-school/profile',
+        '/pet-school/profile',
         data: {
           'name': name,
           'description': description,

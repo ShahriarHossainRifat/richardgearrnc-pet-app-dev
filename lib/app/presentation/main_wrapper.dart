@@ -16,11 +16,15 @@ class MainWrapper extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final userRole = authState.value?.role;
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: AppNavBar(
         currentIndex: navigationShell.currentIndex,
         onItemTapped: (final index) => _onItemTapped(context, ref, index),
+        userRole: userRole,
       ),
     );
   }

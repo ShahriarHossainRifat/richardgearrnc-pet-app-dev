@@ -5,7 +5,7 @@ import 'package:petzy_app/core/enums/user_role.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_hotel_profile_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_owner_profile_page.dart';
-import 'package:petzy_app/features/profile/presentation/pages/pet_school_profile_page.dart';
+import 'package:petzy_app/features/pet_school/profile/presentation/pages/pet_school_profile_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_sitter_profile_page.dart';
 
 class ProfileWrapperPage extends ConsumerWidget {

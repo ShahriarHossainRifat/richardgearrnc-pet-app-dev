@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/pet_school/courses/domain/entities/course.dart';
 import 'package:petzy_app/l10n/generated/app_localizations.dart';

@@ -25,7 +25,6 @@ class ProfileStatsCard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = context.theme;
     final l10n = AppLocalizations.of(context);
 
     return SlideIn(
