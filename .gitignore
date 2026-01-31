@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/release
 .agent/rules/flutter-boilerplate.md
 .github/copilot-instructions.md
+.agent/rules/project-rules.md

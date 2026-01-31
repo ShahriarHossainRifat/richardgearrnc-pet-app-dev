@@ -5,6 +5,7 @@ import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/features/auth/domain/entities/user_exists_response.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
 
 /// Mock implementation of [AuthRepository].
@@ -31,6 +32,86 @@ class AuthRepositoryMock implements AuthRepository {
 
   /// Stores the phone number for mock OTP verification.
   String? _pendingPhoneNumber;
+
+  @override
+  Future<Result<UserExistsResponse>> checkUserExistsByEmail(
+    final String email,
+  ) async {
+    await Future<void>.delayed(AppConstants.mockNetworkDelay);
+
+    // Simulate different scenarios based on email
+    // For mock purposes, consider user exists if email doesn't contain "new"
+    final userExists = !email.toLowerCase().contains('new');
+
+    if (userExists) {
+      // Return response with user data and tokens
+      final user = User(
+        id: 'mock_user_${email.hashCode}',
+        email: email,
+        name: _extractNameFromEmail(email),
+      );
+
+      return Success(
+        UserExistsResponse(
+          success: true,
+          message: 'User found',
+          isUserExists: true,
+          user: user,
+          accessToken: 'mock_access_token_${DateTime.now().millisecondsSinceEpoch}',
+          refreshToken: 'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
+        ),
+      );
+    }
+
+    // User doesn't exist
+    return const Success(
+      UserExistsResponse(
+        success: true,
+        message: 'User not found',
+        isUserExists: false,
+      ),
+    );
+  }
+
+  @override
+  Future<Result<UserExistsResponse>> checkUserExistsByPhone(
+    final String phone,
+  ) async {
+    await Future<void>.delayed(AppConstants.mockNetworkDelay);
+
+    // Simulate different scenarios based on phone
+    // For mock purposes, consider user exists if phone doesn't contain "000"
+    final userExists = !phone.contains('000');
+
+    if (userExists) {
+      // Return response with user data and tokens
+      final user = User(
+        id: 'mock_user_${phone.hashCode}',
+        email: '$phone@phone.local',
+        name: 'Phone User',
+      );
+
+      return Success(
+        UserExistsResponse(
+          success: true,
+          message: 'User found',
+          isUserExists: true,
+          user: user,
+          accessToken: 'mock_access_token_${DateTime.now().millisecondsSinceEpoch}',
+          refreshToken: 'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
+        ),
+      );
+    }
+
+    // User doesn't exist
+    return const Success(
+      UserExistsResponse(
+        success: true,
+        message: 'User not found',
+        isUserExists: false,
+      ),
+    );
+  }
 
   @override
   Future<Result<User>> login(final String email, final String password) async {
@@ -209,9 +290,7 @@ class AuthRepositoryMock implements AuthRepository {
         .replaceAll(RegExp('[._-]'), ' ')
         .split(' ')
         .map(
-          (final word) => word.isNotEmpty
-              ? '${word[0].toUpperCase()}${word.substring(1)}'
-              : '',
+          (final word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '',
         )
         .join(' ');
   }

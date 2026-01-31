@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:petzy_app/core/enums/user_role.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
@@ -21,13 +22,24 @@ abstract class User with _$User {
     required final String email,
     final String? name,
     @JsonKey(name: 'avatar_url') final String? avatarUrl,
-    @JsonKey(name: 'is_email_verified')
-    @Default(false)
-    final bool isEmailVerified,
+    @JsonKey(name: 'is_email_verified') @Default(false) final bool isEmailVerified,
     @JsonKey(name: 'created_at') final DateTime? createdAt,
+    @JsonKey(fromJson: _roleFromJson, toJson: _roleToJson)
+    @Default(UserRole.petOwner)
+    final UserRole role,
   }) = _User;
 
   /// Creates a [User] instance from JSON.
-  factory User.fromJson(final Map<String, dynamic> json) =>
-      _$UserFromJson(json);
+  factory User.fromJson(final Map<String, dynamic> json) => _$UserFromJson(json);
 }
+
+/// Convert JSON string to [UserRole].
+UserRole _roleFromJson(final dynamic value) {
+  if (value is String) {
+    return UserRole.fromString(value) ?? UserRole.petOwner;
+  }
+  return UserRole.petOwner;
+}
+
+/// Convert [UserRole] to JSON string.
+String _roleToJson(final UserRole role) => role.toJsonString();

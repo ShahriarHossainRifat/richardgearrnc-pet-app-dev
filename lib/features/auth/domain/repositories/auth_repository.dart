@@ -2,10 +2,27 @@ import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
+import 'package:petzy_app/features/auth/domain/entities/user_exists_response.dart';
 
 /// Contract for authentication operations.
 /// Implemented by [AuthRepositoryImpl] in the data layer.
 abstract interface class AuthRepository {
+  /// Check if a user exists with the given email.
+  ///
+  /// Sends {"email": "user@example.com"} to /auth/users/exists/email.
+  /// Returns [UserExistsResponse] with isUserExists field.
+  Future<Result<UserExistsResponse>> checkUserExistsByEmail(
+    final String email,
+  );
+
+  /// Check if a user exists with the given phone number.
+  ///
+  /// Sends {"phone": "+1234567890"} to /auth/users/exists/phone.
+  /// Returns [UserExistsResponse] with isUserExists field.
+  Future<Result<UserExistsResponse>> checkUserExistsByPhone(
+    final String phone,
+  );
+
   /// Attempt to login with email and password.
   Future<Result<User>> login(final String email, final String password);
 
