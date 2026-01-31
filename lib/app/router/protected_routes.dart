@@ -7,6 +7,7 @@ import 'package:petzy_app/features/home/presentation/pages/home_page.dart';
 import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:petzy_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:petzy_app/features/shorts/presentation/pages/shorts_page.dart';
 
 /// Main navigation shell with bottom navigation bar.
 ///
@@ -81,5 +82,12 @@ final protectedRoutes = [
     path: AppRoute.onboarding.path,
     name: AppRoute.onboarding.name,
     builder: (final context, final state) => const OnboardingPage(),
+  ),
+
+  // Shorts (full-screen immersive, no nav bar)
+  GoRoute(
+    path: AppRoute.shorts.path,
+    name: AppRoute.shorts.name,
+    builder: (final context, final state) => const ShortsPage(),
   ),
 ];

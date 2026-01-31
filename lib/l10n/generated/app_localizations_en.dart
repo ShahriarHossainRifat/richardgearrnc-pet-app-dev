@@ -584,4 +584,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goHome => 'Go Home';
+
+  @override
+  String get shorts => 'Shorts';
+
+  @override
+  String get topServices => 'Top Services';
 }

@@ -86,7 +86,7 @@ dependencies:
   # ─────────────────────────────────────────────────────────────────────────────
   # NOTIFICATIONS
   # ─────────────────────────────────────────────────────────────────────────────
-  flutter_local_notifications: ^19.5.0
+  flutter_local_notifications: ^20.0.0
   timezone: ^0.10.1 # Required for scheduled notifications
   firebase_messaging: ^16.1.1
   # Note: App icon badges are handled via:
@@ -122,6 +122,7 @@ dependencies:
   path_provider: ^2.1.5
 
   path: any
+  video_player: ^2.10.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

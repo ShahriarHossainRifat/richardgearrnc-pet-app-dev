@@ -71,6 +71,9 @@ export 'widgets/animated_progress.dart';
 export 'widgets/animations.dart';
 export 'widgets/async_value_widget.dart';
 export 'widgets/bounce.dart';
+export 'widgets/entry_animations.dart';
+export 'widgets/attention_animations.dart';
+
 export 'widgets/buttons.dart';
 export 'widgets/cached_image.dart';
 export 'widgets/connectivity_wrapper.dart';
@@ -83,3 +86,4 @@ export 'widgets/shimmer_loading.dart';
 export 'widgets/spacing.dart';
 export 'widgets/typewriter_text.dart';
 export 'widgets/adaptive_scaffold.dart';
+export 'widgets/animated_tab_bar.dart';

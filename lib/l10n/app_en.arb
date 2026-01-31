@@ -899,5 +899,15 @@
   "goHome": "Go Home",
   "@goHome": {
     "description": "Button text to navigate to home page"
+  },
+
+  "shorts": "Shorts",
+  "@shorts": {
+    "description": "Shorts tab label for short-form video content"
+  },
+
+  "topServices": "Top Services",
+  "@topServices": {
+    "description": "Section header for service rail on home page"
   }
 }

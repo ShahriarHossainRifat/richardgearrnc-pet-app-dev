@@ -590,4 +590,10 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get goHome => 'হোমে যান';
+
+  @override
+  String get shorts => 'Shorts';
+
+  @override
+  String get topServices => 'Top Services';
 }

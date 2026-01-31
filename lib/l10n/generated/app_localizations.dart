@@ -1099,6 +1099,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go Home'**
   String get goHome;
+
+  /// Shorts tab label for short-form video content
+  ///
+  /// In en, this message translates to:
+  /// **'Shorts'**
+  String get shorts;
+
+  /// Section header for service rail on home page
+  ///
+  /// In en, this message translates to:
+  /// **'Top Services'**
+  String get topServices;
 }
 
 class _AppLocalizationsDelegate

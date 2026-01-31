@@ -58,7 +58,11 @@ class ServiceRail extends StatelessWidget {
         itemCount: services.length,
         separatorBuilder: (_, final __) => const HorizontalSpace.md(),
         itemBuilder: (final context, final index) {
-          return _ServiceAvatar(service: services[index]);
+          return ScaleIn.staggered(
+            index: index,
+            baseDelay: const Duration(milliseconds: 60),
+            child: _ServiceAvatar(service: services[index]),
+          );
         },
       ),
     );

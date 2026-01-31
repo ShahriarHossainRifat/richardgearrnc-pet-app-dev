@@ -65,22 +65,35 @@ class AdaptiveScaffold extends StatelessWidget {
         color: colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: AppColors.shadow.withValues(alpha: 0.08),
+            blurRadius: 20,
+            spreadRadius: 0,
+            offset: const Offset(0, -4),
           ),
         ],
+        border: Border(
+          top: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+            width: 0.5,
+          ),
+        ),
       ),
-      child: NavigationBar(
-        height: AppConstants.bottomNavHeight,
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onDestinationSelected,
-        indicatorColor: colorScheme.primaryContainer,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        animationDuration: AppConstants.animationNormal,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        destinations: _buildNavDestinations(l10n, colorScheme),
+      child: SafeArea(
+        top: false,
+        child: NavigationBar(
+          height: AppConstants.bottomNavHeight,
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: _onDestinationSelected,
+          indicatorColor: colorScheme.primaryContainer,
+          indicatorShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.borderRadiusLG),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          animationDuration: AppConstants.animationNormal,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: _buildNavDestinations(l10n, colorScheme),
+        ),
       ),
     );
   }
