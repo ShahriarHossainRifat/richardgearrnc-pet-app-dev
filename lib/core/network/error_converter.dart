@@ -111,10 +111,32 @@ class DefaultErrorConverter implements ErrorConverter {
   String? extractErrorMessage(final dynamic data) {
     if (data is Map<String, dynamic>) {
       // Try common error message field names
-      return data['message'] as String? ??
-          data['error'] as String? ??
-          data['detail'] as String? ??
-          _extractErrors(data['errors']);
+      // Handle case where message might be a List (validation errors)
+      final message = data['message'];
+      if (message is String) {
+        return message;
+      }
+      if (message is List) {
+        return message.map((final e) => e.toString()).join(', ');
+      }
+
+      final error = data['error'];
+      if (error is String) {
+        return error;
+      }
+      if (error is List) {
+        return error.map((final e) => e.toString()).join(', ');
+      }
+
+      final detail = data['detail'];
+      if (detail is String) {
+        return detail;
+      }
+      if (detail is List) {
+        return detail.map((final e) => e.toString()).join(', ');
+      }
+
+      return _extractErrors(data['errors']);
     }
     if (data is String) {
       return data;
@@ -172,8 +194,7 @@ class DefaultErrorConverter implements ErrorConverter {
         code: 'RATE_LIMITED',
         stackTrace: stackTrace,
       ),
-      _ when statusCode != null && statusCode >= 500 =>
-        NetworkException.serverError(statusCode),
+      _ when statusCode != null && statusCode >= 500 => NetworkException.serverError(statusCode),
       _ => NetworkException(
         message: message ?? 'Request failed',
         statusCode: statusCode,

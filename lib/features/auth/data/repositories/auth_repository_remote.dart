@@ -4,11 +4,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:petzy_app/core/constants/api_endpoints.dart';
 import 'package:petzy_app/core/constants/app_constants.dart';
 import 'package:petzy_app/core/constants/storage_keys.dart';
+import 'package:petzy_app/core/enums/user_role.dart';
 import 'package:petzy_app/core/google_signin/google_signin_service.dart';
 import 'package:petzy_app/core/network/api_client.dart';
 import 'package:petzy_app/core/phone_auth/phone_auth_service.dart';
 import 'package:petzy_app/core/result/result.dart';
 import 'package:petzy_app/core/utils/logger.dart';
+import 'package:petzy_app/features/auth/data/models/signup_request.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/domain/entities/user_exists_response.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
@@ -213,6 +215,132 @@ class AuthRepositoryRemote implements AuthRepository {
       return Failure(
         AuthException(
           message: 'OTP verification failed: $e',
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<User>> signup({
+    required final String email,
+    required final String fullName,
+    required final String phone,
+    required final String userName,
+    required final String streetAddress,
+    required final String city,
+    required final String country,
+    required final String postalCode,
+  }) async {
+    try {
+      AppLogger.instance.i('🔐 Starting signup for email: $email');
+
+      // Create signup request
+      final request = SignupRequest(
+        email: email,
+        fullName: fullName,
+        phone: phone,
+        userName: userName,
+        streetAddress: streetAddress,
+        city: city,
+        country: country,
+        postalCode: postalCode,
+      );
+
+      AppLogger.instance.d('📤 Signup request: ${request.toJson()}');
+
+      // Call signup endpoint
+      final result = await _apiClient.post<Map<String, dynamic>>(
+        ApiEndpoints.petOwnerSignup,
+        data: request.toJson(),
+        fromJson: (final json) => json as Map<String, dynamic>,
+      );
+
+      return result.fold(
+        onSuccess: (final response) async {
+          AppLogger.instance.i('📝 Signup API response: $response');
+
+          // Check if response has success field
+          final success = response['success'] as bool?;
+          final message = response['message'] as String?;
+          final data = response['data'] as Map<String, dynamic>?;
+
+          AppLogger.instance.i(
+            '📊 Parsed signup - success: $success, message: $message, hasData: ${data != null}',
+          );
+
+          // Check for successful signup based on message or success flag
+          if (success == true &&
+              message != null &&
+              message.toLowerCase().contains('successfully') &&
+              data != null) {
+            // Extract tokens and role from data
+            final accessToken = data['accessToken'] as String?;
+            final refreshToken = data['refreshToken'] as String?;
+            final roleStr = data['role'] as String?;
+
+            AppLogger.instance.i(
+              '🔑 Tokens - access: ${accessToken != null}, refresh: ${refreshToken != null}, role: $roleStr',
+            );
+
+            if (accessToken == null || refreshToken == null || roleStr == null) {
+              return Failure(
+                AuthException(
+                  message: 'Incomplete signup response: missing tokens or role',
+                ),
+              );
+            }
+
+            // Store tokens
+            await _storeTokens(accessToken, refreshToken);
+
+            // Parse role
+            UserRole? userRole;
+            try {
+              // Convert backend format (e.g., "PET_OWNER") to enum
+              final roleEnum = roleStr.replaceAll('_', '').toLowerCase();
+              userRole = UserRole.values.firstWhere(
+                (final r) => r.name.toLowerCase() == roleEnum,
+                orElse: () => UserRole.petOwner,
+              );
+            } catch (e) {
+              AppLogger.instance.w('⚠️ Failed to parse role: $roleStr, defaulting to petOwner');
+              userRole = UserRole.petOwner;
+            }
+
+            // Create user entity
+            final user = User(
+              id: data['userId'] as String? ?? '', // Use userId from backend if available
+              email: email,
+              name: fullName,
+              role: userRole,
+            );
+
+            AppLogger.instance.i(
+              '✅ Signup successful: role=${user.role}, email=$email, userId=${user.id}',
+            );
+
+            return Success(user);
+          }
+
+          // If we reach here, signup failed
+          final errorMessage = message ?? 'Signup failed';
+          AppLogger.instance.e('❌ Signup failed: $errorMessage');
+
+          return Failure(
+            AuthException(message: errorMessage),
+          );
+        },
+        onFailure: (final error) {
+          AppLogger.instance.e('❌ Signup API call failed: $error');
+          return Failure(error);
+        },
+      );
+    } catch (e, stackTrace) {
+      AppLogger.instance.e('❌ Signup exception: $e', stackTrace: stackTrace);
+      return Failure(
+        AuthException(
+          message: 'Signup failed: $e',
           stackTrace: stackTrace,
         ),
       );

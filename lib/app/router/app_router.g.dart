@@ -8,29 +8,13 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider for the app router.
-///
-/// Uses [appLifecycleListenableProvider] to refresh when lifecycle state changes.
-/// Also watches [sessionStateProvider] for immediate redirection on auth changes.
-/// This enables reactive routing based on session state, maintenance mode, etc.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
 
-/// Provider for the app router.
-///
-/// Uses [appLifecycleListenableProvider] to refresh when lifecycle state changes.
-/// Also watches [sessionStateProvider] for immediate redirection on auth changes.
-/// This enables reactive routing based on session state, maintenance mode, etc.
-
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
-  /// Provider for the app router.
-  ///
-  /// Uses [appLifecycleListenableProvider] to refresh when lifecycle state changes.
-  /// Also watches [sessionStateProvider] for immediate redirection on auth changes.
-  /// This enables reactive routing based on session state, maintenance mode, etc.
   AppRouterProvider._()
     : super(
         from: null,
@@ -64,4 +48,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'826126e28edb7fbf7246291609067cbf88dd0bc4';
+String _$appRouterHash() => r'c48cd303192082668d211bb138d1f8694df72338';

@@ -6,6 +6,7 @@ import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/auth/data/repositories/auth_repository_provider.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:petzy_app/features/auth/presentation/providers/signup_intent_provider.dart';
 
 part 'auth_notifier.g.dart';
 
@@ -211,6 +212,27 @@ class AuthNotifier extends _$AuthNotifier {
         // Handle Google sign-in cancellation gracefully (not an error)
         if (error is AuthException && error.isGoogleSignInCancelled) {
           return AsyncData<User?>(null);
+        }
+
+        // Handle user needs signup - store intent and return null (not an error)
+        if (error is AuthException && error.isUserNeedsSignup) {
+          debugPrint('🔔 User needs signup - setting signup intent');
+          // Extract email from error message
+          final email = error.message.replaceFirst(
+            'User needs to complete signup: ',
+            '',
+          );
+          debugPrint('   Email for signup: $email');
+          // Set the signup intent provider
+          ref.read(signupIntentProvider.notifier).setEmail(email);
+          // Return null to indicate no user yet (will trigger redirect to signup)
+          return AsyncData<User?>(null);
+        }
+
+        // Log error details for debugging
+        debugPrint('🔴 Auth error: ${error.runtimeType} - $error');
+        if (error is AuthException) {
+          debugPrint('   Code: ${error.code}');
         }
         // Real errors emit as AsyncError
         return AsyncError<User?>(error, StackTrace.current);
