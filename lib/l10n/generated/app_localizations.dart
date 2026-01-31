@@ -668,16 +668,16 @@ abstract class AppLocalizations {
   /// **'Send Notification'**
   String get basicNotification;
 
-  /// Logout confirmation message
+  /// Confirmation message for logout action
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to sign out?'**
+  /// **'Are you sure you want to logout?'**
   String get confirmLogout;
 
   /// Error message when logout fails
   ///
   /// In en, this message translates to:
-  /// **'Failed to sign out. Please try again.'**
+  /// **'Failed to logout. Please try again.'**
   String get logoutFailed;
 
   /// Welcome message on home page
@@ -818,10 +818,10 @@ abstract class AppLocalizations {
   /// **'Notifications disabled'**
   String get notificationsDisabled;
 
-  /// Sign-in prompt message on home screen for unauthenticated users
+  /// Message shown to unauthenticated users on home page
   ///
   /// In en, this message translates to:
-  /// **'Sign in to unlock exclusive features'**
+  /// **'Sign in to unlock all features'**
   String get signInToUnlock;
 
   /// Login page hero title
@@ -1039,6 +1039,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go Home'**
   String get goHome;
+
+  /// Bookings page title and navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookings;
+
+  /// Messages page title and navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messages;
+
+  /// Shorts page title and navigation label
+  ///
+  /// In en, this message translates to:
+  /// **'Shorts'**
+  String get shorts;
+
+  /// Placeholder text for message search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search messages...'**
+  String get searchMessages;
+
+  /// Pet school profile page title
+  ///
+  /// In en, this message translates to:
+  /// **'Pet School Profile'**
+  String get petSchoolProfile;
+
+  /// Edit profile button text
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// Contact information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get contactInformation;
+
+  /// School information section title
+  ///
+  /// In en, this message translates to:
+  /// **'School Information'**
+  String get schoolInformation;
+
+  /// Description label
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// Status label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// Member since label
+  ///
+  /// In en, this message translates to:
+  /// **'Member Since'**
+  String get memberSince;
+
+  /// Address information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Address Information'**
+  String get addressInformation;
+
+  /// Street address label
+  ///
+  /// In en, this message translates to:
+  /// **'Street Address'**
+  String get streetAddress;
+
+  /// City label
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
+
+  /// Country label
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// Postal code label
+  ///
+  /// In en, this message translates to:
+  /// **'Postal Code'**
+  String get postalCode;
+
+  /// Message shown when no address is available
+  ///
+  /// In en, this message translates to:
+  /// **'No address provided'**
+  String get noAddress;
+
+  /// Active status text
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// Inactive status text
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// Pending status text
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// Rating label
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// Reviews label
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviews;
+
+  /// Verified status text
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verified;
+
+  /// Courses page title
+  ///
+  /// In en, this message translates to:
+  /// **'Courses'**
+  String get courses;
+
+  /// Message shown when no courses are available
+  ///
+  /// In en, this message translates to:
+  /// **'No courses available'**
+  String get noCourses;
+
+  /// Discount off text
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get off;
+
+  /// Weeks duration text
+  ///
+  /// In en, this message translates to:
+  /// **'weeks'**
+  String get weeks;
+
+  /// Price label
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// View details button text
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// Beginner level text
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get beginner;
+
+  /// Intermediate level text
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get intermediate;
+
+  /// Advanced level text
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advanced;
+
+  /// Duration label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// Seats available label
+  ///
+  /// In en, this message translates to:
+  /// **'Seats Available'**
+  String get seatsAvailable;
+
+  /// Overview section title
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// About trainer section title
+  ///
+  /// In en, this message translates to:
+  /// **'About Trainer'**
+  String get aboutTrainer;
 }
 
 class _AppLocalizationsDelegate

@@ -433,7 +433,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get notificationsDisabled => 'নোটিফিকেশন নিষ্ক্রিয় করা হয়েছে';
 
   @override
-  String get signInToUnlock => 'এক্সক্লুসিভ ফিচার আনলক করতে সাইন ইন করুন';
+  String get signInToUnlock => 'সমস্ত বৈশিষ্ট্য আনলক করতে সাইন ইন করুন';
 
   @override
   String get loginToExplore => 'এক্সপ্লোর করতে লগইন করুন';
@@ -560,4 +560,112 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get goHome => 'হোমে যান';
+
+  @override
+  String get bookings => 'বুকিং';
+
+  @override
+  String get messages => 'বার্তা';
+
+  @override
+  String get shorts => 'শর্টস';
+
+  @override
+  String get searchMessages => 'বার্তা অনুসন্ধান করুন...';
+
+  @override
+  String get petSchoolProfile => 'Pet School Profile';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get contactInformation => 'Contact Information';
+
+  @override
+  String get schoolInformation => 'School Information';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get memberSince => 'Member Since';
+
+  @override
+  String get addressInformation => 'Address Information';
+
+  @override
+  String get streetAddress => 'Street Address';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get noAddress => 'No address provided';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get courses => 'Courses';
+
+  @override
+  String get noCourses => 'No courses available';
+
+  @override
+  String get off => 'OFF';
+
+  @override
+  String get weeks => 'weeks';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get beginner => 'Beginner';
+
+  @override
+  String get intermediate => 'Intermediate';
+
+  @override
+  String get advanced => 'Advanced';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get seatsAvailable => 'Seats Available';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get aboutTrainer => 'About Trainer';
 }

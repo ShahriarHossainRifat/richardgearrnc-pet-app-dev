@@ -471,7 +471,12 @@ void main() {
         // Arrange
         when(
           () => mockGoogleSignIn.signIn(),
-        ).thenAnswer((_) async => 'firebase_id_token_123');
+        ).thenAnswer(
+          (_) async => const GoogleSignInResult(
+            email: 'test@example.com',
+            firebaseIdToken: 'firebase_id_token_123',
+          ),
+        );
 
         when(
           () => mockApiClient.post<Map<String, dynamic>>(
@@ -552,7 +557,12 @@ void main() {
         // Arrange
         when(
           () => mockGoogleSignIn.signIn(),
-        ).thenAnswer((_) async => 'firebase_id_token_123');
+        ).thenAnswer(
+          (_) async => const GoogleSignInResult(
+            email: 'test@example.com',
+            firebaseIdToken: 'firebase_id_token_123',
+          ),
+        );
 
         when(
           () => mockApiClient.post<Map<String, dynamic>>(

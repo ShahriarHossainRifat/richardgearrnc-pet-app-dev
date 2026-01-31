@@ -31,9 +31,7 @@ class OTPVerificationPage extends HookConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     useOnMount(() {
-      ref
-          .read(analyticsServiceProvider)
-          .logScreenView(screenName: 'otp_verification');
+      ref.read(analyticsServiceProvider).logScreenView(screenName: 'otp_verification');
     });
 
     return Scaffold(
@@ -177,10 +175,13 @@ class _OTPCard extends HookConsumerWidget {
 
     ref.listen(authProvider, (final _, final next) {
       next.whenOrNull(
-        error: (final error, final _) =>
-            context.showErrorSnackBar(error.toString()),
+        error: (final error, final _) => context.showErrorSnackBar(error.toString()),
         data: (final user) {
-          if (user != null) context.goRoute(AppRoute.home);
+          if (user != null) {
+            // Navigate to role-specific default route
+            final defaultRoute = user.role.defaultRoute;
+            context.goRoute(defaultRoute);
+          }
         },
       );
     });
@@ -220,9 +221,7 @@ class _OTPCard extends HookConsumerWidget {
               size: AppButtonSize.large,
               isExpanded: true,
               isLoading: isLoading,
-              onPressed:
-                  isLoading ||
-                      otpCode.value.length < OTPVerificationPage._otpLength
+              onPressed: isLoading || otpCode.value.length < OTPVerificationPage._otpLength
                   ? null
                   : handleVerifyCode,
               label: l10n.verifyCode,
