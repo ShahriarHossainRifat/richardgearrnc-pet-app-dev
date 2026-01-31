@@ -66,6 +66,10 @@ abstract class ApiEndpoints {
   /// Used after Firebase Phone Auth verification to create app session.
   static const String loginPhoneFirebase = '/auth/users/exists/phone';
 
+  /// Pet owner signup endpoint.
+  /// Creates a new pet owner account with profile information.
+  static const String petOwnerSignup = '/auth/pet-owner-signup';
+
   // ─────────────────────────────────────────────────────────────────────────────
   // USER
   // ─────────────────────────────────────────────────────────────────────────────

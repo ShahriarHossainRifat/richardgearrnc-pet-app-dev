@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
-import 'package:petzy_app/core/enums/user_role.dart';
+import 'package:petzy_app/features/auth/data/repositories/auth_repository_provider.dart';
+import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:petzy_app/features/auth/presentation/providers/signup_intent_provider.dart';
 
 /// Signup page for new users to complete their profile information.
 ///
@@ -82,10 +85,15 @@ class _SignupForm extends HookConsumerWidget {
     final nameController = useTextEditingController();
     final emailController = useTextEditingController(text: email);
     final phoneController = useTextEditingController(text: phoneNumber);
-    final selectedRole = useState<UserRole>(UserRole.petOwner);
+    final userNameController = useTextEditingController();
+    final streetAddressController = useTextEditingController();
+    final cityController = useTextEditingController();
+    final countryController = useTextEditingController();
+    final postalCodeController = useTextEditingController();
     final isLoading = useState(false);
 
     Future<void> handleSubmit() async {
+      // Validate required fields
       if (nameController.text.trim().isEmpty) {
         context.showErrorSnackBar('Please enter your name');
         return;
@@ -101,21 +109,78 @@ class _SignupForm extends HookConsumerWidget {
         return;
       }
 
+      if (userNameController.text.trim().isEmpty) {
+        context.showErrorSnackBar('Please enter a username');
+        return;
+      }
+
+      if (streetAddressController.text.trim().isEmpty) {
+        context.showErrorSnackBar('Please enter your street address');
+        return;
+      }
+
+      if (cityController.text.trim().isEmpty) {
+        context.showErrorSnackBar('Please enter your city');
+        return;
+      }
+
+      if (countryController.text.trim().isEmpty) {
+        context.showErrorSnackBar('Please enter your country');
+        return;
+      }
+
+      if (postalCodeController.text.trim().isEmpty) {
+        context.showErrorSnackBar('Please enter your postal code');
+        return;
+      }
+
       isLoading.value = true;
 
       try {
-        // TODO: Call API to create user account with the collected information
-        // For now, just navigate to home (you'll implement the API call)
-        await Future<void>.delayed(const Duration(seconds: 1)); // Simulate API call
+        debugPrint('📝 Starting signup process...');
+        debugPrint('   Email: ${emailController.text.trim()}');
+        debugPrint('   Name: ${nameController.text.trim()}');
+        debugPrint('   Phone: ${phoneController.text.trim()}');
+
+        // Call signup API
+        final authRepository = ref.read(authRepositoryProvider);
+        final result = await authRepository.signup(
+          email: emailController.text.trim(),
+          fullName: nameController.text.trim(),
+          phone: phoneController.text.trim(),
+          userName: userNameController.text.trim(),
+          streetAddress: streetAddressController.text.trim(),
+          city: cityController.text.trim(),
+          country: countryController.text.trim(),
+          postalCode: postalCodeController.text.trim(),
+        );
 
         if (!context.mounted) return;
 
-        // Navigate to role-specific home
-        final defaultRoute = selectedRole.value.defaultRoute;
-        context.goRoute(defaultRoute);
+        result.fold(
+          onSuccess: (final user) {
+            debugPrint('✅ Signup successful!');
+            debugPrint('   User role: ${user.role}');
+            debugPrint('   Navigating to: ${user.role.defaultRoute}');
+
+            // Clear the signup intent
+            ref.read(signupIntentProvider.notifier).clear();
+
+            // Invalidate auth state to refresh with new user
+            ref.invalidate(authProvider);
+
+            // Navigate to role-specific home
+            context.goRoute(user.role.defaultRoute);
+          },
+          onFailure: (final error) {
+            debugPrint('❌ Signup failed: $error');
+            context.showErrorSnackBar(error.toString());
+          },
+        );
       } catch (e) {
+        debugPrint('❌ Signup exception: $e');
         if (!context.mounted) return;
-        context.showErrorSnackBar(e.toString());
+        context.showErrorSnackBar('Signup failed: $e');
       } finally {
         isLoading.value = false;
       }
@@ -163,34 +228,76 @@ class _SignupForm extends HookConsumerWidget {
             border: OutlineInputBorder(),
           ),
           keyboardType: TextInputType.phone,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           enabled: phoneNumber == null, // Disable if pre-filled from Phone Auth
         ),
-        const SizedBox(height: AppSpacing.lg),
+        const SizedBox(height: AppSpacing.md),
 
-        // Role selection
-        Text(
-          'Select Your Role',
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+        // Username field
+        TextField(
+          controller: userNameController,
+          decoration: const InputDecoration(
+            labelText: 'Username',
+            hintText: 'Choose a username',
+            prefixIcon: Icon(Icons.alternate_email),
+            border: OutlineInputBorder(),
           ),
+          textInputAction: TextInputAction.next,
         ),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.md),
 
-        ...UserRole.values.map((final role) {
-          return RadioListTile<UserRole>(
-            title: Text(role.displayName),
-            value: role,
-            groupValue: selectedRole.value,
-            onChanged: (final value) {
-              if (value != null) {
-                selectedRole.value = value;
-              }
-            },
-            contentPadding: EdgeInsets.zero,
-          );
-        }),
+        // Street Address field
+        TextField(
+          controller: streetAddressController,
+          decoration: const InputDecoration(
+            labelText: 'Street Address',
+            hintText: 'Enter your street address',
+            prefixIcon: Icon(Icons.home_outlined),
+            border: OutlineInputBorder(),
+          ),
+          textInputAction: TextInputAction.next,
+        ),
+        const SizedBox(height: AppSpacing.md),
 
+        // City field
+        TextField(
+          controller: cityController,
+          decoration: const InputDecoration(
+            labelText: 'City',
+            hintText: 'Enter your city',
+            prefixIcon: Icon(Icons.location_city_outlined),
+            border: OutlineInputBorder(),
+          ),
+          textInputAction: TextInputAction.next,
+          textCapitalization: TextCapitalization.words,
+        ),
+        const SizedBox(height: AppSpacing.md),
+
+        // Country field
+        TextField(
+          controller: countryController,
+          decoration: const InputDecoration(
+            labelText: 'Country',
+            hintText: 'Enter your country',
+            prefixIcon: Icon(Icons.public),
+            border: OutlineInputBorder(),
+          ),
+          textInputAction: TextInputAction.next,
+          textCapitalization: TextCapitalization.words,
+        ),
+        const SizedBox(height: AppSpacing.md),
+
+        // Postal Code field
+        TextField(
+          controller: postalCodeController,
+          decoration: const InputDecoration(
+            labelText: 'Postal Code',
+            hintText: 'Enter your postal code',
+            prefixIcon: Icon(Icons.markunread_mailbox_outlined),
+            border: OutlineInputBorder(),
+          ),
+          textInputAction: TextInputAction.done,
+        ),
         const SizedBox(height: AppSpacing.xl),
 
         // Submit button

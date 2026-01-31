@@ -1,3 +1,5 @@
+import 'package:petzy_app/app/router/app_router.dart';
+
 /// Enum representing different user roles in the application.
 enum UserRole {
   /// Pet owner who books pet services
@@ -20,6 +22,9 @@ enum UserRole {
     UserRole.petSchool => 'Pet School',
     UserRole.petHotel => 'Pet Hotel',
   };
+
+  /// Get the default route for this user role after signup/login.
+  AppRoute get defaultRoute => AppRoute.home;
 
   /// Parse a string to UserRole.
   /// Returns null if the string doesn't match any role.

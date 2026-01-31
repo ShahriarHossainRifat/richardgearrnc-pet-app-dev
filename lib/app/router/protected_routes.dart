@@ -7,6 +7,8 @@ import 'package:petzy_app/features/bookings/presentation/pages/pet_school_bookin
 import 'package:petzy_app/features/bookings/presentation/pages/pet_sitter_bookings_page.dart';
 import 'package:petzy_app/features/messages/presentation/pages/messages_page.dart';
 import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:petzy_app/features/pet_setter/presentation/booking_request/pet_sitter_booking_req.dart';
+import 'package:petzy_app/features/pet_setter/presentation/booking_request/pet_sitter_booking_req_details.dart';
 import 'package:petzy_app/features/pet_sitter/views/screens/pet_sitter_screen.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_hotel_profile_page.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_owner_profile_page.dart';
@@ -95,5 +97,13 @@ final protectedRoutes = [
     path: AppRoute.onboarding.path,
     name: AppRoute.onboarding.name,
     builder: (final context, final state) => const OnboardingPage(),
+  ),
+  GoRoute(
+    path: AppRoute.bookingDetails.path,
+    name: AppRoute.bookingDetails.name,
+    builder: (final context, final state) {
+      final serviceId = state.extra is String ? state.extra! as String : '';
+      return PetSitterBookingReqDetailsPage(serviceId: serviceId);
+    },
   ),
 ];

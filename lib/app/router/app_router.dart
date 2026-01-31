@@ -9,6 +9,7 @@ import 'package:petzy_app/app/router/splash_route.dart';
 import 'package:petzy_app/app/startup/app_lifecycle_notifier.dart';
 import 'package:petzy_app/app/startup/app_lifecycle_state.dart';
 import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/auth/presentation/providers/signup_intent_provider.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/bookings_wrapper_page.dart';
 import 'package:petzy_app/features/home/presentation/pages/home_page.dart';
 import 'package:petzy_app/features/messages/presentation/pages/messages_page.dart';
@@ -29,6 +30,14 @@ enum AppRoute {
   signup('/signup', requiresAuth: false),
   otpVerification('/otp-verification/:phoneNumber', requiresAuth: false),
   home('/', requiresAuth: false),
+
+  /// Booking details screen.
+  bookingDetails('/booking-details', requiresAuth: false),
+
+  /// Package details screen.
+  packageDetails('/package-details', requiresAuth: false),
+
+  /// Onboarding screen shown to new users.
   shorts('/shorts', requiresAuth: false),
   messages('/messages', requiresAuth: true),
   bookings('/bookings', requiresAuth: true),
@@ -88,11 +97,30 @@ enum AppRoute {
     );
     return RegExp('^$regexPattern\$').hasMatch(path);
   }
+
+  /// All routes that require authentication.
+  static List<AppRoute> get protectedRoutes => values.where((final r) => r.requiresAuth).toList();
+
+  /// All public routes (no auth required).
+  static List<AppRoute> get publicRoutes => values.where((final r) => !r.requiresAuth).toList();
 }
 
 extension AppRouteNavigation on BuildContext {
   void goRoute(final AppRoute route) => go(route.path);
   void pushRoute(final AppRoute route) => push(route.path);
+
+  /// Navigate to a route with parameters using [GoRouter.push].
+  void pushRouteWith(final AppRoute route, final Map<String, String> params) =>
+      push(route.pathWith(params));
+
+  /// Replace current route using [GoRouter.pushReplacement].
+  void pushReplacementRoute(final AppRoute route) => pushReplacement(route.path);
+
+  /// Replace current route with parameters using [GoRouter.pushReplacement].
+  void pushReplacementRouteWith(
+    final AppRoute route,
+    final Map<String, String> params,
+  ) => pushReplacement(route.pathWith(params));
   void goRouteWith(final AppRoute route, final Map<String, String> params, {final Object? extra}) =>
       go(route.pathWith(params), extra: extra);
 }
@@ -110,6 +138,7 @@ GoRouter appRouter(final Ref ref) {
     initialLocation: AppRoute.splash.path,
     debugLogDiagnostics: true,
     refreshListenable: lifecycleListenable,
+    routes: [splashRoute, ...authRoutes, ...protectedRoutes],
     routes: [
       splashRoute,
       ...authRoutes,
@@ -200,13 +229,25 @@ GoRouter appRouter(final Ref ref) {
 String? _handleRedirect(final Ref ref, final String path) {
   final lifecycleState = ref.read(appLifecycleNotifierProvider);
   final sessionState = ref.read(sessionStateProvider);
+  final signupEmail = ref.read(signupIntentProvider);
   final route = AppRoute.matchPath(path);
 
   return _guardLoading(route, sessionState) ??
       _guardInitialization(route, lifecycleState) ??
       _guardMaintenance(route) ??
       _guardSplash(route) ??
+      _guardSignupIntent(route, signupEmail) ??
       _guardAuth(route, sessionState);
+}
+
+/// Guard for signup intent - redirect to signup page if user needs to sign up
+String? _guardSignupIntent(final AppRoute? route, final String? signupEmail) {
+  // If there's a pending signup intent and we're not already on signup page
+  if (signupEmail != null && route != AppRoute.signup) {
+    // Redirect to signup with email query parameter
+    return '${AppRoute.signup.path}?email=${Uri.encodeComponent(signupEmail)}';
+  }
+  return null;
 }
 
 String? _guardLoading(final AppRoute? route, final SessionState sessionState) {
