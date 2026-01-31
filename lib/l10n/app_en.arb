@@ -849,5 +849,111 @@
   "goHome": "Go Home",
   "@goHome": {
     "description": "Button text to navigate to home page"
+  },
+
+  "petSchoolProfile": "Pet School Profile",
+  "@petSchoolProfile": {
+    "description": "Pet school profile screen title"
+  },
+
+  "schoolInformation": "School Information",
+  "@schoolInformation": {
+    "description": "Section header for school information"
+  },
+
+  "contactInformation": "Contact Information",
+  "@contactInformation": {
+    "description": "Section header for contact information"
+  },
+
+  "addressInformation": "Address Information",
+  "@addressInformation": {
+    "description": "Section header for address information"
+  },
+
+  "statistics": "Statistics",
+  "@statistics": {
+    "description": "Section header for statistics"
+  },
+
+  "verified": "Verified",
+  "@verified": {
+    "description": "Badge text for verified school"
+  },
+
+  "rating": "Rating",
+  "@rating": {
+    "description": "Label for rating"
+  },
+
+  "reviews": "Reviews",
+  "@reviews": {
+    "description": "Label for reviews"
+  },
+
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Label for phone number"
+  },
+
+  "description": "Description",
+  "@description": {
+    "description": "Label for description"
+  },
+
+  "streetAddress": "Street Address",
+  "@streetAddress": {
+    "description": "Label for street address"
+  },
+
+  "city": "City",
+  "@city": {
+    "description": "Label for city"
+  },
+
+  "country": "Country",
+  "@country": {
+    "description": "Label for country"
+  },
+
+  "postalCode": "Postal Code",
+  "@postalCode": {
+    "description": "Label for postal code"
+  },
+
+  "status": "Status",
+  "@status": {
+    "description": "Label for status"
+  },
+
+  "active": "Active",
+  "@active": {
+    "description": "Status text for active"
+  },
+
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Status text for inactive"
+  },
+
+  "pending": "Pending",
+  "@pending": {
+    "description": "Status text for pending"
+  },
+
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Button text to edit profile"
+  },
+
+  "noAddress": "No address information available",
+  "@noAddress": {
+    "description": "Message when no address is available"
+  },
+
+  "memberSince": "Member Since",
+  "@memberSince": {
+    "description": "Label for member since date"
   }
 }
+

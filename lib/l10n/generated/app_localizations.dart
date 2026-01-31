@@ -830,7 +830,7 @@ abstract class AppLocalizations {
   /// **'Login To Explore'**
   String get loginToExplore;
 
-  /// Phone number input label
+  /// Label for phone number
   ///
   /// In en, this message translates to:
   /// **'Phone Number'**
@@ -1039,6 +1039,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go Home'**
   String get goHome;
+
+  /// Pet school profile screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Pet School Profile'**
+  String get petSchoolProfile;
+
+  /// Section header for school information
+  ///
+  /// In en, this message translates to:
+  /// **'School Information'**
+  String get schoolInformation;
+
+  /// Section header for contact information
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get contactInformation;
+
+  /// Section header for address information
+  ///
+  /// In en, this message translates to:
+  /// **'Address Information'**
+  String get addressInformation;
+
+  /// Section header for statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// Badge text for verified school
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verified;
+
+  /// Label for rating
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// Label for reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviews;
+
+  /// Label for description
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// Label for street address
+  ///
+  /// In en, this message translates to:
+  /// **'Street Address'**
+  String get streetAddress;
+
+  /// Label for city
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
+
+  /// Label for country
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// Label for postal code
+  ///
+  /// In en, this message translates to:
+  /// **'Postal Code'**
+  String get postalCode;
+
+  /// Label for status
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// Status text for active
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// Status text for inactive
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// Status text for pending
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// Button text to edit profile
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// Message when no address is available
+  ///
+  /// In en, this message translates to:
+  /// **'No address information available'**
+  String get noAddress;
+
+  /// Label for member since date
+  ///
+  /// In en, this message translates to:
+  /// **'Member Since'**
+  String get memberSince;
 }
 
 class _AppLocalizationsDelegate

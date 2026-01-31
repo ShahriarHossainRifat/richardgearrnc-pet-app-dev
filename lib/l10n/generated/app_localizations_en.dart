@@ -554,4 +554,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goHome => 'Go Home';
+
+  @override
+  String get petSchoolProfile => 'Pet School Profile';
+
+  @override
+  String get schoolInformation => 'School Information';
+
+  @override
+  String get contactInformation => 'Contact Information';
+
+  @override
+  String get addressInformation => 'Address Information';
+
+  @override
+  String get statistics => 'Statistics';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get streetAddress => 'Street Address';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get noAddress => 'No address information available';
+
+  @override
+  String get memberSince => 'Member Since';
 }
