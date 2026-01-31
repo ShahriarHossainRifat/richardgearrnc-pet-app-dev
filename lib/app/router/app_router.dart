@@ -28,11 +28,11 @@ enum AppRoute {
   login('/login', requiresAuth: false),
   signup('/signup', requiresAuth: false),
   otpVerification('/otp-verification/:phoneNumber', requiresAuth: false),
-
-  /// Home screen shown after successful login.
-  // home('/', requiresAuth: false),
   home('/', requiresAuth: false),
-  /// Onboarding screen shown to new users.
+  shorts('/shorts', requiresAuth: false),
+  messages('/messages', requiresAuth: true),
+  bookings('/bookings', requiresAuth: true),
+  profile('/profile', requiresAuth: true),
   onboarding('/onboarding', requiresAuth: false),
   settings('/settings', requiresAuth: true),
   maintenance('/maintenance', requiresAuth: false),
