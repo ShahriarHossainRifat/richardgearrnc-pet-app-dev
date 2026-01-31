@@ -9,6 +9,7 @@ import 'package:petzy_app/app/router/splash_route.dart';
 import 'package:petzy_app/app/startup/app_lifecycle_notifier.dart';
 import 'package:petzy_app/app/startup/app_lifecycle_state.dart';
 import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/auth/presentation/providers/signup_intent_provider.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/bookings_wrapper_page.dart';
 import 'package:petzy_app/features/home/presentation/pages/home_page.dart';
 import 'package:petzy_app/features/messages/presentation/pages/messages_page.dart';
@@ -228,13 +229,25 @@ GoRouter appRouter(final Ref ref) {
 String? _handleRedirect(final Ref ref, final String path) {
   final lifecycleState = ref.read(appLifecycleNotifierProvider);
   final sessionState = ref.read(sessionStateProvider);
+  final signupEmail = ref.read(signupIntentProvider);
   final route = AppRoute.matchPath(path);
 
   return _guardLoading(route, sessionState) ??
       _guardInitialization(route, lifecycleState) ??
       _guardMaintenance(route) ??
       _guardSplash(route) ??
+      _guardSignupIntent(route, signupEmail) ??
       _guardAuth(route, sessionState);
+}
+
+/// Guard for signup intent - redirect to signup page if user needs to sign up
+String? _guardSignupIntent(final AppRoute? route, final String? signupEmail) {
+  // If there's a pending signup intent and we're not already on signup page
+  if (signupEmail != null && route != AppRoute.signup) {
+    // Redirect to signup with email query parameter
+    return '${AppRoute.signup.path}?email=${Uri.encodeComponent(signupEmail)}';
+  }
+  return null;
 }
 
 String? _guardLoading(final AppRoute? route, final SessionState sessionState) {

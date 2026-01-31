@@ -240,6 +240,43 @@ class AuthRepositoryMock implements AuthRepository {
   }
 
   @override
+  Future<Result<User>> signup({
+    required final String email,
+    required final String fullName,
+    required final String phone,
+    required final String userName,
+    required final String streetAddress,
+    required final String city,
+    required final String country,
+    required final String postalCode,
+  }) async {
+    await Future<void>.delayed(AppConstants.mockNetworkDelay);
+
+    // Simulate error for testing
+    if (email == 'error@test.com') {
+      return const Failure(AuthException(message: 'Signup failed'));
+    }
+
+    // Generate mock tokens
+    final accessToken = 'mock_access_token_${DateTime.now().millisecondsSinceEpoch}';
+    final refreshToken = 'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}';
+
+    await secureStorage.write(key: StorageKeys.accessToken, value: accessToken);
+    await secureStorage.write(key: StorageKeys.refreshToken, value: refreshToken);
+
+    // Return mock user
+    final user = User(
+      id: 'mock_user_${email.hashCode}',
+      email: email,
+      name: fullName,
+    );
+
+    await secureStorage.write(key: StorageKeys.userId, value: user.id);
+
+    return Success(user);
+  }
+
+  @override
   Future<Result<User>> restoreSession() async {
     await Future<void>.delayed(AppConstants.mockNetworkDelay);
 

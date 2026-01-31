@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:petzy_app/l10n/generated/app_localizations.dart';
 
@@ -174,6 +175,35 @@ class _LoginCard extends HookConsumerWidget {
     final isLoading = useState(false);
     final l10n = AppLocalizations.of(context);
 
+    // Listen to auth state changes for navigation
+    ref.listen<AsyncValue<User?>>(
+      authProvider,
+      (final previous, final next) {
+        next.whenOrNull(
+          data: (final user) {
+            if (user != null) {
+              // Navigate to role-specific default route
+              final defaultRoute = user.role.defaultRoute;
+              debugPrint('✅ Login successful, navigating to: $defaultRoute');
+              context.goRoute(defaultRoute);
+            }
+            // If user is null and signupIntent is set, router will redirect to signup
+          },
+          error: (final error, _) {
+            // Check if it's a cancellation (don't show error)
+            if (error is AuthException && error.isGoogleSignInCancelled) {
+              debugPrint('ℹ️ Google sign-in cancelled by user');
+              return;
+            }
+
+            debugPrint('❌ Auth error: $error');
+            // Show error for real failures
+            context.showErrorSnackBar(l10n.googleSignInFailed);
+          },
+        );
+      },
+    );
+
     Future<void> handleLogin() async {
       if (!phoneState.value.isValid) {
         context.showErrorSnackBar(l10n.phoneNumberInvalid);
@@ -205,49 +235,12 @@ class _LoginCard extends HookConsumerWidget {
       }
     }
 
-    /// Handle Google Sign-In flow with proper loading state management.
+    /// Handle Google Sign-In flow.
     ///
-    /// Responsibilities:
-    /// - Trigger login via notifier
-    /// - Navigate to role-specific page on success
-    /// - Show error UI on real failures (not cancellations)
-    ///
-    /// Note: Cancellations (user tapping "Cancel" in Google UI) do NOT
-    /// trigger error snackbars. Only real auth failures show errors.
+    /// The actual navigation and error handling is done by the ref.listen
+    /// callback above. This method just triggers the login operation.
     Future<void> handleGoogleLogin() async {
       await ref.read(authProvider.notifier).loginWithGoogle();
-
-      if (!context.mounted) return;
-
-      final authState = ref.read(authProvider);
-
-      authState.whenOrNull(
-        data: (final user) {
-          // Successful authentication
-          if (user != null) {
-            // Navigate to role-specific default route
-            final defaultRoute = user.role.defaultRoute;
-            context.goRoute(defaultRoute);
-          }
-          // If user is null, Google sign-in was cancelled - no error shown
-        },
-        error: (final error, _) {
-          // Check if user needs to sign up
-          if (error is AuthException && error.isUserNeedsSignup) {
-            // Extract email from error message
-            final email = error.message.replaceFirst('User needs to complete signup: ', '');
-            // Navigate to signup page with email parameter
-            context.goNamed(
-              AppRoute.signup.name,
-              queryParameters: {'email': email},
-            );
-            return;
-          }
-
-          // Show error only for real failures (network, backend, etc.)
-          context.showErrorSnackBar(l10n.googleSignInFailed);
-        },
-      );
     }
 
     return Container(

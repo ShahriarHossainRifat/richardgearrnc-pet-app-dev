@@ -65,6 +65,21 @@ abstract interface class AuthRepository {
     required final GoogleSignInService googleSignInService,
   });
 
+  /// Register a new pet owner account.
+  ///
+  /// Sends signup data to /auth/pet-owner-signup.
+  /// Returns [User] with authentication tokens stored.
+  Future<Result<User>> signup({
+    required final String email,
+    required final String fullName,
+    required final String phone,
+    required final String userName,
+    required final String streetAddress,
+    required final String city,
+    required final String country,
+    required final String postalCode,
+  });
+
   /// Restore session from stored credentials.
   Future<Result<User>> restoreSession();
 
