@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/core/enums/user_role.dart';
 import 'package:petzy_app/core/extensions/extensions.dart';
 
 /// Custom bottom navigation bar for the main app navigation.
 ///
-/// Shows 4 main nav items: Home, Bookings, Messages, Profile
+/// Shows 4 main nav items: Home, Bookings/Courses, Messages, Profile
 /// Handles navigation between main screens.
 class AppNavBar extends StatelessWidget {
   /// Creates an [AppNavBar] instance.
   const AppNavBar({
     required this.currentIndex,
     required this.onItemTapped,
+    this.userRole,
     super.key,
   });
 
-  /// The currently selected nav item index (0=Home, 1=Bookings, 2=Messages, 3=Profile).
+  /// The currently selected nav item index (0=Home, 1=Bookings/Courses, 2=Messages, 3=Profile).
   final int currentIndex;
 
   /// Callback when a nav item is tapped.
   final ValueChanged<int> onItemTapped;
 
+  /// The current user's role to determine navbar labels.
+  final UserRole? userRole;
+
   @override
   Widget build(final BuildContext context) {
+    // Determine second tab label and icon based on user role
+    final isSchool = userRole == UserRole.petSchool;
+    final secondTabLabel = isSchool ? 'Courses' : 'Bookings';
+    final secondTabIcon = isSchool ? Icons.school_outlined : Icons.calendar_today_outlined;
+    final secondTabActiveIcon = isSchool ? Icons.school : Icons.calendar_today;
+
     return Container(
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
@@ -47,9 +58,9 @@ class AppNavBar extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            activeIcon: Icon(Icons.calendar_today),
-            label: 'Bookings',
+            icon: Icon(secondTabIcon),
+            activeIcon: Icon(secondTabActiveIcon),
+            label: secondTabLabel,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.message_outlined),

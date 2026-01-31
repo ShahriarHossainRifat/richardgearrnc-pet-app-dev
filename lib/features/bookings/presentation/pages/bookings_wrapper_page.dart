@@ -5,8 +5,8 @@ import 'package:petzy_app/core/enums/user_role.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/pet_hotel_bookings_page.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/pet_owner_bookings_page.dart';
-import 'package:petzy_app/features/bookings/presentation/pages/pet_school_bookings_page.dart';
 import 'package:petzy_app/features/bookings/presentation/pages/pet_sitter_bookings_page.dart';
+import 'package:petzy_app/features/pet_school/courses/presentation/pages/courses_page.dart';
 
 class BookingsWrapperPage extends ConsumerWidget {
   const BookingsWrapperPage({super.key});
@@ -24,7 +24,7 @@ class BookingsWrapperPage extends ConsumerWidget {
         return switch (user.role) {
           UserRole.petOwner => const PetOwnerBookingsPage(),
           UserRole.petSitter => const PetSitterBookingsPage(),
-          UserRole.petSchool => const PetSchoolBookingsPage(),
+          UserRole.petSchool => const CoursesPage(),
           UserRole.petHotel => const PetHotelBookingsPage(),
         };
       },
