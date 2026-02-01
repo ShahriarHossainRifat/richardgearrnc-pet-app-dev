@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/core/enums/user_role.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:petzy_app/features/home/presentation/providers/community_cursor_notifier.dart';
@@ -139,6 +140,7 @@ class _HomeTabContent extends HookConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final authState = ref.watch(authProvider);
     final state = ref.watch<CommunityCursorState>(communityCursorProvider);
     final notifier = ref.read(communityCursorProvider.notifier);
 
@@ -173,33 +175,37 @@ class _HomeTabContent extends HookConsumerWidget {
       child: CustomScrollView(
         controller: scrollController,
         slivers: [
-          // Services section
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const VerticalSpace.md(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    'Top Services',
-                    style: context.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+          // Services section - only for pet owners
+          if (authState.maybeWhen(
+            data: (final user) => user?.role == UserRole.petOwner,
+            orElse: () => false,
+          ))
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const VerticalSpace.md(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Top Services',
+                      style: context.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                const ServicesShowcase(),
-                // const VerticalSpace.lg(),
-              ],
+                  const ServicesShowcase(),
+                  // const VerticalSpace.lg(),
+                ],
+              ),
             ),
-          ),
 
           // Stories section
           SliverToBoxAdapter(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: const StoriesRow(),
                 ),
                 const Divider(thickness: 0.5),
