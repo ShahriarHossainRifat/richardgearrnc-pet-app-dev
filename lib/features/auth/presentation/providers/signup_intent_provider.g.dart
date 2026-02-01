@@ -59,7 +59,7 @@ final class SignupIntentProvider
   }
 }
 
-String _$signupIntentHash() => r'6b4079429f54a4cef053c9debde12f377ef404fc';
+String _$signupIntentHash() => r'a66a050067a0a639f7076a2b50cfb83e659f1d1a';
 
 /// Holds the email of a user who needs to complete signup.
 ///

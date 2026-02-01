@@ -1,19 +1,23 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
-import 'package:petzy_app/features/pet_setter/controller/pet_sitter_book_request_controller.dart';
+import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/service_card.dart';
 
 class PetServicesBookingCardList extends StatelessWidget {
   const PetServicesBookingCardList({
     required this.items,
-    required this.controller,
+    required this.onView,
+    required this.onMessage,
+    required this.onProviderTap,
     this.isPackage = false,
     super.key,
   });
 
-  final List<ServiceItem> items;
-  final PetSearchController controller;
+  final List<dynamic> items;
+  final Function(dynamic item) onView;
+  final Function(dynamic item) onMessage;
+  final Function(dynamic item) onProviderTap;
   final bool isPackage;
 
   @override
@@ -25,13 +29,11 @@ class PetServicesBookingCardList extends StatelessWidget {
       itemBuilder: (final context, final i) {
         final it = items[i];
         return ServiceCard(
-          item: it,
-          onBook: () => controller.onBook(it),
-          onMessage: () => controller.onMessage(it),
-          onProviderTap: () => controller.onProviderTap(it),
-          onView: () => isPackage
-              ? controller.onViewPackage(context, it)
-              : controller.onView(context, it),
+          item: it as ServiceItem,
+          onBook: () {},
+          onMessage: () => onMessage(it),
+          onProviderTap: () => onProviderTap(it),
+          onView: () => onView(it),
         );
       },
     );

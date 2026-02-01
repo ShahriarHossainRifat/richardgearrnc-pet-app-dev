@@ -29,9 +29,13 @@ class AppBootstrap extends StatelessWidget {
     // Ensure Flutter bindings are initialized
     WidgetsFlutterBinding.ensureInitialized();
 
-    // Initialize environment configuration
+    // Initialize environment configuration FIRST (needed for baseUrl)
     EnvConfig.initialize(environment: environment, useMocks: useMocks);
     AppLogger.instance.i('Environment initialized: ${environment.name}');
+
+    // Note: Riverpod's dioProvider is the authoritative source for
+    // the HTTP client with all interceptors (auth, cache, retry, logging).
+    // No need to register Dio separately with GetX.
 
     // Set preferred orientations
     await SystemChrome.setPreferredOrientations([

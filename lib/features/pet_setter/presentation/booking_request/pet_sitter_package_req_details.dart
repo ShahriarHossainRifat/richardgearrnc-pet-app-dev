@@ -1,79 +1,38 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:petzy_app/features/pet_setter/controller/pet_sitter_book_request_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:petzy_app/features/pet_setter/providers/pet_sitter_profile_notifier.dart';
 import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_constants.dart';
 
-class PetSitterPackageReqDetailsPage extends StatefulWidget {
+class PetSitterPackageReqDetailsPage extends HookConsumerWidget {
   const PetSitterPackageReqDetailsPage({required this.packageId, super.key});
 
   final String packageId;
 
   @override
-  State<PetSitterPackageReqDetailsPage> createState() =>
-      _PetSitterPackageReqDetailsPageState();
-}
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    // Watch the package details provider
+    final detailsAsync = ref.watch(petSitterPackageDetailsProvider(packageId));
 
-class _PetSitterPackageReqDetailsPageState
-    extends State<PetSitterPackageReqDetailsPage> {
-  late final PetSearchController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    if (!Get.isRegistered<PetSearchController>()) {
-      Get.put(PetSearchController());
-    }
-    _controller = Get.find<PetSearchController>();
-
-    if (widget.packageId.isNotEmpty) {
-      unawaited(
-        _controller.fetchPackageDetails(widget.packageId, force: true),
-      );
-    }
-  }
-
-  @override
-  Widget build(final BuildContext context) {
     return Scaffold(
       backgroundColor: petServicesBgLight,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 430),
-            child: Obx(
-              () {
-                if (widget.packageId.isEmpty) {
-                  return _PackageErrorState(
-                    message: 'Missing package ID.',
-                    onRetry: null,
-                  );
-                }
-
-                final isLoading = _controller.isLoadingPackageDetails.value;
-                final error = _controller.packageDetailsError.value;
-                final details = _controller.packageDetails.value;
-
-                if (isLoading && details == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (error != null && details == null) {
-                  return _PackageErrorState(
-                    message: error,
-                    onRetry: () => _controller.fetchPackageDetails(
-                      widget.packageId,
-                      force: true,
-                    ),
-                  );
-                }
-
-                return _PackageDetailsContent(details: details);
-              },
+            child: detailsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (final error, final stackTrace) => _PackageErrorState(
+                message: 'Failed to load package details. Please try again.',
+                onRetry: () => ref.refresh(
+                  petSitterPackageDetailsProvider(packageId),
+                ),
+              ),
+              data: (final details) => _PackageDetailsContent(
+                details: details,
+              ),
             ),
           ),
         ),
@@ -89,9 +48,7 @@ class _PackageDetailsContent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final packageName = (details?.name ?? '').isNotEmpty
-        ? details!.name
-        : 'Package';
+    final packageName = (details?.name ?? '').isNotEmpty ? details!.name : 'Package';
     final packageDescription = (details?.description ?? '').isNotEmpty
         ? details!.description
         : 'Package description';
@@ -101,9 +58,7 @@ class _PackageDetailsContent extends StatelessWidget {
     final durationText = details?.durationInMinutes != null
         ? '${details!.durationInMinutes} mins'
         : '—';
-    final offeredPrice = (details?.offeredPrice ?? '').isNotEmpty
-        ? details!.offeredPrice
-        : '0';
+    final offeredPrice = (details?.offeredPrice ?? '').isNotEmpty ? details!.offeredPrice : '0';
     final calculatedPrice = (details?.calculatedPrice ?? '').isNotEmpty
         ? details!.calculatedPrice
         : '0';
@@ -298,7 +253,9 @@ class _PackageDetailsContent extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.snackbar('Cancel', 'Order cancelled'),
+              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Order cancelled')),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: petServicesPrimary,
                 foregroundColor: Colors.white,

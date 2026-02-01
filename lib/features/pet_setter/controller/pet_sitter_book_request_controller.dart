@@ -30,8 +30,10 @@ class ServiceItem {
   });
 }
 
-class PetSearchController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class PetSearchController extends GetxController with GetSingleTickerProviderStateMixin {
+  PetSearchController({required final PetSitterServicesApi servicesApi})
+    : _servicesApi = servicesApi;
+
   late final TabController tabController;
   final searchController = TextEditingController();
 
@@ -42,7 +44,7 @@ class PetSearchController extends GetxController
 
   final packages = <ServiceItem>[].obs;
 
-  final PetSitterServicesApi _servicesApi = PetSitterServicesApi();
+  final PetSitterServicesApi _servicesApi;
 
   final isLoadingServices = false.obs;
   final servicesError = RxnString();
@@ -107,9 +109,7 @@ class PetSearchController extends GetxController
     final bool force = false,
   }) async {
     if (isLoadingServiceDetails.value) return;
-    if (!force &&
-        _lastServiceDetailsId == serviceId &&
-        serviceDetails.value != null) {
+    if (!force && _lastServiceDetailsId == serviceId && serviceDetails.value != null) {
       return;
     }
 
@@ -128,8 +128,7 @@ class PetSearchController extends GetxController
         _lastServiceDetailsId = serviceId;
       }
     } catch (e) {
-      serviceDetailsError.value =
-          'Failed to load service details. Please try again.';
+      serviceDetailsError.value = 'Failed to load service details. Please try again.';
     } finally {
       isLoadingServiceDetails.value = false;
     }
@@ -158,9 +157,7 @@ class PetSearchController extends GetxController
     final bool force = false,
   }) async {
     if (isLoadingPackageDetails.value) return;
-    if (!force &&
-        _lastPackageDetailsId == packageId &&
-        packageDetails.value != null) {
+    if (!force && _lastPackageDetailsId == packageId && packageDetails.value != null) {
       return;
     }
 
@@ -179,8 +176,7 @@ class PetSearchController extends GetxController
         _lastPackageDetailsId = packageId;
       }
     } catch (e) {
-      packageDetailsError.value =
-          'Failed to load package details. Please try again.';
+      packageDetailsError.value = 'Failed to load package details. Please try again.';
     } finally {
       isLoadingPackageDetails.value = false;
     }

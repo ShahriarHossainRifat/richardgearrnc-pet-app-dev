@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
-import 'package:petzy_app/features/pet_setter/controller/pet_sitter_book_request_controller.dart';
+import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_constants.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_section_card.dart';
 

@@ -58,8 +58,7 @@ final protectedRoutes = [
   GoRoute(
     path: AppRoute.bookings.path,
     name: AppRoute.bookings.name,
-    builder: (final context, final state) =>
-        const PlaceholderPage(title: 'Bookings'),
+    builder: (final context, final state) => const PlaceholderPage(title: 'Bookings'),
   ),
   // Role-specific profile pages
   GoRoute(
@@ -86,8 +85,7 @@ final protectedRoutes = [
   GoRoute(
     path: AppRoute.profile.path,
     name: AppRoute.profile.name,
-    builder: (final context, final state) =>
-        const PlaceholderPage(title: 'Profile'),
+    builder: (final context, final state) => const PlaceholderPage(title: 'Profile'),
   ),
   GoRoute(
     path: AppRoute.settings.path,

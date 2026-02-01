@@ -172,4 +172,28 @@ abstract class ApiEndpoints {
 
   /// Get feature flags.
   static const String featureFlags = '/config/features';
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // PET SITTER SERVICES
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Get current pet sitter's profile (detailed).
+  static const String petSitterMyProfile = '/pet-sitter/me';
+
+  /// Get current pet sitter's services.
+  static const String petSitterMyServices = '/services/me';
+
+  /// Get pet sitter service by ID.
+  /// Append service ID to path: /services/{id}
+  static const String petSitterServices = '/services';
+
+  /// Get current pet sitter's packages.
+  static const String petSitterMyPackages = '/pet-sitter-package/me';
+
+  /// Get pet sitter package by ID.
+  /// Append package ID to path: /pet-sitter-package/{id}
+  static const String petSitterPackages = '/pet-sitter-package';
+
+  /// Get all pet sitters directory/profiles.
+  static const String petSitterDirectory = '/pet-sitter';
 }

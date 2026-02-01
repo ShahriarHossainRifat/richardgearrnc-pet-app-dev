@@ -6,8 +6,7 @@ import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:petzy_app/features/home/presentation/providers/community_cursor_notifier.dart';
-import 'package:petzy_app/features/home/presentation/widgets/home_feed.dart'
-    show PostCard;
+import 'package:petzy_app/features/home/presentation/widgets/home_feed.dart' show PostCard;
 import 'package:petzy_app/features/home/presentation/widgets/services_showcase.dart';
 import 'package:petzy_app/features/home/presentation/widgets/stories_row.dart';
 import 'package:petzy_app/features/shorts/presentation/pages/shorts_page.dart';
@@ -156,8 +155,7 @@ class _HomeTabContent extends HookConsumerWidget {
     useEffect(() {
       void handleScroll() {
         if (scrollController.position.pixels >=
-            scrollController.position.maxScrollExtent -
-                AppConstants.scrollLoadMoreThreshold) {
+            scrollController.position.maxScrollExtent - AppConstants.scrollLoadMoreThreshold) {
           notifier.loadNextPage();
         }
       }
@@ -187,7 +185,7 @@ class _HomeTabContent extends HookConsumerWidget {
                   ),
                 ),
                 const ServicesShowcase(),
-                const VerticalSpace.lg(),
+                // const VerticalSpace.lg(),
               ],
             ),
           ),
@@ -234,14 +232,38 @@ class _HomeTabContent extends HookConsumerWidget {
                   final post = state.posts[index];
                   return PostCard(
                     post: post,
-                    onLikeToggle: (final bool isLiked) =>
-                        notifier.updatePostLike(post.id, isLiked),
-                    onSaveToggle: (final bool isSaved) =>
-                        notifier.updatePostSave(post.id, isSaved),
+                    onLikeToggle: (final bool isLiked) => notifier.updatePostLike(post.id, isLiked),
+                    onSaveToggle: (final bool isSaved) => notifier.updatePostSave(post.id, isSaved),
+                    onEdit: () async {
+                      // TODO: Implement edit post functionality
+                      context.showSnackBar('Edit post coming soon');
+                    },
+                    onDelete: () async {
+                      // TODO: Implement delete post functionality
+                      context.showSnackBar('Post deleted');
+                    },
+                    onReport: () async {
+                      // TODO: Implement report post functionality
+                      context.showSnackBar('Post reported');
+                    },
+                    onViewComments: (final postId) async {
+                      // TODO: Fetch comments from backend
+                    },
+                    onAddComment: (final postId, final text) async {
+                      // TODO: Implement add comment functionality
+                      context.showSnackBar('Comment added: $text');
+                    },
+                    onCommentLike: (final commentId, final isLiked) async {
+                      // TODO: Implement comment like functionality
+                    },
+                    onShare: (final postId, final postUrl) async {
+                      // TODO: Track share event in analytics
+                      // Share event tracking can be added here
+                    },
+                    isCurrentUser: false, // TODO: Check if current user owns post
                   );
                 },
-                childCount:
-                    state.posts.length + (state.isLoading == true ? 1 : 0),
+                childCount: state.posts.length + (state.isLoading == true ? 1 : 0),
               ),
             ),
 

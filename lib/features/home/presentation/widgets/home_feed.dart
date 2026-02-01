@@ -1,8 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart' as share;
 import 'package:petzy_app/core/core.dart';
+import 'package:petzy_app/features/home/domain/entities/comment.dart';
 import 'package:petzy_app/features/home/domain/entities/post.dart';
+import 'package:petzy_app/features/home/presentation/widgets/comments_bottom_sheet.dart';
+import 'package:petzy_app/features/home/presentation/widgets/post_menu_button.dart';
+
+/// Callback types for post actions.
+typedef OnPostEdit = Future<void> Function();
+typedef OnPostDelete = Future<void> Function();
+typedef OnPostReport = Future<void> Function();
+typedef OnViewComments = Future<void> Function(String postId);
+typedef OnAddComment = Future<void> Function(String postId, String text);
+typedef OnCommentLike = Future<void> Function(String commentId, bool isLiked);
+typedef OnSharePost = Future<void> Function(String postId, String postUrl);
 
 /// Individual post card in the feed.
 class PostCard extends HookConsumerWidget {
@@ -11,6 +24,14 @@ class PostCard extends HookConsumerWidget {
     required this.post,
     required this.onLikeToggle,
     required this.onSaveToggle,
+    this.onEdit,
+    this.onDelete,
+    this.onReport,
+    this.onViewComments,
+    this.onAddComment,
+    this.onCommentLike,
+    this.onShare,
+    this.isCurrentUser = false,
   });
 
   /// The post data.
@@ -22,19 +43,45 @@ class PostCard extends HookConsumerWidget {
   /// Callback when save button is tapped.
   final void Function(bool) onSaveToggle;
 
+  /// Callback when edit button is tapped.
+  final OnPostEdit? onEdit;
+
+  /// Callback when delete button is tapped.
+  final OnPostDelete? onDelete;
+
+  /// Callback when report button is tapped.
+  final OnPostReport? onReport;
+
+  /// Callback when view comments is tapped.
+  final OnViewComments? onViewComments;
+
+  /// Callback when a comment is added.
+  final OnAddComment? onAddComment;
+
+  /// Callback when a comment is liked.
+  final OnCommentLike? onCommentLike;
+
+  /// Callback when share button is tapped.
+  final OnSharePost? onShare;
+
+  /// Whether this post is owned by the current user.
+  final bool isCurrentUser;
+
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final isLiked = useState(post.isLiked);
     final isSaved = useState(post.isSaved);
     final currentImageIndex = useState(0);
+    final comments = useState<List<Comment>>([]);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Post header with user info
+        // Post header with user info and menu
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
                 radius: AppConstants.avatarRadiusMD,
@@ -43,109 +90,174 @@ class PostCard extends HookConsumerWidget {
                     ? CachedNetworkImageProvider(post.user.image!)
                     : null,
               ),
-              const HorizontalSpace.sm(),
+              const HorizontalSpace.md(),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      post.user.fullName,
-                      style: context.textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                    // Name and username
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            post.user.fullName,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
+                    // Username
                     Text(
-                      post.createdAt.timeAgo,
+                      '@${post.user.userName}',
                       style: context.textTheme.labelSmall?.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w400,
                       ),
+                    ),
+                    const VerticalSpace.xs(),
+                    // Time and location
+                    Row(
+                      children: [
+                        Text(
+                          post.createdAt.timeAgo,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        if (post.location.isNotEmpty) ...[
+                          const HorizontalSpace.xs(),
+                          Text(
+                            '•',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          const HorizontalSpace.xs(),
+                          Expanded(
+                            child: Text(
+                              post.location,
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: context.colorScheme.onSurfaceVariant,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ],
                 ),
               ),
-              AppIconButton(
-                icon: Icons.more_vert,
-                onPressed: () {},
-              ),
+              if (onEdit != null || onDelete != null || onReport != null)
+                PostMenuButton(
+                  showEdit: isCurrentUser,
+                  showDelete: isCurrentUser,
+                  onEdit: onEdit ?? () async {},
+                  onDelete: onDelete ?? () async {},
+                  onReport: onReport ?? () async {},
+                )
+              else
+                AppIconButton(
+                  icon: Icons.more_vert,
+                  onPressed: () {},
+                ),
             ],
           ),
         ),
 
-        // Post image carousel
+        // Post image carousel with swipe support
         if (post.media.isNotEmpty)
-          Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: AppConstants.postImageHeight,
-                color: context.colorScheme.surfaceContainer,
-                child: CachedNetworkImage(
-                  imageUrl: post.media[currentImageIndex.value],
-                  fit: BoxFit.cover,
-                  placeholder: (final context, final url) =>
-                      const LoadingWidget(),
-                  errorWidget: (final context, final url, final error) =>
-                      const Icon(Icons.image_not_supported),
+          GestureDetector(
+            onHorizontalDragEnd: (final details) {
+              // Swipe left = next image
+              if (details.velocity.pixelsPerSecond.dx < -500) {
+                if (currentImageIndex.value < post.media.length - 1) {
+                  currentImageIndex.value++;
+                }
+              }
+              // Swipe right = previous image
+              else if (details.velocity.pixelsPerSecond.dx > 500) {
+                if (currentImageIndex.value > 0) {
+                  currentImageIndex.value--;
+                }
+              }
+            },
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: AppConstants.postImageHeight,
+                  color: context.colorScheme.surfaceContainer,
+                  child: CachedNetworkImage(
+                    imageUrl: post.media[currentImageIndex.value],
+                    fit: BoxFit.cover,
+                    placeholder: (final context, final url) => const LoadingWidget(),
+                    errorWidget: (final context, final url, final error) =>
+                        const Icon(Icons.image_not_supported),
+                  ),
                 ),
-              ),
-              // Image indicator dots
-              if (post.media.length > 1)
-                Positioned(
-                  bottom: 12,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.borderRadiusMD,
+                // Image indicator dots
+                if (post.media.length > 1)
+                  Positioned(
+                    bottom: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.borderRadiusMD,
+                        ),
+                      ),
+                      child: Text(
+                        '${currentImageIndex.value + 1}/${post.media.length}',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      '${currentImageIndex.value + 1}/${post.media.length}',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
+                  ),
+                // Image navigation arrows (kept for accessibility)
+                if (post.media.length > 1)
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: AppIconButton(
+                        icon: Icons.chevron_left,
+                        onPressed: () {
+                          if (currentImageIndex.value > 0) {
+                            currentImageIndex.value--;
+                          }
+                        },
                       ),
                     ),
                   ),
-                ),
-              // Image navigation arrows
-              if (post.media.length > 1)
-                Positioned(
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(
-                    child: AppIconButton(
-                      icon: Icons.chevron_left,
-                      onPressed: () {
-                        if (currentImageIndex.value > 0) {
-                          currentImageIndex.value--;
-                        }
-                      },
+                if (post.media.length > 1)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Center(
+                      child: AppIconButton(
+                        icon: Icons.chevron_right,
+                        onPressed: () {
+                          if (currentImageIndex.value < post.media.length - 1) {
+                            currentImageIndex.value++;
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-              if (post.media.length > 1)
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Center(
-                    child: AppIconButton(
-                      icon: Icons.chevron_right,
-                      onPressed: () {
-                        if (currentImageIndex.value < post.media.length - 1) {
-                          currentImageIndex.value++;
-                        }
-                      },
-                    ),
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
 
         // Post actions and stats
@@ -165,9 +277,7 @@ class PostCard extends HookConsumerWidget {
                     child: Row(
                       children: [
                         Icon(
-                          isLiked.value
-                              ? Icons.favorite
-                              : Icons.favorite_outline,
+                          isLiked.value ? Icons.favorite : Icons.favorite_outline,
                           color: isLiked.value ? Colors.red : null,
                           size: AppConstants.iconSizeMD,
                         ),
@@ -180,18 +290,61 @@ class PostCard extends HookConsumerWidget {
                     ),
                   ),
                   const HorizontalSpace.lg(),
-                  Row(
-                    children: [
-                      const Icon(Icons.comment_outlined, size: 24),
-                      const HorizontalSpace.xs(),
-                      Text(
-                        '${post.commentCount}',
-                        style: context.textTheme.bodyMedium,
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: onViewComments != null
+                        ? () {
+                            showModalBottomSheet<void>(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (_) => CommentsBottomSheet(
+                                comments: comments.value,
+                                onAddComment: (final text) async {
+                                  if (onAddComment != null) {
+                                    await onAddComment!(post.id, text);
+                                    // In a real app, you'd refresh comments here
+                                  }
+                                },
+                                onCommentLikeToggle: (final commentId, final isLiked) async {
+                                  if (onCommentLike != null) {
+                                    await onCommentLike!(commentId, isLiked);
+                                  }
+                                },
+                              ),
+                            );
+                          }
+                        : null,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.comment_outlined, size: 24),
+                        const HorizontalSpace.xs(),
+                        Text(
+                          '${post.commentCount}',
+                          style: context.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
                   const HorizontalSpace.lg(),
-                  const Icon(Icons.share_outlined, size: 24),
+                  GestureDetector(
+                    onTap: onShare != null
+                        ? () async {
+                            final postUrl = 'https://petzy.app/posts/${post.id}';
+                            try {
+                              await share.Share.share(
+                                '${post.user.fullName} shared a post: ${post.caption}\n\n$postUrl',
+                                subject: 'Check out this post on Petzy',
+                              );
+                              await onShare!(post.id, postUrl);
+                            } catch (e) {
+                              context.showErrorSnackBar(
+                                'Failed to share: $e',
+                              );
+                            }
+                          }
+                        : null,
+                    child: const Icon(Icons.share_outlined, size: 24),
+                  ),
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
@@ -212,37 +365,38 @@ class PostCard extends HookConsumerWidget {
                 post.caption,
                 style: context.textTheme.bodyMedium,
               ),
-              const VerticalSpace.sm(),
-
-              // Location
-              if (post.location.isNotEmpty)
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      size: AppConstants.iconSizeSM,
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
-                    const HorizontalSpace.xs(),
-                    Text(
-                      post.location,
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-
               const VerticalSpace.md(),
 
               // View comments link
               if (post.commentCount > 0)
                 GestureDetector(
-                  onTap: () {},
+                  onTap: onViewComments != null
+                      ? () {
+                          showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (_) => CommentsBottomSheet(
+                              comments: comments.value,
+                              onAddComment: (final text) async {
+                                if (onAddComment != null) {
+                                  await onAddComment!(post.id, text);
+                                }
+                              },
+                              onCommentLikeToggle: (final commentId, final isLiked) async {
+                                if (onCommentLike != null) {
+                                  await onCommentLike!(commentId, isLiked);
+                                }
+                              },
+                            ),
+                          );
+                        }
+                      : null,
                   child: Text(
                     'View all ${post.commentCount} comment${post.commentCount > 1 ? 's' : ''}',
                     style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
+                      color: context.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),

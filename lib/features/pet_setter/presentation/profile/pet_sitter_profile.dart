@@ -1,35 +1,26 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:petzy_app/features/pet_setter/controller/pet_sitter_profile_controller.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:petzy_app/features/pet_setter/providers/pet_sitter_profile_notifier.dart';
 import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_constants.dart';
 
-class PetSitterProfilePage extends StatefulWidget {
+class PetSitterProfilePage extends HookConsumerWidget {
   const PetSitterProfilePage({super.key});
 
   @override
-  State<PetSitterProfilePage> createState() => _PetSitterProfilePageState();
-}
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    // Track screen view on mount
+    useEffect(() {
+      // Note: Add analytics tracking here if needed
+      // ref.read(analyticsServiceProvider).logScreenView(screenName: 'pet_sitter_profile');
+      return null;
+    }, []);
 
-class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
-  late final PetSitterProfileController _controller;
+    final profilesAsync = ref.watch(petSitterProfilesProvider);
 
-  @override
-  void initState() {
-    super.initState();
-    if (!Get.isRegistered<PetSitterProfileController>()) {
-      Get.put(PetSitterProfileController());
-    }
-    _controller = Get.find<PetSitterProfileController>();
-    unawaited(_controller.fetchProfiles());
-  }
-
-  @override
-  Widget build(final BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
@@ -47,144 +38,116 @@ class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
               child: SizedBox(
                 width: contentWidth,
                 height: maxHeight,
-                child: Obx(() {
-                  final isLoading = _controller.isLoading.value;
-                  final error = _controller.error.value;
-                  final profile = _controller.primaryProfile;
-
-                  if (isLoading && profile == null) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          petServicesPrimary,
-                        ),
-                        strokeWidth: 3,
+                child: profilesAsync.when(
+                  loading: () => Center(
+                    child: CircularProgressIndicator(
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        petServicesPrimary,
                       ),
-                    );
-                  }
+                      strokeWidth: 3,
+                    ),
+                  ),
+                  error: (final error, final stackTrace) => _ErrorState(
+                    message: 'Failed to load profile. Please try again.',
+                    onRetry: () => ref.refresh(petSitterProfilesProvider),
+                  ),
+                  data: (final profiles) {
+                    final profile = profiles.isNotEmpty ? profiles.first : null;
 
-                  if (error != null && profile == null) {
-                    return _ErrorState(
-                      message: error,
-                      onRetry: () => _controller.fetchProfiles(force: true),
-                    );
-                  }
-
-                  return CustomScrollView(
-                    slivers: [
-                      // Modern App Bar
-                      SliverAppBar(
-                        floating: true,
-                        elevation: 0,
-                        backgroundColor: Colors.transparent,
-                        leading: Container(
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            onPressed: Get.back,
-                            icon: const Icon(
-                              Icons.arrow_back_ios_new,
+                    return CustomScrollView(
+                      slivers: [
+                        // Modern App Bar
+                        SliverAppBar(
+                          floating: true,
+                          elevation: 0,
+                          backgroundColor: Colors.transparent,
+                          automaticallyImplyLeading: true,
+                          title: const Text(
+                            'My Profile',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
                               color: Color(0xFF1F2937),
-                              size: 18,
+                              letterSpacing: -0.5,
                             ),
-                            padding: EdgeInsets.zero,
                           ),
                         ),
-                        title: const Text(
-                          'My Profile',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF1F2937),
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ),
 
-                      SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate([
-                            if (profile == null)
-                              const _EmptyState()
-                            else ...[
-                              _ProfileHeader(profile: profile),
-                              const SizedBox(height: 24),
-                              _ModernSection(
-                                icon: Icons.info_outline,
-                                title: 'About',
-                                child: Text(
-                                  _valueOrFallback(
-                                    profile.bio,
-                                    'No bio available.',
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                              if (profile == null)
+                                const _EmptyState()
+                              else ...[
+                                _ProfileHeader(profile: profile),
+                                const SizedBox(height: 24),
+                                _ModernSection(
+                                  icon: Icons.info_outline,
+                                  title: 'About',
+                                  child: Text(
+                                    _valueOrFallback(
+                                      profile.bio,
+                                      'No bio available.',
+                                    ),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xFF4B5563),
+                                      height: 1.6,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xFF4B5563),
-                                    height: 1.6,
-                                    fontWeight: FontWeight.w400,
+                                ),
+                                const SizedBox(height: 20),
+                                _ModernSection(
+                                  icon: Icons.work_outline,
+                                  title: 'Experience',
+                                  child: Column(
+                                    children: [
+                                      _ModernInfoRow(
+                                        icon: Icons.badge_outlined,
+                                        label: 'Designation',
+                                        value: _valueOrFallback(
+                                          profile.designations,
+                                          '-',
+                                        ),
+                                      ),
+                                      const SizedBox(height: 14),
+                                      _ModernInfoRow(
+                                        icon: Icons.calendar_today_outlined,
+                                        label: 'Years',
+                                        value: profile.yearsOfExperience > 0
+                                            ? '${profile.yearsOfExperience} years'
+                                            : '-',
+                                      ),
+                                      const SizedBox(height: 14),
+                                      _ModernInfoRow(
+                                        icon: Icons.check_circle_outline,
+                                        label: 'Status',
+                                        value: _valueOrFallback(
+                                          profile.status,
+                                          '-',
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 20),
-                              _ModernSection(
-                                icon: Icons.work_outline,
-                                title: 'Experience',
-                                child: Column(
-                                  children: [
-                                    _ModernInfoRow(
-                                      icon: Icons.badge_outlined,
-                                      label: 'Designation',
-                                      value: _valueOrFallback(
-                                        profile.designations,
-                                        '-',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 14),
-                                    _ModernInfoRow(
-                                      icon: Icons.calendar_today_outlined,
-                                      label: 'Years',
-                                      value: profile.yearsOfExperience > 0
-                                          ? '${profile.yearsOfExperience} years'
-                                          : '-',
-                                    ),
-                                    const SizedBox(height: 14),
-                                    _ModernInfoRow(
-                                      icon: Icons.check_circle_outline,
-                                      label: 'Status',
-                                      value: _valueOrFallback(
-                                        profile.status,
-                                        '-',
-                                      ),
-                                    ),
-                                  ],
+                                const SizedBox(height: 20),
+                                _ModernSection(
+                                  icon: Icons.language_outlined,
+                                  title: 'Languages',
+                                  child: _LanguagesWrap(
+                                    languages: profile.languages,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 20),
-                              _ModernSection(
-                                icon: Icons.language_outlined,
-                                title: 'Languages',
-                                child: _LanguagesWrap(
-                                  languages: profile.languages,
-                                ),
-                              ),
-                            ],
-                          ]),
+                              ],
+                            ]),
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }),
+                      ],
+                    );
+                  },
+                ),
               ),
             );
           },

@@ -1,6 +1,30 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:dio/dio.dart';
+import 'package:petzy_app/core/constants/api_endpoints.dart';
+
+/// Represents a service or package item for display in booking UI
+class ServiceItem {
+  final String id;
+  final String title;
+  final double price;
+  final double rating;
+  final int reviews;
+  final double distanceMiles;
+  final String provider;
+  final String imageUrl;
+
+  const ServiceItem({
+    required this.id,
+    required this.title,
+    required this.price,
+    required this.rating,
+    required this.reviews,
+    required this.distanceMiles,
+    required this.provider,
+    required this.imageUrl,
+  });
+}
 
 class PetSitterService {
   PetSitterService({
@@ -39,9 +63,7 @@ class PetSitterService {
       whatsIncluded: whats is List<dynamic>
           ? whats.map((final e) => e.toString()).toList()
           : const [],
-      tags: tags is List<dynamic>
-          ? tags.map((final e) => e.toString()).toList()
-          : const [],
+      tags: tags is List<dynamic> ? tags.map((final e) => e.toString()).toList() : const [],
       isAvailable: json['isAvailable'] as bool? ?? false,
     );
   }
@@ -53,12 +75,16 @@ class PetSitterProfileUser {
     required this.fullName,
     required this.image,
     this.email = '',
+    this.phone = '',
+    this.role = '',
   });
 
   final String id;
   final String fullName;
   final String image;
   final String email;
+  final String phone;
+  final String role;
 
   factory PetSitterProfileUser.fromJson(final Map<String, dynamic> json) {
     return PetSitterProfileUser(
@@ -66,6 +92,8 @@ class PetSitterProfileUser {
       fullName: json['fullName']?.toString() ?? '',
       image: json['image']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
+      phone: json['phone']?.toString() ?? '',
+      role: json['role']?.toString() ?? '',
     );
   }
 }
@@ -86,9 +114,7 @@ class PetSitterProfile {
     return PetSitterProfile(
       userId: json['userId']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
-      user: userJson is Map<String, dynamic>
-          ? PetSitterProfileUser.fromJson(userJson)
-          : null,
+      user: userJson is Map<String, dynamic> ? PetSitterProfileUser.fromJson(userJson) : null,
     );
   }
 }
@@ -102,6 +128,9 @@ class PetSitterDirectoryProfile {
     required this.yearsOfExperience,
     required this.status,
     required this.user,
+    this.profileStatus = '',
+    this.isVerified = false,
+    this.addresses = const [],
   });
 
   final String id;
@@ -111,10 +140,14 @@ class PetSitterDirectoryProfile {
   final int yearsOfExperience;
   final String status;
   final PetSitterProfileUser? user;
+  final String profileStatus;
+  final bool isVerified;
+  final List<Map<String, dynamic>> addresses;
 
   factory PetSitterDirectoryProfile.fromJson(final Map<String, dynamic> json) {
     final languagesJson = json['languages'];
     final yearsValue = json['yearsOfExperience'];
+    final addressesJson = json['petSitterAddresses'];
 
     return PetSitterDirectoryProfile(
       id: json['id']?.toString() ?? '',
@@ -130,6 +163,11 @@ class PetSitterDirectoryProfile {
       user: json['user'] is Map<String, dynamic>
           ? PetSitterProfileUser.fromJson(json['user'] as Map<String, dynamic>)
           : null,
+      profileStatus: json['profileStatus']?.toString() ?? '',
+      isVerified: json['isVerified'] as bool? ?? false,
+      addresses: addressesJson is List<dynamic>
+          ? addressesJson.whereType<Map<String, dynamic>>().toList()
+          : const [],
     );
   }
 }
@@ -303,25 +341,45 @@ class PetSitterPackageDetails {
   }
 }
 
+/// Pet Sitter Services API client.
+///
+/// Handles all pet sitter-related API calls using authenticated Dio instance.
+/// The Dio client should already have authentication headers configured via
+/// interceptors. API endpoints are centralized in [ApiEndpoints].
+///
+/// Usage:
+/// ```dart
+/// final apiService = PetSitterServicesApi(dio: authenticatedDioClient);
+/// final services = await apiService.fetchMyServices();
+/// ```
 class PetSitterServicesApi {
-  PetSitterServicesApi({final Dio? dio}) : _dio = dio ?? Dio();
+  /// Creates a new instance of [PetSitterServicesApi].
+  ///
+  /// [dio] - Authenticated Dio instance with auth headers already configured.
+  /// If not provided, creates a new instance (not recommended for production).
+  PetSitterServicesApi({required final Dio dio}) : _dio = dio;
 
   final Dio _dio;
 
-  static const String _baseUrl =
-      'https://clever-iguana-terminally.ngrok-free.app/api';
-  static const String _accessToken =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkwZmY4MTBiLTBiM2EtNGYwYS05ZGJlLTdmNzVkZTY2MDg5OSIsImVtYWlsIjoiamloYWRtdWdkaG8xMjM2QGdtYWlsLmNvbSIsInJvbGUiOiJQRVRfU0lUVEVSIiwiaWF0IjoxNzY5ODQ3Mjg0LCJleHAiOjE3Njk5MzM2ODR9._julCeX93bctfznXnJbX2kEIxvCLRNQ6VOV6REnd-Y8';
+  /// Fetch current pet sitter's profile (detailed).
+  Future<PetSitterDirectoryProfile?> fetchMyProfile() async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      ApiEndpoints.petSitterMyProfile,
+    );
 
+    final data = response.data;
+    if (data == null) return null;
+
+    final payload = data['data'];
+    if (payload is! Map<String, dynamic>) return null;
+
+    return PetSitterDirectoryProfile.fromJson(payload);
+  }
+
+  /// Fetch current pet sitter's services.
   Future<List<PetSitterService>> fetchMyServices() async {
     final response = await _dio.get<Map<String, dynamic>>(
-      '$_baseUrl/services/me',
-      options: Options(
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_accessToken',
-        },
-      ),
+      ApiEndpoints.petSitterMyServices,
     );
 
     final data = response.data;
@@ -333,21 +391,13 @@ class PetSitterServicesApi {
     final items = payload['data'];
     if (items is! List<dynamic>) return [];
 
-    return items
-        .whereType<Map<String, dynamic>>()
-        .map(PetSitterService.fromJson)
-        .toList();
+    return items.whereType<Map<String, dynamic>>().map(PetSitterService.fromJson).toList();
   }
 
+  /// Fetch current pet sitter's packages.
   Future<List<PetSitterPackage>> fetchMyPackages() async {
     final response = await _dio.get<Map<String, dynamic>>(
-      '$_baseUrl/pet-sitter-package/me',
-      options: Options(
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_accessToken',
-        },
-      ),
+      ApiEndpoints.petSitterMyPackages,
     );
 
     final data = response.data;
@@ -359,25 +409,17 @@ class PetSitterServicesApi {
     final items = payload['data'];
     if (items is! List<dynamic>) return [];
 
-    return items
-        .whereType<Map<String, dynamic>>()
-        .map(PetSitterPackage.fromJson)
-        .toList();
+    return items.whereType<Map<String, dynamic>>().map(PetSitterPackage.fromJson).toList();
   }
 
+  /// Fetch service details by service ID.
   Future<PetSitterServiceDetails?> fetchServiceDetails(
     final String serviceId,
   ) async {
     if (serviceId.isEmpty) return null;
 
     final response = await _dio.get<Map<String, dynamic>>(
-      '$_baseUrl/services/$serviceId',
-      options: Options(
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_accessToken',
-        },
-      ),
+      '${ApiEndpoints.petSitterServices}/$serviceId',
     );
 
     final data = response.data;
@@ -389,19 +431,14 @@ class PetSitterServicesApi {
     return PetSitterServiceDetails.fromJson(payload);
   }
 
+  /// Fetch package details by package ID.
   Future<PetSitterPackageDetails?> fetchPackageDetails(
     final String packageId,
   ) async {
     if (packageId.isEmpty) return null;
 
     final response = await _dio.get<Map<String, dynamic>>(
-      '$_baseUrl/pet-sitter-package/$packageId',
-      options: Options(
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_accessToken',
-        },
-      ),
+      '${ApiEndpoints.petSitterPackages}/$packageId',
     );
 
     final data = response.data;
@@ -413,15 +450,10 @@ class PetSitterServicesApi {
     return PetSitterPackageDetails.fromJson(payload);
   }
 
+  /// Fetch all pet sitters from directory.
   Future<List<PetSitterDirectoryProfile>> fetchPetSitterProfiles() async {
     final response = await _dio.get<Map<String, dynamic>>(
-      '$_baseUrl/pet-sitter',
-      options: Options(
-        headers: {
-          'accept': '*/*',
-          'Authorization': 'Bearer $_accessToken',
-        },
-      ),
+      ApiEndpoints.petSitterDirectory,
     );
 
     final data = response.data;
@@ -433,9 +465,6 @@ class PetSitterServicesApi {
     final items = payload['data'];
     if (items is! List<dynamic>) return [];
 
-    return items
-        .whereType<Map<String, dynamic>>()
-        .map(PetSitterDirectoryProfile.fromJson)
-        .toList();
+    return items.whereType<Map<String, dynamic>>().map(PetSitterDirectoryProfile.fromJson).toList();
   }
 }

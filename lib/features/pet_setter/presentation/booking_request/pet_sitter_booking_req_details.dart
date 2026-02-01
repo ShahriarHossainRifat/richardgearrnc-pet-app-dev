@@ -1,79 +1,38 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:petzy_app/features/pet_setter/controller/pet_sitter_book_request_controller.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:petzy_app/features/pet_setter/providers/pet_sitter_profile_notifier.dart';
 import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_constants.dart';
 
-class PetSitterBookingReqDetailsPage extends StatefulWidget {
+class PetSitterBookingReqDetailsPage extends HookConsumerWidget {
   const PetSitterBookingReqDetailsPage({required this.serviceId, super.key});
 
   final String serviceId;
 
   @override
-  State<PetSitterBookingReqDetailsPage> createState() =>
-      _PetSitterBookingReqDetailsPageState();
-}
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    // Watch the service details provider
+    final detailsAsync = ref.watch(petSitterServiceDetailsProvider(serviceId));
 
-class _PetSitterBookingReqDetailsPageState
-    extends State<PetSitterBookingReqDetailsPage> {
-  late final PetSearchController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    if (!Get.isRegistered<PetSearchController>()) {
-      Get.put(PetSearchController());
-    }
-    _controller = Get.find<PetSearchController>();
-
-    if (widget.serviceId.isNotEmpty) {
-      unawaited(
-        _controller.fetchServiceDetails(widget.serviceId, force: true),
-      );
-    }
-  }
-
-  @override
-  Widget build(final BuildContext context) {
     return Scaffold(
       backgroundColor: petServicesBgLight,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 430),
-            child: Obx(
-              () {
-                if (widget.serviceId.isEmpty) {
-                  return _ErrorState(
-                    message: 'Missing service ID.',
-                    onRetry: null,
-                  );
-                }
-
-                final isLoading = _controller.isLoadingServiceDetails.value;
-                final error = _controller.serviceDetailsError.value;
-                final details = _controller.serviceDetails.value;
-
-                if (isLoading && details == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (error != null && details == null) {
-                  return _ErrorState(
-                    message: error,
-                    onRetry: () => _controller.fetchServiceDetails(
-                      widget.serviceId,
-                      force: true,
-                    ),
-                  );
-                }
-
-                return _DetailsContent(details: details);
-              },
+            child: detailsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (final error, final stackTrace) => _ErrorState(
+                message: 'Failed to load service details. Please try again.',
+                onRetry: () => ref.refresh(
+                  petSitterServiceDetailsProvider(serviceId),
+                ),
+              ),
+              data: (final details) => _DetailsContent(
+                details: details,
+              ),
             ),
           ),
         ),
@@ -89,12 +48,10 @@ class _DetailsContent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final caregiverName =
-        (details?.petSitterProfile?.user?.fullName ?? '').isNotEmpty
+    final caregiverName = (details?.petSitterProfile?.user?.fullName ?? '').isNotEmpty
         ? details!.petSitterProfile!.user!.fullName
         : 'Sarah Johnson';
-    final caregiverImage =
-        (details?.petSitterProfile?.user?.image ?? '').isNotEmpty
+    final caregiverImage = (details?.petSitterProfile?.user?.image ?? '').isNotEmpty
         ? details!.petSitterProfile!.user!.image
         : ((details?.thumbnailImage ?? '').isNotEmpty
               ? details!.thumbnailImage
@@ -333,7 +290,9 @@ class _DetailsContent extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.snackbar('Cancel', 'Order cancelled'),
+              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Order cancelled')),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: petServicesPrimary,
                 foregroundColor: Colors.white,
