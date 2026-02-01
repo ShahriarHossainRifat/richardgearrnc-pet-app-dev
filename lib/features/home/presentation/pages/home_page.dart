@@ -242,33 +242,100 @@ class _HomeTabContent extends HookConsumerWidget {
                   final post = state.posts[index];
                   return PostCard(
                     post: post,
-                    onLikeToggle: (final bool isLiked) => notifier.updatePostLike(post.id, isLiked),
-                    onSaveToggle: (final bool isSaved) => notifier.updatePostSave(post.id, isSaved),
+                    onLikeToggle: (final bool isLiked) {
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        notifier.updatePostLike(post.id, isLiked);
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
+                    },
+                    onSaveToggle: (final bool isSaved) {
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        notifier.updatePostSave(post.id, isSaved);
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
+                    },
                     onEdit: () async {
-                      // TODO: Implement edit post functionality
-                      context.showSnackBar('Edit post coming soon');
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Implement edit post functionality
+                        context.showSnackBar('Edit post coming soon');
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     onDelete: () async {
-                      // TODO: Implement delete post functionality
-                      context.showSnackBar('Post deleted');
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Implement delete post functionality
+                        context.showSnackBar('Post deleted');
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     onReport: () async {
-                      // TODO: Implement report post functionality
-                      context.showSnackBar('Post reported');
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Implement report post functionality
+                        context.showSnackBar('Post reported');
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     onViewComments: (final postId) async {
-                      // TODO: Fetch comments from backend
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Fetch comments from backend
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     onAddComment: (final postId, final text) async {
-                      // TODO: Implement add comment functionality
-                      context.showSnackBar('Comment added: $text');
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Implement add comment functionality
+                        context.showSnackBar('Comment added: $text');
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     onCommentLike: (final commentId, final isLiked) async {
-                      // TODO: Implement comment like functionality
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Implement comment like functionality
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     onShare: (final postId, final postUrl) async {
-                      // TODO: Track share event in analytics
-                      // Share event tracking can be added here
+                      if (authState.maybeWhen(
+                        data: (final user) => user != null,
+                        orElse: () => false,
+                      )) {
+                        // TODO: Track share event in analytics
+                        // Share event tracking can be added here
+                      } else {
+                        context.pushRoute(AppRoute.login);
+                      }
                     },
                     isCurrentUser: false, // TODO: Check if current user owns post
                   );
