@@ -35,10 +35,10 @@ class PetServicesBookingHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          IconButton(
-            onPressed: onBack,
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF111827)),
-          ),
+          // IconButton(
+          //   onPressed: onBack,
+          //   icon: const Icon(Icons.arrow_back, color: Color(0xFF111827)),
+          // ),
           const SizedBox(width: 6),
           Expanded(
             child: Column(
