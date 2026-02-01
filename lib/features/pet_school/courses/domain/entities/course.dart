@@ -38,12 +38,15 @@ abstract class Course with _$Course {
     required final String discount,
     required final int duration,
     @JsonKey(name: 'trainerId') required final String trainerId,
-    @JsonKey(name: 'courseLevel') @Default(CourseLevel.beginner) final CourseLevel courseLevel,
+    @JsonKey(name: 'courseLevel')
+    @Default(CourseLevel.beginner)
+    final CourseLevel courseLevel,
     @JsonKey(name: 'createdAt') final DateTime? createdAt,
     @JsonKey(name: 'updatedAt') final DateTime? updatedAt,
     required final Trainer trainer,
   }) = _Course;
 
   /// Creates a [Course] instance from JSON.
-  factory Course.fromJson(final Map<String, dynamic> json) => _$CourseFromJson(json);
+  factory Course.fromJson(final Map<String, dynamic> json) =>
+      _$CourseFromJson(json);
 }

@@ -28,7 +28,9 @@ class PetSchoolProfilePage extends HookConsumerWidget {
 
     // Track screen view once on mount
     useOnMount(() {
-      ref.read(analyticsServiceProvider).logScreenView(screenName: 'pet_school_profile');
+      ref
+          .read(analyticsServiceProvider)
+          .logScreenView(screenName: 'pet_school_profile');
     });
 
     return Scaffold(
@@ -124,7 +126,9 @@ class _ProfileContent extends StatelessWidget {
                 if (profile.createdAt != null)
                   InfoRow(
                     label: l10n.memberSince,
-                    value: DateFormat('MMMM dd, yyyy').format(profile.createdAt!),
+                    value: DateFormat(
+                      'MMMM dd, yyyy',
+                    ).format(profile.createdAt!),
                     icon: Icons.calendar_today_outlined,
                   ),
               ],
@@ -165,7 +169,9 @@ class _ProfileContent extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceVariant,
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusLG),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.borderRadiusLG,
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -194,7 +200,10 @@ class _ProfileContent extends StatelessWidget {
     );
   }
 
-  String _getStatusLabel(final ProfileStatus status, final AppLocalizations l10n) {
+  String _getStatusLabel(
+    final ProfileStatus status,
+    final AppLocalizations l10n,
+  ) {
     return switch (status) {
       ProfileStatus.active => l10n.active,
       ProfileStatus.inactive => l10n.inactive,

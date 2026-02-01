@@ -283,7 +283,9 @@ class AuthRepositoryRemote implements AuthRepository {
               '🔑 Tokens - access: ${accessToken != null}, refresh: ${refreshToken != null}, role: $roleStr',
             );
 
-            if (accessToken == null || refreshToken == null || roleStr == null) {
+            if (accessToken == null ||
+                refreshToken == null ||
+                roleStr == null) {
               return Failure(
                 AuthException(
                   message: 'Incomplete signup response: missing tokens or role',
@@ -304,13 +306,17 @@ class AuthRepositoryRemote implements AuthRepository {
                 orElse: () => UserRole.petOwner,
               );
             } catch (e) {
-              AppLogger.instance.w('⚠️ Failed to parse role: $roleStr, defaulting to petOwner');
+              AppLogger.instance.w(
+                '⚠️ Failed to parse role: $roleStr, defaulting to petOwner',
+              );
               userRole = UserRole.petOwner;
             }
 
             // Create user entity
             final user = User(
-              id: data['userId'] as String? ?? '', // Use userId from backend if available
+              id:
+                  data['userId'] as String? ??
+                  '', // Use userId from backend if available
               email: email,
               name: fullName,
               role: userRole,

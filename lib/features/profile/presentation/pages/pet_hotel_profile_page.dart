@@ -58,7 +58,9 @@ class PetHotelProfilePage extends HookConsumerWidget {
                         height: 100,
                         decoration: BoxDecoration(
                           color: context.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMD),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusMD,
+                          ),
                         ),
                         child: Icon(
                           Icons.hotel,
@@ -95,7 +97,10 @@ class PetHotelProfilePage extends HookConsumerWidget {
                             ),
                           ),
                           const HorizontalSpace.sm(),
-                          Text('(234 reviews)', style: context.textTheme.bodySmall),
+                          Text(
+                            '(234 reviews)',
+                            style: context.textTheme.bodySmall,
+                          ),
                         ],
                       ),
                       const VerticalSpace.md(),
@@ -104,7 +109,9 @@ class PetHotelProfilePage extends HookConsumerWidget {
                         size: AppButtonSize.medium,
                         isExpanded: true,
                         onPressed: () {
-                          ref.read(feedbackServiceProvider).showInfo('Editing profile...');
+                          ref
+                              .read(feedbackServiceProvider)
+                              .showInfo('Editing profile...');
                         },
                         label: 'Edit Profile',
                       ),

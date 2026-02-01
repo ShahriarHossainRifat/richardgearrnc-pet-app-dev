@@ -17,7 +17,6 @@ class App extends ConsumerWidget {
     final locale = ref.watch(localeNotifierProvider);
 
     return MaterialApp.router(
-      
       title: 'Petzy App',
       debugShowCheckedModeBanner: false,
 

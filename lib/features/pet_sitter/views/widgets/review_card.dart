@@ -4,7 +4,7 @@ class ReviewCard extends StatelessWidget {
   const ReviewCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -20,7 +20,10 @@ class ReviewCard extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.white,
-                child: Text('👦', style: TextStyle(fontSize: 20)), // Emoji placeholder
+                child: Text(
+                  '👦',
+                  style: TextStyle(fontSize: 20),
+                ), // Emoji placeholder
               ),
               const SizedBox(width: 12),
               Column(
@@ -49,7 +52,7 @@ class ReviewCard extends StatelessWidget {
 
           // 2. Stars
           Row(
-            children: List.generate(5, (index) {
+            children: List.generate(5, (final index) {
               return const Icon(
                 Icons.star_rounded,
                 color: Color(0xFFFFC107),
@@ -73,7 +76,11 @@ class ReviewCard extends StatelessWidget {
           // 4. Helpful Button
           Row(
             children: [
-              Icon(Icons.thumb_up_alt_outlined, size: 18, color: Colors.grey[600]),
+              Icon(
+                Icons.thumb_up_alt_outlined,
+                size: 18,
+                color: Colors.grey[600],
+              ),
               const SizedBox(width: 6),
               Text(
                 'Helpful (12)',

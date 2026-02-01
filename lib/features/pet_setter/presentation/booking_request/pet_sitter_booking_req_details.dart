@@ -14,10 +14,12 @@ class PetSitterBookingReqDetailsPage extends StatefulWidget {
   final String serviceId;
 
   @override
-  State<PetSitterBookingReqDetailsPage> createState() => _PetSitterBookingReqDetailsPageState();
+  State<PetSitterBookingReqDetailsPage> createState() =>
+      _PetSitterBookingReqDetailsPageState();
 }
 
-class _PetSitterBookingReqDetailsPageState extends State<PetSitterBookingReqDetailsPage> {
+class _PetSitterBookingReqDetailsPageState
+    extends State<PetSitterBookingReqDetailsPage> {
   late final PetSearchController _controller;
 
   @override
@@ -87,10 +89,12 @@ class _DetailsContent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final caregiverName = (details?.petSitterProfile?.user?.fullName ?? '').isNotEmpty
+    final caregiverName =
+        (details?.petSitterProfile?.user?.fullName ?? '').isNotEmpty
         ? details!.petSitterProfile!.user!.fullName
         : 'Sarah Johnson';
-    final caregiverImage = (details?.petSitterProfile?.user?.image ?? '').isNotEmpty
+    final caregiverImage =
+        (details?.petSitterProfile?.user?.image ?? '').isNotEmpty
         ? details!.petSitterProfile!.user!.image
         : ((details?.thumbnailImage ?? '').isNotEmpty
               ? details!.thumbnailImage

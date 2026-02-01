@@ -30,7 +30,8 @@ class ServiceItem {
   });
 }
 
-class PetSearchController extends GetxController with GetSingleTickerProviderStateMixin {
+class PetSearchController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late final TabController tabController;
   final searchController = TextEditingController();
 

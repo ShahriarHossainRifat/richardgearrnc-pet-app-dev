@@ -127,7 +127,8 @@ class CommunityCursor extends _$CommunityCursor {
   void updatePostSave(final String postId, final bool isSaved) {
     final updatedPosts = state.posts
         .map(
-          (final Post post) => post.id == postId ? post.copyWith(isSaved: isSaved) : post,
+          (final Post post) =>
+              post.id == postId ? post.copyWith(isSaved: isSaved) : post,
         )
         .toList();
 

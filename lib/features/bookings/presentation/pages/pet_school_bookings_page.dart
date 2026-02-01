@@ -48,7 +48,9 @@ class PetSchoolBookingsPage extends HookConsumerWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: context.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSM,
+                          ),
                         ),
                         child: Icon(
                           Icons.school,
@@ -86,7 +88,10 @@ class PetSchoolBookingsPage extends HookConsumerWidget {
                         color: context.colorScheme.onSurfaceVariant,
                       ),
                       const HorizontalSpace.sm(),
-                      Text('10:00 AM - 11:00 AM', style: context.textTheme.bodySmall),
+                      Text(
+                        '10:00 AM - 11:00 AM',
+                        style: context.textTheme.bodySmall,
+                      ),
                       const HorizontalSpace.lg(),
                       Icon(
                         Icons.location_on,

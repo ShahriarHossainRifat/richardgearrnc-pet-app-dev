@@ -45,7 +45,9 @@ class CommunityRepositoryRemote implements CommunityRepository {
       );
     } catch (e) {
       AppLogger.instance.e('Error fetching community posts: $e');
-      return Failure(UnexpectedException(message: 'Failed to fetch community posts: $e'));
+      return Failure(
+        UnexpectedException(message: 'Failed to fetch community posts: $e'),
+      );
     }
   }
 }

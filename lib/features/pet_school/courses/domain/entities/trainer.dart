@@ -19,5 +19,6 @@ abstract class Trainer with _$Trainer {
   }) = _Trainer;
 
   /// Creates a [Trainer] instance from JSON.
-  factory Trainer.fromJson(final Map<String, dynamic> json) => _$TrainerFromJson(json);
+  factory Trainer.fromJson(final Map<String, dynamic> json) =>
+      _$TrainerFromJson(json);
 }

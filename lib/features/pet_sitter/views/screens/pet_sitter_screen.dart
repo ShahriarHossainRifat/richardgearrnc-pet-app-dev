@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/pet_sitter/views/screens/service_details.dart';
 import 'package:petzy_app/features/pet_sitter/views/widgets/service_card.dart';
@@ -8,42 +7,57 @@ class PetSitterScreen extends StatelessWidget {
   const PetSitterScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(preferredSize: Size.fromHeight(60), child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        height: 112,
-        width: double.maxFinite,
-        color: AppColors.primary.withOpacity(0.2),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          height: 112,
+          width: double.maxFinite,
+          color: AppColors.primary.withOpacity(0.2),
 
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Padding(padding: EdgeInsets.only(left: 10)),
-            Icon(Icons.arrow_back_rounded, size: 25,),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Padding(padding: EdgeInsets.only(left: 10)),
+              Icon(
+                Icons.arrow_back_rounded,
+                size: 25,
+              ),
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Find a Trusted Pet Sitter', style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Find a Trusted Pet Sitter',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
 
-                Text('Caring professionals near you', style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF828282)
-                ),)
-              ],
-            ),
+                  Text(
+                    'Caring professionals near you',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF828282),
+                    ),
+                  ),
+                ],
+              ),
 
-            Image.asset(Assets.dogImage, height: 40,)
-          ],
+              Image.asset(
+                Assets.dogImage,
+                height: 40,
+              ),
+            ],
+          ),
         ),
-      ),),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -62,11 +76,17 @@ class PetSitterScreen extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(vertical: 15),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(color: Colors.grey, width: 0.5),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 0.5,
+                    ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(color: Colors.grey, width: 0.5),
+                    borderSide: const BorderSide(
+                      color: Colors.grey,
+                      width: 0.5,
+                    ),
                   ),
                 ),
               ),
@@ -90,7 +110,11 @@ class PetSitterScreen extends StatelessWidget {
                         child: const Text(
                           'Services',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
@@ -98,7 +122,10 @@ class PetSitterScreen extends StatelessWidget {
                       child: Text(
                         'Packages',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xFF5F6368), fontSize: 18),
+                        style: TextStyle(
+                          color: Color(0xFF5F6368),
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ],
@@ -118,15 +145,25 @@ class PetSitterScreen extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.filter_list_outlined, color: Color(0xFF5F6368)),
+                        Icon(
+                          Icons.filter_list_outlined,
+                          color: Color(0xFF5F6368),
+                        ),
                         SizedBox(width: 8),
-                        Text('Filters', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                        Text(
+                          'Filters',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
                     GridView.count(
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(), // Important
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Important
                       crossAxisCount: 2,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
@@ -146,11 +183,15 @@ class PetSitterScreen extends StatelessWidget {
 
               // 4. List View (Modified to scroll with the Column)
               ListView.builder(
-                shrinkWrap: true, // Allows the ListView to take only needed space
-                physics: const NeverScrollableScrollPhysics(), // Disables nested scrolling
+                shrinkWrap:
+                    true, // Allows the ListView to take only needed space
+                physics:
+                    const NeverScrollableScrollPhysics(), // Disables nested scrolling
                 itemCount: 10,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16), // Add space between cards
+                itemBuilder: (final context, final index) => Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 16,
+                  ), // Add space between cards
                   child: ServiceProviderCard(
                     imageUrl: "https://placehold.co/100x100/png",
                     serviceName: "Full Grooming",
@@ -163,7 +204,7 @@ class PetSitterScreen extends StatelessWidget {
                     onBookNow: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ServiceDetails(),
+                        builder: (final context) => ServiceDetails(),
                       ),
                     ),
                   ),
@@ -172,11 +213,11 @@ class PetSitterScreen extends StatelessWidget {
             ],
           ),
         ),
-      )
+      ),
     );
   }
 
-  Widget _buildFilterChip(String label) {
+  Widget _buildFilterChip(final String label) {
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -190,5 +231,4 @@ class PetSitterScreen extends StatelessWidget {
       ),
     );
   }
-
 }

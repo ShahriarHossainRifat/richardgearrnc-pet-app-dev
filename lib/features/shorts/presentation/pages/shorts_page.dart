@@ -109,13 +109,18 @@ class _ShortCard extends ConsumerWidget {
             if (loadingProgress == null) return child;
             return Container(
               color: Colors.black,
-              child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
             );
           },
-          errorBuilder: (final context, final error, final stackTrace) => Container(
-            color: Colors.grey.shade900,
-            child: const Center(child: Icon(Icons.error, color: Colors.white)),
-          ),
+          errorBuilder: (final context, final error, final stackTrace) =>
+              Container(
+                color: Colors.grey.shade900,
+                child: const Center(
+                  child: Icon(Icons.error, color: Colors.white),
+                ),
+              ),
         ),
 
         // Bottom gradient overlay for text readability
@@ -167,11 +172,17 @@ class _ShortCard extends ConsumerWidget {
                       onPressed: () {},
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.white),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 0,
+                        ),
                         minimumSize: const Size(0, 32),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: const Text('Follow', style: TextStyle(color: Colors.white)),
+                      child: const Text(
+                        'Follow',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -319,7 +330,8 @@ class _MockShort {
 final _mockShorts = [
   const _MockShort(
     username: 'Luna & Sarah',
-    userImage: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=150',
+    userImage:
+        'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=150',
     location: 'Central Dog Park',
     description: 'Playing fetch in the park! 🎾 #doglife',
     imageAsset:
@@ -330,7 +342,8 @@ final _mockShorts = [
   ),
   const _MockShort(
     username: 'Max',
-    userImage: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=150',
+    userImage:
+        'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=150',
     location: 'Beach',
     description: 'Beach vibes 🌊☀️',
     imageAsset:
@@ -341,7 +354,8 @@ final _mockShorts = [
   ),
   const _MockShort(
     username: 'Bella',
-    userImage: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=150',
+    userImage:
+        'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=150',
     location: 'Home',
     description: 'Sleepy Sunday... 😴',
     imageAsset:

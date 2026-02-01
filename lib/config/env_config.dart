@@ -82,10 +82,14 @@ class EnvConfig {
     if (_isInitialized) return;
 
     // Use compile-time environment if provided, otherwise use runtime parameter
-    _environment = _dartDefineEnv.isNotEmpty ? _parseEnvironment(_dartDefineEnv) : environment;
+    _environment = _dartDefineEnv.isNotEmpty
+        ? _parseEnvironment(_dartDefineEnv)
+        : environment;
 
     // Use compile-time base URL if provided, otherwise derive from environment
-    _baseUrl = _dartDefineBaseUrl.isNotEmpty ? _dartDefineBaseUrl : _getBaseUrl(_environment);
+    _baseUrl = _dartDefineBaseUrl.isNotEmpty
+        ? _dartDefineBaseUrl
+        : _getBaseUrl(_environment);
 
     // API key from compile-time (empty string if not provided)
     _apiKey = _dartDefineApiKey;

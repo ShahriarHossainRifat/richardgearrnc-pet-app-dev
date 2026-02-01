@@ -39,7 +39,9 @@ class PetSitterService {
       whatsIncluded: whats is List<dynamic>
           ? whats.map((final e) => e.toString()).toList()
           : const [],
-      tags: tags is List<dynamic> ? tags.map((final e) => e.toString()).toList() : const [],
+      tags: tags is List<dynamic>
+          ? tags.map((final e) => e.toString()).toList()
+          : const [],
       isAvailable: json['isAvailable'] as bool? ?? false,
     );
   }
@@ -84,10 +86,9 @@ class PetSitterProfile {
     return PetSitterProfile(
       userId: json['userId']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
-      user:
-          userJson is Map<String, dynamic>
-              ? PetSitterProfileUser.fromJson(userJson)
-              : null,
+      user: userJson is Map<String, dynamic>
+          ? PetSitterProfileUser.fromJson(userJson)
+          : null,
     );
   }
 }
@@ -119,17 +120,16 @@ class PetSitterDirectoryProfile {
       id: json['id']?.toString() ?? '',
       bio: json['bio']?.toString() ?? '',
       designations: json['designations']?.toString() ?? '',
-      languages:
-          languagesJson is List<dynamic>
-              ? languagesJson.map((final e) => e.toString()).toList()
-              : const [],
-      yearsOfExperience:
-          yearsValue is int ? yearsValue : int.tryParse(yearsValue?.toString() ?? '') ?? 0,
+      languages: languagesJson is List<dynamic>
+          ? languagesJson.map((final e) => e.toString()).toList()
+          : const [],
+      yearsOfExperience: yearsValue is int
+          ? yearsValue
+          : int.tryParse(yearsValue?.toString() ?? '') ?? 0,
       status: json['status']?.toString() ?? '',
-      user:
-          json['user'] is Map<String, dynamic>
-              ? PetSitterProfileUser.fromJson(json['user'] as Map<String, dynamic>)
-              : null,
+      user: json['user'] is Map<String, dynamic>
+          ? PetSitterProfileUser.fromJson(json['user'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
@@ -166,10 +166,9 @@ class PetSitterServiceDetails extends PetSitterService {
       whatsIncluded: base.whatsIncluded,
       tags: base.tags,
       isAvailable: base.isAvailable,
-      petSitterProfile:
-          profileJson is Map<String, dynamic>
-              ? PetSitterProfile.fromJson(profileJson)
-              : null,
+      petSitterProfile: profileJson is Map<String, dynamic>
+          ? PetSitterProfile.fromJson(profileJson)
+          : null,
       isOwner: json['isOwner'] as bool? ?? false,
     );
   }
@@ -287,20 +286,18 @@ class PetSitterPackageDetails {
       durationInMinutes: json['durationInMinutes'] as int?,
       calculatedPrice: json['calculatedPrice']?.toString() ?? '0',
       offeredPrice: json['offeredPrice']?.toString() ?? '0',
-      services:
-          servicesJson is List<dynamic>
-              ? servicesJson
-                  .whereType<Map<String, dynamic>>()
-                  .map(PetSitterPackageService.fromJson)
-                  .toList()
-              : const [],
-      addons:
-          addonsJson is List<dynamic>
-              ? addonsJson
-                  .whereType<Map<String, dynamic>>()
-                  .map(PetSitterPackageAddon.fromJson)
-                  .toList()
-              : const [],
+      services: servicesJson is List<dynamic>
+          ? servicesJson
+                .whereType<Map<String, dynamic>>()
+                .map(PetSitterPackageService.fromJson)
+                .toList()
+          : const [],
+      addons: addonsJson is List<dynamic>
+          ? addonsJson
+                .whereType<Map<String, dynamic>>()
+                .map(PetSitterPackageAddon.fromJson)
+                .toList()
+          : const [],
       isOwner: json['isOwner'] as bool? ?? false,
     );
   }
@@ -311,7 +308,8 @@ class PetSitterServicesApi {
 
   final Dio _dio;
 
-  static const String _baseUrl = 'https://clever-iguana-terminally.ngrok-free.app/api';
+  static const String _baseUrl =
+      'https://clever-iguana-terminally.ngrok-free.app/api';
   static const String _accessToken =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkwZmY4MTBiLTBiM2EtNGYwYS05ZGJlLTdmNzVkZTY2MDg5OSIsImVtYWlsIjoiamloYWRtdWdkaG8xMjM2QGdtYWlsLmNvbSIsInJvbGUiOiJQRVRfU0lUVEVSIiwiaWF0IjoxNzY5ODQ3Mjg0LCJleHAiOjE3Njk5MzM2ODR9._julCeX93bctfznXnJbX2kEIxvCLRNQ6VOV6REnd-Y8';
 
@@ -335,7 +333,10 @@ class PetSitterServicesApi {
     final items = payload['data'];
     if (items is! List<dynamic>) return [];
 
-    return items.whereType<Map<String, dynamic>>().map(PetSitterService.fromJson).toList();
+    return items
+        .whereType<Map<String, dynamic>>()
+        .map(PetSitterService.fromJson)
+        .toList();
   }
 
   Future<List<PetSitterPackage>> fetchMyPackages() async {
@@ -358,7 +359,10 @@ class PetSitterServicesApi {
     final items = payload['data'];
     if (items is! List<dynamic>) return [];
 
-    return items.whereType<Map<String, dynamic>>().map(PetSitterPackage.fromJson).toList();
+    return items
+        .whereType<Map<String, dynamic>>()
+        .map(PetSitterPackage.fromJson)
+        .toList();
   }
 
   Future<PetSitterServiceDetails?> fetchServiceDetails(

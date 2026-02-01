@@ -32,7 +32,9 @@ class PetOwnerBookingsPage extends HookConsumerWidget {
           AppIconButton(
             icon: Icons.add_circle_outline,
             onPressed: () {
-              ref.read(feedbackServiceProvider).showInfo('Booking a pet sitter...');
+              ref
+                  .read(feedbackServiceProvider)
+                  .showInfo('Booking a pet sitter...');
             },
           ),
         ],
@@ -47,7 +49,8 @@ class PetOwnerBookingsPage extends HookConsumerWidget {
             ),
           ),
           const VerticalSpace.md(),
-          for (final booking in _mockOwnerBookings) _OwnerBookingCard(booking: booking),
+          for (final booking in _mockOwnerBookings)
+            _OwnerBookingCard(booking: booking),
         ],
       ),
     );
@@ -97,12 +100,17 @@ class _OwnerBookingCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: booking.status == 'Confirmed'
                         ? Colors.green.shade100
                         : Colors.amber.shade100,
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.borderRadiusSM,
+                    ),
                   ),
                   child: Text(
                     booking.status,
@@ -118,14 +126,22 @@ class _OwnerBookingCard extends StatelessWidget {
             const VerticalSpace.md(),
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 16, color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 const HorizontalSpace.sm(),
                 Text(
                   booking.date,
                   style: theme.textTheme.bodySmall,
                 ),
                 const HorizontalSpace.lg(),
-                Icon(Icons.access_time, size: 16, color: theme.colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.access_time,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 const HorizontalSpace.sm(),
                 Text(
                   booking.time,

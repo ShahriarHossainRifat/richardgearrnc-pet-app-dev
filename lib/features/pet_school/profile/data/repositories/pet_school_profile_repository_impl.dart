@@ -76,8 +76,10 @@ class PetSchoolProfileRepositoryImpl implements PetSchoolProfileRepository {
 }
 
 /// Provider for [PetSchoolProfileRepository].
-final petSchoolProfileRepositoryProvider = Provider<PetSchoolProfileRepository>((final ref) {
-  return PetSchoolProfileRepositoryImpl(
-    apiClient: ref.watch(apiClientProvider),
-  );
-});
+final petSchoolProfileRepositoryProvider = Provider<PetSchoolProfileRepository>(
+  (final ref) {
+    return PetSchoolProfileRepositoryImpl(
+      apiClient: ref.watch(apiClientProvider),
+    );
+  },
+);

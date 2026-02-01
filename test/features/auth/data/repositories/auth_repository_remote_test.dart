@@ -539,7 +539,8 @@ void main() {
             fromJson: any(named: 'fromJson'),
           ),
         ).thenAnswer(
-          (_) async => Success(testAuthResponse['user'] as Map<String, dynamic>),
+          (_) async =>
+              Success(testAuthResponse['user'] as Map<String, dynamic>),
         );
 
         // Act

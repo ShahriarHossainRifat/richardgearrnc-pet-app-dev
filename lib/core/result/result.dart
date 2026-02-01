@@ -150,7 +150,9 @@ final class Success<T> extends Result<T> {
   @override
   bool operator ==(final Object other) =>
       identical(this, other) ||
-      other is Success<T> && runtimeType == other.runtimeType && data == other.data;
+      other is Success<T> &&
+          runtimeType == other.runtimeType &&
+          data == other.data;
 
   @override
   int get hashCode => data.hashCode;
@@ -171,7 +173,9 @@ final class Failure<T> extends Result<T> {
   @override
   bool operator ==(final Object other) =>
       identical(this, other) ||
-      other is Failure<T> && runtimeType == other.runtimeType && error == other.error;
+      other is Failure<T> &&
+          runtimeType == other.runtimeType &&
+          error == other.error;
 
   @override
   int get hashCode => error.hashCode;
@@ -195,7 +199,8 @@ sealed class AppException implements Exception {
   final StackTrace? stackTrace;
 
   @override
-  String toString() => 'AppException: $message${code != null ? ' (code: $code)' : ''}';
+  String toString() =>
+      'AppException: $message${code != null ? ' (code: $code)' : ''}';
 }
 
 /// Network-related exceptions.
@@ -219,11 +224,12 @@ final class NetworkException extends AppException {
       const NetworkException(message: 'Request timed out', code: 'TIMEOUT');
 
   /// Server error (5xx)
-  factory NetworkException.serverError([final int? statusCode]) => NetworkException(
-    message: 'Server error occurred',
-    code: 'SERVER_ERROR',
-    statusCode: statusCode,
-  );
+  factory NetworkException.serverError([final int? statusCode]) =>
+      NetworkException(
+        message: 'Server error occurred',
+        code: 'SERVER_ERROR',
+        statusCode: statusCode,
+      );
 
   /// Unauthorized (401)
   factory NetworkException.unauthorized() => const NetworkException(

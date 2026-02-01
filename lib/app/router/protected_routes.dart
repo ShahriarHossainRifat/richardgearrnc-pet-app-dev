@@ -7,7 +7,6 @@ import 'package:petzy_app/features/bookings/presentation/pages/pet_school_bookin
 import 'package:petzy_app/features/bookings/presentation/pages/pet_sitter_bookings_page.dart';
 import 'package:petzy_app/features/messages/presentation/pages/messages_page.dart';
 import 'package:petzy_app/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:petzy_app/features/pet_setter/presentation/booking_request/pet_sitter_booking_req.dart';
 import 'package:petzy_app/features/pet_setter/presentation/booking_request/pet_sitter_booking_req_details.dart';
 import 'package:petzy_app/features/pet_sitter/views/screens/pet_sitter_screen.dart';
 import 'package:petzy_app/features/profile/presentation/pages/pet_hotel_profile_page.dart';
@@ -59,7 +58,8 @@ final protectedRoutes = [
   GoRoute(
     path: AppRoute.bookings.path,
     name: AppRoute.bookings.name,
-    builder: (final context, final state) => const PlaceholderPage(title: 'Bookings'),
+    builder: (final context, final state) =>
+        const PlaceholderPage(title: 'Bookings'),
   ),
   // Role-specific profile pages
   GoRoute(
@@ -86,7 +86,8 @@ final protectedRoutes = [
   GoRoute(
     path: AppRoute.profile.path,
     name: AppRoute.profile.name,
-    builder: (final context, final state) => const PlaceholderPage(title: 'Profile'),
+    builder: (final context, final state) =>
+        const PlaceholderPage(title: 'Profile'),
   ),
   GoRoute(
     path: AppRoute.settings.path,

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -149,7 +148,8 @@ class _PhoneState {
   _PhoneState({
     final PhoneNumber? phoneNumber,
     this.isValid = false,
-  }) : phoneNumber = phoneNumber ?? PhoneNumber(isoCode: AppConstants.defaultCountryCode);
+  }) : phoneNumber =
+           phoneNumber ?? PhoneNumber(isoCode: AppConstants.defaultCountryCode);
 
   final PhoneNumber phoneNumber;
   final bool isValid;
@@ -392,7 +392,8 @@ class _PhoneInput extends StatelessWidget {
       ),
       child: InternationalPhoneNumberInput(
         onInputChanged: onInputChanged,
-        onInputValidated: (final bool? valid) => onInputValidated(valid ?? false),
+        onInputValidated: (final bool? valid) =>
+            onInputValidated(valid ?? false),
         initialValue: initialValue,
         selectorConfig: const SelectorConfig(
           selectorType: PhoneInputSelectorType.DROPDOWN,

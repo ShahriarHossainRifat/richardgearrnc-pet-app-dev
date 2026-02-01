@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 
 class PetSitterProfileController extends GetxController {
-  PetSitterProfileController({final PetSitterServicesApi? api}) : _api = api ?? PetSitterServicesApi();
+  PetSitterProfileController({final PetSitterServicesApi? api})
+    : _api = api ?? PetSitterServicesApi();
 
   final PetSitterServicesApi _api;
 
@@ -13,7 +14,8 @@ class PetSitterProfileController extends GetxController {
   final profiles = <PetSitterDirectoryProfile>[].obs;
   bool _hasLoaded = false;
 
-  PetSitterDirectoryProfile? get primaryProfile => profiles.isNotEmpty ? profiles.first : null;
+  PetSitterDirectoryProfile? get primaryProfile =>
+      profiles.isNotEmpty ? profiles.first : null;
 
   Future<void> fetchProfiles({final bool force = false}) async {
     if (isLoading.value) return;

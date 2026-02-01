@@ -30,7 +30,9 @@ class AppNavBar extends StatelessWidget {
     // Determine second tab label and icon based on user role
     final isSchool = userRole == UserRole.petSchool;
     final secondTabLabel = isSchool ? 'Courses' : 'Bookings';
-    final secondTabIcon = isSchool ? Icons.school_outlined : Icons.calendar_today_outlined;
+    final secondTabIcon = isSchool
+        ? Icons.school_outlined
+        : Icons.calendar_today_outlined;
     final secondTabActiveIcon = isSchool ? Icons.school : Icons.calendar_today;
 
     return Container(

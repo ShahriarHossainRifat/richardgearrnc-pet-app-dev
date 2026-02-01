@@ -27,5 +27,6 @@ abstract class Address with _$Address {
   const Address._();
 
   /// Creates an [Address] instance from JSON.
-  factory Address.fromJson(final Map<String, dynamic> json) => _$AddressFromJson(json);
+  factory Address.fromJson(final Map<String, dynamic> json) =>
+      _$AddressFromJson(json);
 }

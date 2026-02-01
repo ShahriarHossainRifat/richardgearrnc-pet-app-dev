@@ -89,28 +89,24 @@ class _PackageDetailsContent extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final packageName =
-        (details?.name ?? '').isNotEmpty ? details!.name : 'Package';
-    final packageDescription =
-        (details?.description ?? '').isNotEmpty
-            ? details!.description
-            : 'Package description';
-    final packageImage =
-        (details?.image ?? '').isNotEmpty
-            ? details!.image
-            : 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=800&q=80&auto=format&fit=crop';
-    final durationText =
-        details?.durationInMinutes != null
-            ? '${details!.durationInMinutes} mins'
-            : '—';
-    final offeredPrice =
-        (details?.offeredPrice ?? '').isNotEmpty
-            ? details!.offeredPrice
-            : '0';
-    final calculatedPrice =
-        (details?.calculatedPrice ?? '').isNotEmpty
-            ? details!.calculatedPrice
-            : '0';
+    final packageName = (details?.name ?? '').isNotEmpty
+        ? details!.name
+        : 'Package';
+    final packageDescription = (details?.description ?? '').isNotEmpty
+        ? details!.description
+        : 'Package description';
+    final packageImage = (details?.image ?? '').isNotEmpty
+        ? details!.image
+        : 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=800&q=80&auto=format&fit=crop';
+    final durationText = details?.durationInMinutes != null
+        ? '${details!.durationInMinutes} mins'
+        : '—';
+    final offeredPrice = (details?.offeredPrice ?? '').isNotEmpty
+        ? details!.offeredPrice
+        : '0';
+    final calculatedPrice = (details?.calculatedPrice ?? '').isNotEmpty
+        ? details!.calculatedPrice
+        : '0';
 
     final services = details?.services ?? const <PetSitterPackageService>[];
     final addons = details?.addons ?? const <PetSitterPackageAddon>[];

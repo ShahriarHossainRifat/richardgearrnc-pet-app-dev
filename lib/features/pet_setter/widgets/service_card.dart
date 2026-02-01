@@ -69,7 +69,11 @@ class ServiceCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.star, size: 16, color: Color(0xFFFBBF24)),
+                        const Icon(
+                          Icons.star,
+                          size: 16,
+                          color: Color(0xFFFBBF24),
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           item.rating.toStringAsFixed(1),
@@ -91,7 +95,11 @@ class ServiceCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, size: 14, color: Color(0xFF9CA3AF)),
+                        const Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: Color(0xFF9CA3AF),
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${item.distanceMiles.toStringAsFixed(1)} miles away',
@@ -117,7 +125,11 @@ class ServiceCard extends StatelessWidget {
                   color: const Color(0xFFEAF7EE),
                   borderRadius: BorderRadius.circular(999),
                 ),
-                child: const Icon(Icons.pets, size: 16, color: Color(0xFF16A34A)),
+                child: const Icon(
+                  Icons.pets,
+                  size: 16,
+                  color: Color(0xFF16A34A),
+                ),
               ),
               const SizedBox(width: 10),
               InkWell(

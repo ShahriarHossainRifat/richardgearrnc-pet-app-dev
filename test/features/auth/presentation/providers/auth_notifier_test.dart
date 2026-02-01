@@ -154,7 +154,9 @@ void main() {
       container = createContainer();
 
       // Act
-      await container.read(authProvider.notifier).login('test@example.com', 'password');
+      await container
+          .read(authProvider.notifier)
+          .login('test@example.com', 'password');
 
       // Assert
       final state = container.read(authProvider);
@@ -173,7 +175,9 @@ void main() {
       container = createContainer();
 
       // Act
-      await container.read(authProvider.notifier).loginWithPhone('+821234567890');
+      await container
+          .read(authProvider.notifier)
+          .loginWithPhone('+821234567890');
 
       // Assert
       final state = container.read(authProvider);
@@ -193,7 +197,9 @@ void main() {
       container = createContainer();
 
       // Act
-      await container.read(authProvider.notifier).login('test@example.com', 'wrong');
+      await container
+          .read(authProvider.notifier)
+          .login('test@example.com', 'wrong');
 
       // Assert
       final state = container.read(authProvider);
@@ -216,7 +222,9 @@ void main() {
 
       // Act & Assert
       expect(
-        () => container.read(authProvider.notifier).loginWithPhone('+00000000000'),
+        () => container
+            .read(authProvider.notifier)
+            .loginWithPhone('+00000000000'),
         throwsA(isA<UnexpectedException>()),
       );
     });
@@ -240,7 +248,9 @@ void main() {
       await container.read(authProvider.future);
 
       // Act
-      final future = container.read(authProvider.notifier).loginWithPhone('+821234567890');
+      final future = container
+          .read(authProvider.notifier)
+          .loginWithPhone('+821234567890');
 
       // Assert - loginWithPhone does NOT set loading state
       // The state should still be AsyncData(null) from the initial build
@@ -260,7 +270,9 @@ void main() {
       when(
         () => mockAuthRepository.login('test@example.com', 'password'),
       ).thenAnswer((_) async => Success(testUser));
-      await container.read(authProvider.notifier).login('test@example.com', 'password');
+      await container
+          .read(authProvider.notifier)
+          .login('test@example.com', 'password');
 
       // Setup logout mock
       when(
@@ -284,7 +296,9 @@ void main() {
       when(
         () => mockAuthRepository.login('test@example.com', 'password'),
       ).thenAnswer((_) async => Success(testUser));
-      await container.read(authProvider.notifier).login('test@example.com', 'password');
+      await container
+          .read(authProvider.notifier)
+          .login('test@example.com', 'password');
 
       // Setup logout mock to fail
       when(
@@ -545,7 +559,9 @@ void main() {
         ).thenAnswer((_) async => const Success(null));
 
         // Act - Login
-        await container.read(authProvider.notifier).login('test@example.com', 'password');
+        await container
+            .read(authProvider.notifier)
+            .login('test@example.com', 'password');
         expect(container.read(isAuthenticatedProvider), true);
 
         // Act - Logout
@@ -568,7 +584,9 @@ void main() {
 
       // Act & Assert - Multiple cycles
       for (int i = 0; i < 3; i++) {
-        await container.read(authProvider.notifier).login('test@example.com', 'password');
+        await container
+            .read(authProvider.notifier)
+            .login('test@example.com', 'password');
         expect(container.read(isAuthenticatedProvider), true);
 
         await container.read(authProvider.notifier).logout();
@@ -593,7 +611,9 @@ void main() {
 
       // Act & Assert
       expect(
-        () => container.read(authProvider.notifier).loginWithPhone('+821234567890'),
+        () => container
+            .read(authProvider.notifier)
+            .loginWithPhone('+821234567890'),
         throwsA(isA<NetworkException>()),
       );
     });
@@ -607,7 +627,9 @@ void main() {
       container = createContainer();
 
       // Act
-      await container.read(authProvider.notifier).login('test@example.com', 'password');
+      await container
+          .read(authProvider.notifier)
+          .login('test@example.com', 'password');
 
       // Assert
       final state = container.read(authProvider);

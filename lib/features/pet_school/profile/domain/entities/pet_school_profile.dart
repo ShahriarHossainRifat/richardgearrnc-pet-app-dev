@@ -37,7 +37,9 @@ abstract class PetSchoolProfile with _$PetSchoolProfile {
     @Default(0.0) final double rating,
     @JsonKey(name: 'reviewCount') @Default(0) final int reviewCount,
     final dynamic analytics,
-    @JsonKey(name: 'reductionList') @Default([]) final List<dynamic> reductionList,
+    @JsonKey(name: 'reductionList')
+    @Default([])
+    final List<dynamic> reductionList,
     @JsonKey(name: 'createdAt') final DateTime? createdAt,
     @JsonKey(name: 'updatedAt') final DateTime? updatedAt,
     @Default([]) final List<Address> addresses,

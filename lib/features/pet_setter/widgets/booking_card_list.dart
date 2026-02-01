@@ -29,11 +29,9 @@ class PetServicesBookingCardList extends StatelessWidget {
           onBook: () => controller.onBook(it),
           onMessage: () => controller.onMessage(it),
           onProviderTap: () => controller.onProviderTap(it),
-          onView:
-              () =>
-                  isPackage
-                      ? controller.onViewPackage(context, it)
-                      : controller.onView(context, it),
+          onView: () => isPackage
+              ? controller.onViewPackage(context, it)
+              : controller.onView(context, it),
         );
       },
     );

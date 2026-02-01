@@ -25,5 +25,6 @@ abstract class Post with _$Post {
   }) = _Post;
 
   /// Creates a [Post] instance from JSON.
-  factory Post.fromJson(final Map<String, dynamic> json) => _$PostFromJson(json);
+  factory Post.fromJson(final Map<String, dynamic> json) =>
+      _$PostFromJson(json);
 }

@@ -99,10 +99,12 @@ enum AppRoute {
   }
 
   /// All routes that require authentication.
-  static List<AppRoute> get protectedRoutes => values.where((final r) => r.requiresAuth).toList();
+  static List<AppRoute> get protectedRoutes =>
+      values.where((final r) => r.requiresAuth).toList();
 
   /// All public routes (no auth required).
-  static List<AppRoute> get publicRoutes => values.where((final r) => !r.requiresAuth).toList();
+  static List<AppRoute> get publicRoutes =>
+      values.where((final r) => !r.requiresAuth).toList();
 }
 
 extension AppRouteNavigation on BuildContext {
@@ -114,15 +116,19 @@ extension AppRouteNavigation on BuildContext {
       push(route.pathWith(params));
 
   /// Replace current route using [GoRouter.pushReplacement].
-  void pushReplacementRoute(final AppRoute route) => pushReplacement(route.path);
+  void pushReplacementRoute(final AppRoute route) =>
+      pushReplacement(route.path);
 
   /// Replace current route with parameters using [GoRouter.pushReplacement].
   void pushReplacementRouteWith(
     final AppRoute route,
     final Map<String, String> params,
   ) => pushReplacement(route.pathWith(params));
-  void goRouteWith(final AppRoute route, final Map<String, String> params, {final Object? extra}) =>
-      go(route.pathWith(params), extra: extra);
+  void goRouteWith(
+    final AppRoute route,
+    final Map<String, String> params, {
+    final Object? extra,
+  }) => go(route.pathWith(params), extra: extra);
 }
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -166,7 +172,8 @@ GoRouter appRouter(final Ref ref) {
               GoRoute(
                 path: AppRoute.bookings.path,
                 name: AppRoute.bookings.name,
-                builder: (final context, final state) => const BookingsWrapperPage(),
+                builder: (final context, final state) =>
+                    const BookingsWrapperPage(),
               ),
             ],
           ),
@@ -188,13 +195,15 @@ GoRouter appRouter(final Ref ref) {
               GoRoute(
                 path: AppRoute.profile.path,
                 name: AppRoute.profile.name,
-                builder: (final context, final state) => const ProfileWrapperPage(),
+                builder: (final context, final state) =>
+                    const ProfileWrapperPage(),
                 routes: [
                   GoRoute(
                     path: 'settings',
                     name: AppRoute.settings.name,
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (final context, final state) => const SettingsPage(),
+                    builder: (final context, final state) =>
+                        const SettingsPage(),
                   ),
                 ],
               ),
@@ -213,11 +222,14 @@ GoRouter appRouter(final Ref ref) {
       GoRoute(
         path: AppRoute.shorts.path,
         name: AppRoute.shorts.name,
-        builder: (final context, final state) => const PlaceholderPage(title: 'Shorts'),
+        builder: (final context, final state) =>
+            const PlaceholderPage(title: 'Shorts'),
       ),
     ],
-    redirect: (final context, final state) => _handleRedirect(ref, state.uri.path),
-    errorBuilder: (final context, final state) => ErrorPage(path: state.uri.path),
+    redirect: (final context, final state) =>
+        _handleRedirect(ref, state.uri.path),
+    errorBuilder: (final context, final state) =>
+        ErrorPage(path: state.uri.path),
     observers: [
       if (analyticsObserver != null) analyticsObserver,
     ],

@@ -47,7 +47,10 @@ class PetSitterBookingsPage extends HookConsumerWidget {
                       CircleAvatar(
                         radius: 24,
                         backgroundColor: context.colorScheme.primaryContainer,
-                        child: Icon(Icons.person, color: context.colorScheme.primary),
+                        child: Icon(
+                          Icons.person,
+                          color: context.colorScheme.primary,
+                        ),
                       ),
                       const HorizontalSpace.md(),
                       Expanded(
@@ -70,10 +73,15 @@ class PetSitterBookingsPage extends HookConsumerWidget {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.amber.shade100,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSM,
+                          ),
                         ),
                         child: Text(
                           'Pending',
@@ -101,7 +109,10 @@ class PetSitterBookingsPage extends HookConsumerWidget {
                         color: context.colorScheme.onSurfaceVariant,
                       ),
                       const HorizontalSpace.sm(),
-                      Text('4:00 PM - 8:00 PM', style: context.textTheme.bodySmall),
+                      Text(
+                        '4:00 PM - 8:00 PM',
+                        style: context.textTheme.bodySmall,
+                      ),
                     ],
                   ),
                   const VerticalSpace.md(),
@@ -112,7 +123,9 @@ class PetSitterBookingsPage extends HookConsumerWidget {
                           variant: AppButtonVariant.secondary,
                           size: AppButtonSize.medium,
                           onPressed: () {
-                            ref.read(feedbackServiceProvider).showInfo('Booking declined');
+                            ref
+                                .read(feedbackServiceProvider)
+                                .showInfo('Booking declined');
                           },
                           label: 'Decline',
                         ),
@@ -123,7 +136,9 @@ class PetSitterBookingsPage extends HookConsumerWidget {
                           variant: AppButtonVariant.primary,
                           size: AppButtonSize.medium,
                           onPressed: () {
-                            ref.read(feedbackServiceProvider).showInfo('Booking accepted');
+                            ref
+                                .read(feedbackServiceProvider)
+                                .showInfo('Booking accepted');
                           },
                           label: 'Accept',
                         ),

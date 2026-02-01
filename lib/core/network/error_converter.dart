@@ -194,7 +194,8 @@ class DefaultErrorConverter implements ErrorConverter {
         code: 'RATE_LIMITED',
         stackTrace: stackTrace,
       ),
-      _ when statusCode != null && statusCode >= 500 => NetworkException.serverError(statusCode),
+      _ when statusCode != null && statusCode >= 500 =>
+        NetworkException.serverError(statusCode),
       _ => NetworkException(
         message: message ?? 'Request failed',
         statusCode: statusCode,

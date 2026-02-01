@@ -30,7 +30,10 @@ class CoursesRepositoryImpl implements CoursesRepository {
         final responseData = data['data'] as Map<String, dynamic>;
         final coursesData = responseData['data'] as List;
         return coursesData
-            .map((final courseJson) => Course.fromJson(courseJson as Map<String, dynamic>))
+            .map(
+              (final courseJson) =>
+                  Course.fromJson(courseJson as Map<String, dynamic>),
+            )
             .toList();
       });
     } catch (e, stack) {

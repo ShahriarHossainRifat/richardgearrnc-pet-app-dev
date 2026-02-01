@@ -28,7 +28,7 @@ class ServiceProviderCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       // Maximize width to parent
       width: double.infinity,
@@ -166,8 +166,14 @@ class ServiceProviderCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.calendar_today_outlined, size: 18, color: Colors.white,),
-                        SizedBox(width: 10,),
+                        const Icon(
+                          Icons.calendar_today_outlined,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         const Text(
                           'Book Now',
                           style: TextStyle(
@@ -184,18 +190,22 @@ class ServiceProviderCard extends StatelessWidget {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFE97676)), // Salmon/Red color
+                    border: Border.all(
+                      color: const Color(0xFFE97676),
+                    ), // Salmon/Red color
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       const Text(
                         'Message',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFFE97676)
+                          color: const Color(0xFFE97676),
                         ),
                       ),
                     ],

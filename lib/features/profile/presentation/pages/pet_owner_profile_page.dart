@@ -83,7 +83,9 @@ class PetOwnerProfilePage extends HookConsumerWidget {
                         size: AppButtonSize.medium,
                         isExpanded: true,
                         onPressed: () {
-                          ref.read(feedbackServiceProvider).showInfo('Editing profile...');
+                          ref
+                              .read(feedbackServiceProvider)
+                              .showInfo('Editing profile...');
                         },
                         label: 'Edit Profile',
                       ),
@@ -108,7 +110,9 @@ class PetOwnerProfilePage extends HookConsumerWidget {
                   subtitle: const Text('Age: 3 years'),
                   trailing: Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
-                    ref.read(feedbackServiceProvider).showInfo('Viewing pet details...');
+                    ref
+                        .read(feedbackServiceProvider)
+                        .showInfo('Viewing pet details...');
                   },
                 ),
               ),
@@ -118,7 +122,9 @@ class PetOwnerProfilePage extends HookConsumerWidget {
                 size: AppButtonSize.medium,
                 isExpanded: true,
                 onPressed: () {
-                  ref.read(feedbackServiceProvider).showInfo('Adding new pet...');
+                  ref
+                      .read(feedbackServiceProvider)
+                      .showInfo('Adding new pet...');
                 },
                 label: 'Add New Pet',
               ),
@@ -136,14 +142,20 @@ class PetOwnerProfilePage extends HookConsumerWidget {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.payment, color: context.colorScheme.primary),
+                      leading: Icon(
+                        Icons.payment,
+                        color: context.colorScheme.primary,
+                      ),
                       title: const Text('Payment Methods'),
                       trailing: Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {},
                     ),
                     Divider(height: 1),
                     ListTile(
-                      leading: Icon(Icons.card_giftcard, color: context.colorScheme.primary),
+                      leading: Icon(
+                        Icons.card_giftcard,
+                        color: context.colorScheme.primary,
+                      ),
                       title: const Text('My Bookings'),
                       trailing: Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () => context.goRoute(AppRoute.bookingsOwner),

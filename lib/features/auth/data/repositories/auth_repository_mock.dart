@@ -57,8 +57,10 @@ class AuthRepositoryMock implements AuthRepository {
           message: 'User found',
           isUserExists: true,
           user: user,
-          accessToken: 'mock_access_token_${DateTime.now().millisecondsSinceEpoch}',
-          refreshToken: 'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
+          accessToken:
+              'mock_access_token_${DateTime.now().millisecondsSinceEpoch}',
+          refreshToken:
+              'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
         ),
       );
     }
@@ -97,8 +99,10 @@ class AuthRepositoryMock implements AuthRepository {
           message: 'User found',
           isUserExists: true,
           user: user,
-          accessToken: 'mock_access_token_${DateTime.now().millisecondsSinceEpoch}',
-          refreshToken: 'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
+          accessToken:
+              'mock_access_token_${DateTime.now().millisecondsSinceEpoch}',
+          refreshToken:
+              'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}',
         ),
       );
     }
@@ -258,11 +262,16 @@ class AuthRepositoryMock implements AuthRepository {
     }
 
     // Generate mock tokens
-    final accessToken = 'mock_access_token_${DateTime.now().millisecondsSinceEpoch}';
-    final refreshToken = 'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}';
+    final accessToken =
+        'mock_access_token_${DateTime.now().millisecondsSinceEpoch}';
+    final refreshToken =
+        'mock_refresh_token_${DateTime.now().millisecondsSinceEpoch}';
 
     await secureStorage.write(key: StorageKeys.accessToken, value: accessToken);
-    await secureStorage.write(key: StorageKeys.refreshToken, value: refreshToken);
+    await secureStorage.write(
+      key: StorageKeys.refreshToken,
+      value: refreshToken,
+    );
 
     // Return mock user
     final user = User(
@@ -327,7 +336,9 @@ class AuthRepositoryMock implements AuthRepository {
         .replaceAll(RegExp('[._-]'), ' ')
         .split(' ')
         .map(
-          (final word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '',
+          (final word) => word.isNotEmpty
+              ? '${word[0].toUpperCase()}${word.substring(1)}'
+              : '',
         )
         .join(' ');
   }

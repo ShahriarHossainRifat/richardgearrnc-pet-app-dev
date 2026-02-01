@@ -4,7 +4,7 @@ class RatingSummaryWidget extends StatelessWidget {
   const RatingSummaryWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class RatingSummaryWidget extends StatelessWidget {
                   ),
                 ),
                 Row(
-                  children: List.generate(5, (index) {
+                  children: List.generate(5, (final index) {
                     return const Icon(
                       Icons.star_rounded,
                       color: Color(0xFFFFC107),
@@ -66,7 +66,7 @@ class RatingSummaryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingBar(String star, double percent, String count) {
+  Widget _buildRatingBar(final String star, final double percent, final String count) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -89,7 +89,9 @@ class RatingSummaryWidget extends StatelessWidget {
                 value: percent,
                 minHeight: 8,
                 backgroundColor: const Color(0xFFE5E7EB),
-                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFFFC107)),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  Color(0xFFFFC107),
+                ),
               ),
             ),
           ),

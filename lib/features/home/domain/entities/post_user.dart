@@ -15,5 +15,6 @@ abstract class PostUser with _$PostUser {
   }) = _PostUser;
 
   /// Creates a [PostUser] instance from JSON.
-  factory PostUser.fromJson(final Map<String, dynamic> json) => _$PostUserFromJson(json);
+  factory PostUser.fromJson(final Map<String, dynamic> json) =>
+      _$PostUserFromJson(json);
 }

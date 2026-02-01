@@ -92,7 +92,10 @@ class PetSitterProfilePage extends HookConsumerWidget {
                             ),
                           ),
                           const HorizontalSpace.sm(),
-                          Text('(142 reviews)', style: context.textTheme.bodySmall),
+                          Text(
+                            '(142 reviews)',
+                            style: context.textTheme.bodySmall,
+                          ),
                         ],
                       ),
                       const VerticalSpace.md(),
@@ -101,7 +104,9 @@ class PetSitterProfilePage extends HookConsumerWidget {
                         size: AppButtonSize.medium,
                         isExpanded: true,
                         onPressed: () {
-                          ref.read(feedbackServiceProvider).showInfo('Editing profile...');
+                          ref
+                              .read(feedbackServiceProvider)
+                              .showInfo('Editing profile...');
                         },
                         label: 'Edit Profile',
                       ),
@@ -121,7 +126,10 @@ class PetSitterProfilePage extends HookConsumerWidget {
               const VerticalSpace.md(),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.pets_outlined, color: context.colorScheme.primary),
+                  leading: Icon(
+                    Icons.pets_outlined,
+                    color: context.colorScheme.primary,
+                  ),
                   title: const Text('Dog Walking'),
                   trailing: Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {},

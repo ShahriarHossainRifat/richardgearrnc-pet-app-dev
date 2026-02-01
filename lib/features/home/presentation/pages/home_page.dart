@@ -5,7 +5,9 @@ import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/auth/domain/entities/user.dart';
 import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:petzy_app/features/home/presentation/widgets/home_feed.dart';
+import 'package:petzy_app/features/home/presentation/providers/community_cursor_notifier.dart';
+import 'package:petzy_app/features/home/presentation/widgets/home_feed.dart'
+    show PostCard;
 import 'package:petzy_app/features/home/presentation/widgets/services_showcase.dart';
 import 'package:petzy_app/features/home/presentation/widgets/stories_row.dart';
 import 'package:petzy_app/features/shorts/presentation/pages/shorts_page.dart';
@@ -128,45 +130,127 @@ class HomePage extends HookConsumerWidget {
 }
 
 /// Home tab content with services and feed.
-class _HomeTabContent extends StatelessWidget {
+class _HomeTabContent extends HookConsumerWidget {
   const _HomeTabContent();
 
   @override
-  Widget build(final BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        const VerticalSpace.md(),
-        // Top Services section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Top Services',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final state = ref.watch<CommunityCursorState>(communityCursorProvider);
+    final notifier = ref.read(communityCursorProvider.notifier);
+
+    final scrollController = ScrollController();
+
+    // Load first page on mount
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (state.posts.isEmpty && state.isLoading == false) {
+          notifier.loadFirstPage();
+        }
+      });
+
+      return () => scrollController.dispose();
+    }, <dynamic>[]);
+
+    // Listen for scroll events to load more posts
+    useEffect(() {
+      void handleScroll() {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent -
+                AppConstants.scrollLoadMoreThreshold) {
+          notifier.loadNextPage();
+        }
+      }
+
+      scrollController.addListener(handleScroll);
+      return () => scrollController.removeListener(handleScroll);
+    }, [scrollController]);
+
+    return RefreshIndicator(
+      onRefresh: () => notifier.refreshFeed(),
+      child: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          // Services section
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const VerticalSpace.md(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Top Services',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-              const ServicesShowcase(),
-            ],
+                const ServicesShowcase(),
+                const VerticalSpace.lg(),
+              ],
+            ),
           ),
-        ),
 
-        const VerticalSpace.lg(),
+          // Stories section
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: const StoriesRow(),
+                ),
+                const Divider(thickness: 0.5),
+              ],
+            ),
+          ),
 
-        // Stories / Status Section
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: const StoriesRow(),
-        ),
+          // Feed content
+          if (state.posts.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: state.isLoading == true
+                  ? const LoadingWidget()
+                  : (state.error != null
+                        ? AppErrorWidget(
+                            message: state.error ?? l10n.unknownError,
+                            onRetry: () => notifier.loadFirstPage(),
+                          )
+                        : EmptyWidget(
+                            message: l10n.noPostsFound,
+                          )),
+            )
+          else
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (final context, final index) {
+                  if (index == state.posts.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: LoadingWidget(),
+                    );
+                  }
 
-        const Divider(thickness: 0.5),
+                  final post = state.posts[index];
+                  return PostCard(
+                    post: post,
+                    onLikeToggle: (final bool isLiked) =>
+                        notifier.updatePostLike(post.id, isLiked),
+                    onSaveToggle: (final bool isSaved) =>
+                        notifier.updatePostSave(post.id, isSaved),
+                  );
+                },
+                childCount:
+                    state.posts.length + (state.isLoading == true ? 1 : 0),
+              ),
+            ),
 
-        // Home feed
-        const HomeFeed(),
-      ],
+          // Bottom padding
+          SliverToBoxAdapter(
+            child: const SizedBox(height: 16),
+          ),
+        ],
+      ),
     );
   }
 }

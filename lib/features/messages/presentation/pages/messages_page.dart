@@ -31,7 +31,9 @@ class MessagesPage extends HookConsumerWidget {
             icon: Icons.add_circle_outline,
             onPressed: () {
               // TODO: Start new conversation
-              ref.read(feedbackServiceProvider).showInfo('Starting new chat...');
+              ref
+                  .read(feedbackServiceProvider)
+                  .showInfo('Starting new chat...');
             },
           ),
         ],

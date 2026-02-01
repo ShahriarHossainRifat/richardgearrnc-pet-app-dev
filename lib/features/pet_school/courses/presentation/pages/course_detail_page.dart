@@ -60,7 +60,10 @@ class CourseDetailPage extends ConsumerWidget {
                     ],
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: AppColors.onSurface,
+                    ),
                     onPressed: () {
                       // Navigate back to courses list
                       // context.go(AppRoute.courses.path);
@@ -131,7 +134,9 @@ class CourseDetailPage extends ConsumerWidget {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: _getLevelColor(course.courseLevel).withValues(alpha: 0.15),
+                                color: _getLevelColor(
+                                  course.courseLevel,
+                                ).withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
                                   color: _getLevelColor(course.courseLevel),
@@ -159,14 +164,17 @@ class CourseDetailPage extends ConsumerWidget {
                               ),
                             ),
                             // Discount chip (if available)
-                            if (course.discount.isNotEmpty && course.discount != '0%')
+                            if (course.discount.isNotEmpty &&
+                                course.discount != '0%')
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.error.withValues(alpha: 0.15),
+                                  color: AppColors.error.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: AppColors.error,
@@ -200,7 +208,9 @@ class CourseDetailPage extends ConsumerWidget {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(alpha: 0.15),
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.15,
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
                                   color: AppColors.primary,
@@ -368,7 +378,9 @@ class CourseDetailPage extends ConsumerWidget {
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary.withValues(alpha: 0.1),
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(

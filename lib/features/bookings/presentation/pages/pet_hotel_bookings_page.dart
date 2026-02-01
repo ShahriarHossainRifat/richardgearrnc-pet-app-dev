@@ -48,7 +48,9 @@ class PetHotelBookingsPage extends HookConsumerWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: context.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSM,
+                          ),
                         ),
                         child: Text(
                           'Rm 5',
@@ -79,10 +81,15 @@ class PetHotelBookingsPage extends HookConsumerWidget {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.blue.shade100,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSM,
+                          ),
                         ),
                         child: Text(
                           'Checked In',
@@ -96,11 +103,19 @@ class PetHotelBookingsPage extends HookConsumerWidget {
                   const VerticalSpace.md(),
                   Row(
                     children: [
-                      Icon(Icons.login, size: 16, color: context.colorScheme.onSurfaceVariant),
+                      Icon(
+                        Icons.login,
+                        size: 16,
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
                       const HorizontalSpace.sm(),
                       Text('Feb 14, 2026', style: context.textTheme.bodySmall),
                       const HorizontalSpace.lg(),
-                      Icon(Icons.logout, size: 16, color: context.colorScheme.onSurfaceVariant),
+                      Icon(
+                        Icons.logout,
+                        size: 16,
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
                       const HorizontalSpace.sm(),
                       Text('Feb 17, 2026', style: context.textTheme.bodySmall),
                     ],

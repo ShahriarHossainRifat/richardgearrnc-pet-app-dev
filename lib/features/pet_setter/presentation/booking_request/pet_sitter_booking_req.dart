@@ -46,7 +46,9 @@ class PetServicesBookingSearchPage extends GetView<PetSearchController> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               const SizedBox(height: 12),
-                              PetServicesBookingPillTabs(controller: controller),
+                              PetServicesBookingPillTabs(
+                                controller: controller,
+                              ),
                               // Padding(
                               //   padding: const EdgeInsets.symmetric(horizontal: 20),
                               //   child: Column(
@@ -66,7 +68,11 @@ class PetServicesBookingSearchPage extends GetView<PetSearchController> {
                                   children: const [
                                     Row(
                                       children: [
-                                        Icon(Icons.filter_list, size: 18, color: Color(0xFF6B7280)),
+                                        Icon(
+                                          Icons.filter_list,
+                                          size: 18,
+                                          color: Color(0xFF6B7280),
+                                        ),
                                         SizedBox(width: 8),
                                         Text(
                                           'Filters',
@@ -88,19 +94,23 @@ class PetServicesBookingSearchPage extends GetView<PetSearchController> {
 
                               // Tab content
                               Container(
-                                height: MediaQuery.of(context).size.height * 0.65,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
                                 child: TabBarView(
                                   controller: controller.tabController,
                                   children: [
                                     Obx(
                                       () {
-                                        if (controller.isLoadingServices.value) {
+                                        if (controller
+                                            .isLoadingServices
+                                            .value) {
                                           return const Center(
                                             child: CircularProgressIndicator(),
                                           );
                                         }
 
-                                        final error = controller.servicesError.value;
+                                        final error =
+                                            controller.servicesError.value;
                                         if (error != null && error.isNotEmpty) {
                                           return Center(
                                             child: Text(
@@ -115,7 +125,8 @@ class PetServicesBookingSearchPage extends GetView<PetSearchController> {
                                           );
                                         }
 
-                                        final items = controller.services.toList();
+                                        final items = controller.services
+                                            .toList();
                                         if (items.isEmpty) {
                                           return const Center(
                                             child: Text(
@@ -133,20 +144,23 @@ class PetServicesBookingSearchPage extends GetView<PetSearchController> {
                                         return PetServicesBookingCardList(
                                           items: items,
                                           controller: controller,
-                                          
                                         );
                                       },
                                     ),
                                     Obx(
                                       () {
-                                        final items = controller.packages.toList();
-                                        if (controller.isLoadingPackages.value) {
+                                        final items = controller.packages
+                                            .toList();
+                                        if (controller
+                                            .isLoadingPackages
+                                            .value) {
                                           return const Center(
                                             child: CircularProgressIndicator(),
                                           );
                                         }
 
-                                        final error = controller.packagesError.value;
+                                        final error =
+                                            controller.packagesError.value;
                                         if (error != null && error.isNotEmpty) {
                                           return Center(
                                             child: Text(

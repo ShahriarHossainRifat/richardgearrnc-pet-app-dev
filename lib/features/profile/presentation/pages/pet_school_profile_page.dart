@@ -58,7 +58,9 @@ class PetSchoolProfilePage extends HookConsumerWidget {
                         height: 100,
                         decoration: BoxDecoration(
                           color: context.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMD),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusMD,
+                          ),
                         ),
                         child: Icon(
                           Icons.school,
@@ -95,7 +97,10 @@ class PetSchoolProfilePage extends HookConsumerWidget {
                             ),
                           ),
                           const HorizontalSpace.sm(),
-                          Text('(87 reviews)', style: context.textTheme.bodySmall),
+                          Text(
+                            '(87 reviews)',
+                            style: context.textTheme.bodySmall,
+                          ),
                         ],
                       ),
                       const VerticalSpace.md(),
@@ -104,7 +109,9 @@ class PetSchoolProfilePage extends HookConsumerWidget {
                         size: AppButtonSize.medium,
                         isExpanded: true,
                         onPressed: () {
-                          ref.read(feedbackServiceProvider).showInfo('Editing profile...');
+                          ref
+                              .read(feedbackServiceProvider)
+                              .showInfo('Editing profile...');
                         },
                         label: 'Edit Profile',
                       ),
@@ -130,9 +137,15 @@ class PetSchoolProfilePage extends HookConsumerWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: context.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSM,
+                          ),
                         ),
-                        child: Icon(Icons.school, color: context.colorScheme.primary, size: 20),
+                        child: Icon(
+                          Icons.school,
+                          color: context.colorScheme.primary,
+                          size: 20,
+                        ),
                       ),
                       title: const Text('Basic Obedience'),
                       subtitle: const Text('12 students'),
@@ -145,9 +158,15 @@ class PetSchoolProfilePage extends HookConsumerWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: context.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSM),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSM,
+                          ),
                         ),
-                        child: Icon(Icons.school, color: context.colorScheme.primary, size: 20),
+                        child: Icon(
+                          Icons.school,
+                          color: context.colorScheme.primary,
+                          size: 20,
+                        ),
                       ),
                       title: const Text('Advanced Training'),
                       subtitle: const Text('8 students'),

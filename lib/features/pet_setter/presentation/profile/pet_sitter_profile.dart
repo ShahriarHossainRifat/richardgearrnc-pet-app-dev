@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:petzy_app/features/pet_setter/controller/pet_sitter_profile_controller.dart';
 import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_constants.dart';
-import 'package:petzy_app/features/pet_setter/widgets/booking_section_card.dart';
 
 class PetSitterProfilePage extends StatefulWidget {
   const PetSitterProfilePage({super.key});
@@ -56,7 +55,9 @@ class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
                   if (isLoading && profile == null) {
                     return Center(
                       child: CircularProgressIndicator(
-                        valueColor: const AlwaysStoppedAnimation<Color>(petServicesPrimary),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          petServicesPrimary,
+                        ),
                         strokeWidth: 3,
                       ),
                     );
@@ -123,7 +124,10 @@ class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
                                 icon: Icons.info_outline,
                                 title: 'About',
                                 child: Text(
-                                  _valueOrFallback(profile.bio, 'No bio available.'),
+                                  _valueOrFallback(
+                                    profile.bio,
+                                    'No bio available.',
+                                  ),
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Color(0xFF4B5563),
@@ -141,7 +145,10 @@ class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
                                     _ModernInfoRow(
                                       icon: Icons.badge_outlined,
                                       label: 'Designation',
-                                      value: _valueOrFallback(profile.designations, '-'),
+                                      value: _valueOrFallback(
+                                        profile.designations,
+                                        '-',
+                                      ),
                                     ),
                                     const SizedBox(height: 14),
                                     _ModernInfoRow(
@@ -155,7 +162,10 @@ class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
                                     _ModernInfoRow(
                                       icon: Icons.check_circle_outline,
                                       label: 'Status',
-                                      value: _valueOrFallback(profile.status, '-'),
+                                      value: _valueOrFallback(
+                                        profile.status,
+                                        '-',
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -164,7 +174,9 @@ class _PetSitterProfilePageState extends State<PetSitterProfilePage> {
                               _ModernSection(
                                 icon: Icons.language_outlined,
                                 title: 'Languages',
-                                child: _LanguagesWrap(languages: profile.languages),
+                                child: _LanguagesWrap(
+                                  languages: profile.languages,
+                                ),
                               ),
                             ],
                           ]),
@@ -635,7 +647,10 @@ class _ErrorState extends StatelessWidget {
                     backgroundColor: petServicesPrimary,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

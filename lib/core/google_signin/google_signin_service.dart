@@ -45,7 +45,9 @@ class GoogleSignInService {
         // iOS requires clientId from GoogleService-Info.plist
         clientId: Platform.isIOS ? GoogleSignInConfig.iosClientId : null,
         // Android requires serverClientId for Credential Manager integration
-        serverClientId: Platform.isAndroid ? GoogleSignInConfig.androidServerClientId : null,
+        serverClientId: Platform.isAndroid
+            ? GoogleSignInConfig.androidServerClientId
+            : null,
       );
       _isInitialized = true;
     } catch (e, stack) {
@@ -94,7 +96,8 @@ class GoogleSignInService {
       final idToken = googleAuth.idToken;
       if (idToken == null) {
         throw const GoogleSignInException(
-          message: 'Missing Google ID token. Check serverClientId configuration.',
+          message:
+              'Missing Google ID token. Check serverClientId configuration.',
         );
       }
 

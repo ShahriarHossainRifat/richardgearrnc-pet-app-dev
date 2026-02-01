@@ -34,8 +34,10 @@ class PetServicesBookingPillTabs extends StatelessWidget {
         labelColor: Colors.white,
         unselectedLabelColor: const Color(0xFF9CA3AF),
         labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-        unselectedLabelStyle:
-            const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
+        ),
         dividerColor: Colors.transparent,
         tabs: const [
           Tab(text: 'Services'),

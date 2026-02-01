@@ -76,13 +76,16 @@ class UserExistsResponse {
       } else {
         // Fallback: construct minimal user from available fields
         final role = data['role'] as String?;
-        final id = data['id'] as String? ?? data['userId'] as String? ?? 'temp_id';
+        final id =
+            data['id'] as String? ?? data['userId'] as String? ?? 'temp_id';
         final email = data['email'] as String? ?? 'temp@email.com';
 
         user = User(
           id: id,
           email: email,
-          role: role != null ? (UserRole.fromString(role) ?? UserRole.petOwner) : UserRole.petOwner,
+          role: role != null
+              ? (UserRole.fromString(role) ?? UserRole.petOwner)
+              : UserRole.petOwner,
         );
       }
 
