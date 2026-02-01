@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:petzy_app/app/router/app_router.dart';
+import 'package:petzy_app/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:petzy_app/features/pet_setter/providers/pet_sitter_profile_notifier.dart';
 import 'package:petzy_app/features/pet_setter/services/pet_sitter_services.dart';
 import 'package:petzy_app/features/pet_setter/widgets/booking_constants.dart';
@@ -140,6 +142,8 @@ class PetSitterProfilePage extends HookConsumerWidget {
                                     languages: profile.languages,
                                   ),
                                 ),
+                                const SizedBox(height: 20),
+                                _LogoutButton(),
                               ],
                             ]),
                           ),
@@ -639,4 +643,61 @@ String _valueOrFallback(final String? value, final String fallback) {
   if (value == null) return fallback;
   if (value.trim().isEmpty) return fallback;
   return value;
+}
+
+class _LogoutButton extends HookConsumerWidget {
+  const _LogoutButton();
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () async {
+          // Show confirmation dialog
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder: (final dialogContext) => AlertDialog(
+              title: const Text('Logout'),
+              content: const Text('Are you sure you want to logout?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, true),
+                  child: const Text('Logout'),
+                ),
+              ],
+            ),
+          );
+
+          if (confirmed ?? false) {
+            await ref.read(authProvider.notifier).logout();
+            if (context.mounted) {
+              context.goRoute(AppRoute.login);
+            }
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red.shade50,
+          foregroundColor: Color(0xFFDC2626),
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Color(0xFFDC2626).withOpacity(0.2)),
+          ),
+        ),
+        child: const Text(
+          'Logout',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
 }
