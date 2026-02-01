@@ -4,7 +4,9 @@ import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/pet_sitter/views/widgets/rating_summery_widget.dart';
 
 class ServiceDetails extends StatelessWidget {
-  const ServiceDetails({super.key, String? serviceId});
+  const ServiceDetails({super.key, this.serviceId});
+
+  final String? serviceId;
 
   @override
   Widget build(final BuildContext context) {
@@ -224,7 +226,6 @@ class ServiceDetails extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
             RatingSummaryWidget(),
-            ServiceDetails(),
           ],
         ).paddingSymmetric(horizontal: 16),
       ),

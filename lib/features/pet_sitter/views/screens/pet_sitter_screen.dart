@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petzy_app/app/router/app_router.dart';
 import 'package:petzy_app/core/core.dart';
 import 'package:petzy_app/features/pet_sitter/views/screens/service_details.dart';
 import 'package:petzy_app/features/pet_sitter/views/widgets/service_card.dart';
@@ -191,11 +192,9 @@ class PetSitterScreen extends StatelessWidget {
                           providerLogoUrl: sitter.user.image ?? '',
                           onBookNow: () {
                             // Navigate to service details
-                            // Option: pass sitter ID or whole object
-                            context.goNamed(
+                            context.pushNamed(
                               'service-details',
                               pathParameters: {'serviceId': sitter.id},
-                              // extra: sitter, // if you want to pass whole object
                             );
                           },
                         ),
