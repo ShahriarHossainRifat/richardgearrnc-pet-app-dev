@@ -41,7 +41,7 @@ class ServicesShowcase extends StatelessWidget {
         _ServiceCard(
           icon: Icons.hotel_outlined,
           label: 'Pet hotel',
-          onTap: () {},
+          onTap: () => context.goNamed(AppRoute.petSitter.name),
         ),
       ],
     );
