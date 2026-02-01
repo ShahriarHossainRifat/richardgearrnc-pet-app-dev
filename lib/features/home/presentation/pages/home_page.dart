@@ -91,6 +91,10 @@ class HomePage extends HookConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              AppIconButton(
+                icon: Icons.menu,
+                onPressed: () => context.pushRoute(AppRoute.menu),
+              ),
               Text(
                 'Petzy',
                 style: context.textTheme.headlineMedium?.copyWith(
