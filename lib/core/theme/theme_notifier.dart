@@ -10,7 +10,7 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   ThemeMode build() {
     final prefs = ref.read(sharedPreferencesProvider);
     final themeIndex = prefs.getInt(_themeKey);
-    return themeIndex != null ? ThemeMode.values[themeIndex] : ThemeMode.system;
+    return themeIndex != null ? ThemeMode.values[themeIndex] : ThemeMode.light;
   }
 
   /// Set the theme mode and persist the choice
